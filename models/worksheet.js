@@ -35,10 +35,15 @@ class Worksheet {
             })
 
             if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
+                if (response.status === 401) {
+                    return 401;
+                } else {
+                    throw new Error('Failed to fetch entries');
+                }
             }
     
             const data = await response.json();
+
             return data.value;
 
         } catch (err){
@@ -49,15 +54,18 @@ class Worksheet {
     async getEntry(fName) {
         try {
             const list = await this.getEntryList();
-            for (let row of list) {
+            if (list === 401) {
+                return {error: 401, values: 'You are unauthorized to make this request.'};
+            } else if (list !== null && list.length !== 0) {
+                for (let row of list) {
 
-                const name = row.values[0][0];
-                console.log(fName);
-                if (name === fName) {
-                    return row.values;
+                    const name = row.values[0][0];
+                    if (name === fName) {
+                        return row.values;
+                    }
                 }
             }
-            return {values: 'No entries found.'};
+            return {error: 1, values: 'No entries found.'};
         } catch (err) {
             console.log('Error fetching specific entry: ', err);
         }

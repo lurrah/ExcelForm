@@ -23,6 +23,10 @@ function populateWS() {
     })
     .then(response => response.json())
     .then(data=> {
+        if (data.error) {
+            const error = document.getElementById('error-div');
+            error.innerText = data.values;
+        } else {
         // Hide search form and show entry form
         const entryForm = document.getElementById('entry-form');
         entryForm.setAttribute('hidden', true);
@@ -36,7 +40,7 @@ function populateWS() {
         document.getElementById('description-edit').value = data.description;
 
         //data = JSON.stringify(data, null, 2);
-
+        }
     })
     .catch(err => {
         console.error('Error populating worksheet div', err);
