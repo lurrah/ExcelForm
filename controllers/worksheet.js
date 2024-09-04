@@ -10,8 +10,8 @@ class WorksheetController {
             const fName = req.query.fName;
             const response = await this.ws.getEntry(fName);
 
-            if (response.values === 'No entries found.') {
-                return res.json('No entries found.')
+            if (response.error) {
+                return res.json(response);
             }
 
             const entry_info = {
@@ -20,7 +20,7 @@ class WorksheetController {
                 email: response[0][2],
                 description: response[0][3]
             } 
-            res.json(entry_info);
+            return res.json(entry_info);
         } catch(err) {
             console.log('Error retrieving entry from table:', err);
         }
