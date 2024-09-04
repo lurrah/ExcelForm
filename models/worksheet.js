@@ -1,3 +1,7 @@
+
+// Current table structure (all instances must be updated when the table is updated)
+// [ fname, lname, email, description ]
+
 class Worksheet {
     constructor() {
     
@@ -51,6 +55,7 @@ class Worksheet {
         }
     }
 
+    // Get specified entry based on search parameter (currently fName)
     async getEntry(fName) {
         try {
             const list = await this.getEntryList();
@@ -61,7 +66,7 @@ class Worksheet {
 
                     const name = row.values[0][0];
                     if (name === fName) {
-                        return row.values;
+                        return {index: row.index, values: row.values};
                     }
                 }
             }
@@ -71,17 +76,70 @@ class Worksheet {
         }
     }
 
-    async editEntry(fName, lName, email, description) {
+    // Edit specified entry based
+    async editEntry(values, index) {
         try {
-            const response = await fetch(``, {
+            const body = {
+                persistChanges: true,
+                values: [
+                    values
+                ]
+            }
+
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${process.env.graph_pat}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(body)
             })
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return 401;
+                } else {
+                    throw new Error('Failed to edit entry');
+                }
+            }
+
+            const data = await response.json();
+
+            return data;
         } catch (err) {
-            console.log('Error editing entry in Master Application Inventory: ', err)
+            console.log('Error editing entry in Master Application Inventory: ', err);
+        }
+    }
+
+    async addEntry(values) {
+        try {
+            const body = {
+                persistChanges: true,
+                values: [
+                    values
+                ]
+            }
+
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/add`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${process.env.graph_pat}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body),
+            })
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return 401;
+                } else {
+                    throw new Error('Failed to edit entry');
+                }
+            }
+
+            const data = await response.json();
+
+            return data;
+        } catch(err) {
+            console.log('Error adding entry to table:', err);
         }
     }
 }
