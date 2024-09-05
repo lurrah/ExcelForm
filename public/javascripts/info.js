@@ -1,13 +1,18 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = null;
     document.getElementById('get-entry').addEventListener('click', async function(event) {
         event.preventDefault();
         originFormData = await populateForm();
     });
 
-    document.getElementById('make-changes').addEventListener('click', async function(event) {
-        event.preventDefault();
-        editEntry(originFormData);
+    const button = document.getElementById('make-changes');
+    button.addEventListener('click', async function(event) {
+        event.preventDefault
+        if (button.textContent === 'Make Changes') {
+            await editEntry(originFormData);
+        } else {
+            await addEntry();
+        }
     })
 });
 
@@ -27,28 +32,26 @@ async function populateForm() {
         data = await response.json();
         if (data.error) {
             if (data.error === 1) {
+
+                // error means entry is not found, therefore, add entry
                 data.index = null;
                 data.fName = null;
                 data.lName = null;
                 data.email = null;
                 data.description = null;
+
+                displayEditTable(data);
+                document.getElementById("make-changes").textContent = "Add Entry"
             }
             else {
             const error = document.getElementById('error-div');
             error.innerText = data.values;
             }
         } else {
-            // Hide search form and show entry form
-            const entryForm = document.getElementById('entry-form');
-            entryForm.setAttribute('hidden', true);
-            const tableForm = document.getElementById('table-form');
-            tableForm.removeAttribute('hidden');
-
             // Fill in entry form with current information
-            document.getElementById('fname-edit').value = data.fName;
-            document.getElementById('lname-edit').value = data.lName;
-            document.getElementById('email-edit').value = data.email;
-            document.getElementById('description-edit').value = data.description;
+            displayEditTable(data);
+            document.getElementById("make-changes").textContent = "Make Changes"
+
             return [data.index, data.fName, data.lName, data.email, data.description];
         }
     }
@@ -58,13 +61,25 @@ async function populateForm() {
     }
 }
 
+async function displayEditTable(data) {
+    // Hide search form and show entry form
+    const entryForm = document.getElementById('entry-form');
+    entryForm.setAttribute('hidden', true);
+    const tableForm = document.getElementById('table-form');
+    tableForm.removeAttribute('hidden');
+
+    document.getElementById('fname-edit').value = data.fName;
+    document.getElementById('lname-edit').value = data.lName;
+    document.getElementById('email-edit').value = data.email;
+    document.getElementById('description-edit').value = data.description;
+}
+
 async function editEntry(originFormData) {
     try {
         const fName = document.getElementById('fname-edit').value;
         const lName = document.getElementById('lname-edit').value;
         const email = document.getElementById('email-edit').value;
         const description = document.getElementById('description-edit').value;
-        const div = document.getElementById
 
         let newEntry = [fName, lName, email, description];
         
@@ -106,5 +121,37 @@ async function detectChanges(oldFields, newFields) {
         return newFields;
     } catch (err) {
         console.error("Discrepancy between the old and updated form values: ", err);
+    }
+}
+
+async function addEntry() {
+    try {
+        const fName = document.getElementById('fname-edit').value;
+        const lName = document.getElementById('lname-edit').value;
+        const email = document.getElementById('email-edit').value;
+        const description = document.getElementById('description-edit').value;
+
+        let newEntry = [fName, lName, email, description];
+        
+        if (newEntry.every(element => element === null)) {
+            const div = document.getElementById('error-div');
+            div.innerText = 'Entry not added';
+        }
+        else {
+            const response = fetch('/info/add-entry', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    values: newEntry,
+                })
+            })
+            
+            const div = document.getElementById('error-div');
+            div.innerText = 'Entry has been added';
+        }
+    } catch (err) {
+        console.error("Error calling addEntry router: ", err);
     }
 }

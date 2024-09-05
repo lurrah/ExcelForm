@@ -43,7 +43,11 @@ class WorksheetController {
 
     async addEntry(req, res) {
         try {
-            const x = req;
+            const values = req.body.values;
+
+            const response = await this.ws.addEntry(values);
+
+            return res.json(response);
         } catch(err) {
             console.log('Error adding entry to table:', err);
         }
