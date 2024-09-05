@@ -131,7 +131,7 @@ class Worksheet {
                 if (response.status === 401) {
                     return 401;
                 } else {
-                    throw new Error('Failed to edit entry');
+                    throw new Error('Failed to add entry');
                 }
             }
 

@@ -10,7 +10,74 @@
         <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    </head>
+        <style>
+      
+  
+          .form-container {
+              background-color: #fff;
+              padding: 20px;
+              border-radius: 10px;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+              max-width: 400px;
+              width: 100%;
+          }
+  
+          h2 {
+              text-align: center;
+              color: #333;
+          }
+  
+          .form-group {
+              margin-bottom: 15px;
+          }
+  
+          .form-group label {
+              display: block;
+              margin-bottom: 5px;
+              font-weight: bold;
+          }
+  
+          .form-group input,
+          .form-group select,
+          .form-group textarea {
+              width: 100%;
+              padding: 10px;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+              font-size: 16px;
+          }
+  
+          .form-group input:focus,
+          .form-group select:focus,
+          .form-group textarea:focus {
+              outline: none;
+              border-color: #007bff;
+              box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+          }
+  
+          .form-group textarea {
+              resize: vertical;
+              min-height: 100px;
+          }
+  
+          .btn-submit {
+              display: block;
+              width: 100%;
+              padding: 10px;
+              background-color: #007bff;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              font-size: 16px;
+              cursor: pointer;
+          }
+  
+          .btn-submit:hover {
+              background-color: #0056b3;
+          }
+      </style>
+    
+      </head>
     <body>
         <!-- ucf bar -->
         <div id="ucfhb" class=" preload" role="complementary" aria-label="University of Central Florida navbar">
@@ -48,31 +115,36 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
             </ol>
-            <form id="entry-form">
-              <label for="fname">First Name:</label>
-              <input type="text" id="fname" name="fname"><br><br>
 
-              <label for="lname">Last Name:</label>
-              <input type="text" id="lname" name="lname"><br><br>
-              <button type="button" id="get-entry">Get Entry</button>
-            </form>
-
-            <form id="table-form" hidden>
+          <div class="form-container">  
+            <div class="form-group">
+              <form id="entry-form">
                 <label for="fname">First Name:</label>
-                <input type="text" id="fname-edit" name="fname"><br><br>
-  
+                <input type="text" id="fname" name="fname"><br><br>
+
                 <label for="lname">Last Name:</label>
-                <input type="text" id="lname-edit" name="lname"><br><br>
+                <input type="text" id="lname" name="lname"><br><br>
+                <button type="button" id="get-entry">Get Entry</button>
+              </form>
+            </div>
+            <div class="form-group">
+              <form id="table-form" hidden>
+                  <label for="fname">First Name:</label>
+                  <input type="text" id="fname-edit" name="fname"><br><br>
+    
+                  <label for="lname">Last Name:</label>
+                  <input type="text" id="lname-edit" name="lname"><br><br>
 
-                <label for="email">Email:</label>
-                <input type="text" id="email-edit" name="email"><br><br>
+                  <label for="email">Email:</label>
+                  <input type="text" id="email-edit" name="email"><br><br>
 
-                <label for="description">Description:</label>
-                <input type="text" id="description-edit" name="text"><br><br>
+                  <label for="description">Description:</label>
+                  <input type="text" id="description-edit" name="text"><br><br>
 
-                <button type="button" id="make-changes">Make Changes</button>
-            </form>
-
+                  <button type="button" id="make-changes" class="btn-submit">Make Changes</button>
+              </form>
+            </div>
+          </div>  
             <div id="error-div"></div>
           </div>
         </div>

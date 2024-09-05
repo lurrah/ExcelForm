@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let originFormData = null;
     document.getElementById('get-entry').addEventListener('click', async function(event) {
         event.preventDefault();
-        originFormData = await populateWS();
+        originFormData = await populateForm();
     });
 
     document.getElementById('make-changes').addEventListener('click', async function(event) {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 });
 
-async function populateWS() {
+async function populateForm() {
     try{ 
         const fName = document.getElementById('fname').value;
         const lName = document.getElementById('lname').value;
