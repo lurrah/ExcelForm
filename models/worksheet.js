@@ -96,6 +96,7 @@ class Worksheet {
             })
             if (!response.ok) {
                 if (response.status === 401) {
+                    console.error('Unauthorized to make this request.');
                     return 401;
                 } else {
                     throw new Error('Failed to edit entry');
@@ -129,6 +130,7 @@ class Worksheet {
             })
             if (!response.ok) {
                 if (response.status === 401) {
+                    console.error('Unauthorized to make this request.');
                     return 401;
                 } else {
                     throw new Error('Failed to add entry');

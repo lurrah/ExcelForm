@@ -116,38 +116,93 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
             </ol>
-            <div id="pagination-container">
+
+            <!-- Search Entry Form -->
               <div class="form-group">
 
               <form id="entry-form">
-                <label for="fname">First Name:</label>
-                <input type="text" id="fname" name="fname"><br><br>
+                <label for="appName">Application Name:</label>
+                <input type="text" id="appname" name="appname"><br><br>
 
                   <label for="lname">Last Name:</label>
                   <input type="text" id="lname" name="lname"><br><br>
                   <button type="button" id="get-entry">Get Entry</button>
                 </form>
                 </div>
-                <div class="form-group">
-                  <form id="table-form" hidden>
-                      <label for="fname">First Name:</label>
+              </div>
+                <!-- MAI Form -->
+                <div class="form-group" id="page-1" style="display:none;">
+                  <form id="table-form">
+                      <label for="appName">Application Name:</label>
+                      <input type="text" id="appname-edit" name="appName"><br><br>
+          
+                      <label for="description">Description:</label>
+                      <input type="text" id="description-edit" name="description"><br><br>
+
+                      <label for="criticality">Business Criticality:</label>
+                      <input type="text" id="criticality-edit" name="crticality"><br><br>
+
+                      <label for="lifecycle">Lifecycle State:</label>
+                      <input type="text" id="lifecycle-edit" name="lifecycle"><br><br>
+
+                      <label for="community">User Community:</label>
+                      <input type="text" id="community-edit" name="community"><br><br>
+          
+                      <label for="owner">Business Owner:</label>
+                      <input type="text" id="owner-edit" name="owner"><br><br>
+
+                      <label for="ownerDep">Business Owner Department:</label>
+                      <input type="text" id="owner-dep-edit" name="ownerDep"><br><br>
+
+                      <label for="ownerBudg">Budget Owner:</label>
+                      <input type="text" id="owner-budg-edit" name="ownerBudg"><br><br>
+
+                      <label for="ownerIt">IT Owner:</label>
+                      <input type="text" id="owner-it-edit" name="ownerIt"><br><br>
+
+                      <label for="ownerItDep">IT Owner Department:</label>
+                      <input type="text" id="owner-itdep-edit" name="ownerItDep"><br><br>
+                  </form>
+                </div>
+
+                <div class="form-group" id="page-2" style="display:none;">
+                  <form id="table-form">
+                      <label for="fname">1:</label>
                       <input type="text" id="fname-edit" name="fname"><br><br>
-        
-                      <label for="lname">Last Name:</label>
+          
+                      <label for="lname">2:</label>
                       <input type="text" id="lname-edit" name="lname"><br><br>
 
-                      <label for="email">Email:</label>
+                      <label for="email">3:</label>
                       <input type="text" id="email-edit" name="email"><br><br>
 
-                      <label for="description">Description:</label>
+                      <label for="description">4:</label>
                       <input type="text" id="description-edit" name="text"><br><br>
+                  </form>
+                </div>
 
-                    <button type="button" id="make-changes">Make Changes</button>
-                </form>
-              </div>
-              </div>
-            <div id="error-div"></div>
-          </div>
+                <div class="form-group" id="page-3" style="display:none;">
+                  <form id="table-form">
+                      <label for="fname">5:</label>
+                      <input type="text" id="fname-edit" name="fname"><br><br>
+          
+                      <label for="lname">6:</label>
+                      <input type="text" id="lname-edit" name="lname"><br><br>
+
+                      <label for="email">7:</label>
+                      <input type="text" id="email-edit" name="email"><br><br>
+
+                      <label for="description">8:</label>
+                      <input type="text" id="description-edit" name="text"><br><br>
+                  </form>
+                </div>
+
+              <!-- Pagination controls-->
+              <div id="pagination"></div>
+
+              <button type="button" id="make-changes">Make Changes</button>
+
+              <div id="error-div"></div>
         </div>
 
     </body>

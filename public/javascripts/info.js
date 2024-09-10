@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('get-entry').addEventListener('click', async function(event) {
         event.preventDefault();
         originFormData = await populateForm();
+        //await initPagination();
     });
 
     const button = document.getElementById('make-changes');
@@ -18,13 +19,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 async function populateForm() {
     try{ 
-        const fName = document.getElementById('fname').value;
+        const fName = document.getElementById('appname').value;
         const lName = document.getElementById('lname').value;
 
         const url = new URL('/info/get-entry', window.location.origin);
         const params = { fName, lName };
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
+        // get-entry based on search parameters (currently: fName)
         const response = await fetch(url, {
             method: 'GET',
         })
@@ -32,7 +34,6 @@ async function populateForm() {
         data = await response.json();
         if (data.error) {
             if (data.error === 1) {
-
                 // error means entry is not found, therefore, add entry
                 data.index = null;
                 data.fName = null;
@@ -48,9 +49,11 @@ async function populateForm() {
             error.innerText = data.values;
             }
         } else {
+            console.log("here");
+            initPagination();
             // Fill in entry form with current information
             displayEditTable(data);
-            document.getElementById("make-changes").textContent = "Make Changes"
+            //document.getElementById("make-changes").textContent = "Make Changes"
 
             return [data.index, data.fName, data.lName, data.email, data.description];
         }
@@ -68,10 +71,16 @@ async function displayEditTable(data) {
     const tableForm = document.getElementById('table-form');
     tableForm.removeAttribute('hidden');
 
-    document.getElementById('fname-edit').value = data.fName;
-    document.getElementById('lname-edit').value = data.lName;
-    document.getElementById('email-edit').value = data.email;
+    document.getElementById('appname-edit').value = data.appName;
     document.getElementById('description-edit').value = data.description;
+    document.getElementById('criticality-edit').value = data.criticality;
+    document.getElementById('lifecycle-edit').value = data.lifecycle;
+    document.getElementById('community-edit').value = data.community;
+    document.getElementById('owner-edit').value = data.owner;
+    document.getElementById('owner-dep-edit').value = data.ownerDep;
+    document.getElementById('owner-budg-edit').value = data.ownerBudg;
+    document.getElementById('owner-it-edit').value = data.ownerIt;
+    document.getElementById('owner-itdep-edit').value = data.ownerItDep;
 }
 
 async function editEntry(originFormData) {
@@ -153,5 +162,33 @@ async function addEntry() {
         }
     } catch (err) {
         console.error("Error calling addEntry router: ", err);
+    }
+}
+
+async function initPagination() {
+    const totalPages = 3;
+
+    //const pagination = document.getElementById('pagination-container')
+
+    try {
+        $('#pagination').pagination({
+            dataSource: new Array(totalPages),
+            pageSize: 1,
+            callback: function (data, pagination) {
+                $('.form-group').hide();
+
+
+
+                $('#page-' + pagination.pageNumber).show();
+
+                if (pagination.pageNumber === totalPages) {
+                    $('#make-changes').show();
+                } else {
+                    $('#make-changes').hide();
+                }
+            }
+        });
+    } catch(err) {
+        console.error('Error initializing pagination', err);
     }
 }

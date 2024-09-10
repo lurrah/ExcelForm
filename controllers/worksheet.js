@@ -15,11 +15,20 @@ class WorksheetController {
             }
             // index is for backend purposes
             const entry_info = {
+                // page-1 info
                 index: response.index,
-                fName: response.values[0][0],
-                lName: response.values[0][1],
-                email: response.values[0][2],
-                description: response.values[0][3]
+                appName: response.values[0][0],
+                description: response.values[0][2],
+                criticality: response.values[0][3],
+                lifecycleStat: response.values[0][4],
+                community: response.values[0][5],
+                owner: response.values[0][6],
+                ownerDep: response.values[0][7],
+                ownerBudg: response.values[0][8], // not sure if this is correct
+                ownerIt:response.values[0][9],
+                ownerItDep:response.values[0][10],
+                //page-2 info
+                //page-3 info
             } 
             return res.json(entry_info);
         } catch(err) {
