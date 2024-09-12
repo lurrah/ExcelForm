@@ -175,18 +175,35 @@ async function detectChanges(oldFields, newFields) {
 
 async function addEntry() {
     try {
-        const appName = document.getElementById('appName').value;
-        const description = document.getElementById('description').value;
-        const criticality = document.getElementById('criticality').value;
-        const lifecycle = document.getElementById('lifecycle').value;
-        const community = document.getElementById('community').value;
-        const owner = document.getElementById('owner').value;
-        const ownerDep = document.getElementById('owner-dep').value;
-        const ownerBudg = document.getElementById('owner-budg').value;
-        const ownerIt = document.getElementById('owner-it').value;
-        const ownerItDep = document.getElementById('owner-itdep').value;
-        let newEntry = [fName, lName, email, description];
-        
+        const appName = document.getElementById('appname-edit').value;
+        const appNorm = document.getElementById('appnorm-edit').value;
+        const description = document.getElementById('description-edit').value;
+        const criticality = document.getElementById('criticality-edit').value;
+        const lifecycle = document.getElementById('lifecycle-edit').value;
+        const community = document.getElementById('community-edit').value;
+        const owner = document.getElementById('owner-edit').value;
+        const ownerDep = document.getElementById('owner-dep-edit').value;
+        const ownerBudg = document.getElementById('owner-budg-edit').value;
+        const ownerIt = document.getElementById('owner-it-edit').value;
+        const ownerItDep = document.getElementById('owner-itdep-edit').value;
+
+        const appType = document.getElementById('apptype-edit').value; 
+        const appDel = document.getElementById('appdel-edit').value;
+        const platform = document.getElementById('platform-edit').value;
+        const numInteg = document.getElementById('numInteg-edit').value;
+        const numActivUsr = document.getElementById('numActivUsr-edit').value;
+        const numStaff = document.getElementById('numStaff-edit').value;
+        const cobbId = document.getElementById('cobbId-edit').value;
+        const vendor = document.getElementById('vendor-edit').value;
+        const numLic = document.getElementById('numLic-edit').value;
+        const yrCost = document.getElementById('yrCost-edit').value;
+        const cntDates = document.getElementById('cntDates-edit').value;
+        const details = document.getElementById("details-edit").value;
+        const datUpdat = document.getElementById("datUpdat-edit").value;
+
+        let newEntry = [ appName, appNorm, description, criticality, lifecycle, community, owner, ownerDep, ownerBudg, ownerIt, ownerItDep,
+            appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat ];
+
         if (newEntry.every(element => element === null)) {
             const div = document.getElementById('error-div');
             div.innerText = 'Entry not added';
