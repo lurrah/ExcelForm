@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('get-entry').addEventListener('click', async function(event) {
         event.preventDefault();
         originFormData = await populateForm();
-        //await initPagination();
     });
-
     const button = document.getElementById('make-changes');
     button.addEventListener('click', async function(event) {
         event.preventDefault
@@ -19,6 +17,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 async function populateForm() {
     try{ 
+        document.getElementById('error-div').innerText = "";
+
         const fName = document.getElementById('appname').value;
         const lName = document.getElementById('lname').value;
 
@@ -35,27 +35,22 @@ async function populateForm() {
         if (data.error) {
             if (data.error === 1) {
                 // error means entry is not found, therefore, add entry
-                data.index = null;
-                data.fName = null;
-                data.lName = null;
-                data.email = null;
-                data.description = null;
-
+                initPagination();
                 displayEditTable(data);
                 document.getElementById("make-changes").textContent = "Add Entry"
             }
             else {
-            const error = document.getElementById('error-div');
-            error.innerText = data.values;
+                const error = document.getElementById('error-div');
+                error.innerText = data.values;
             }
         } else {
-            console.log("here");
             initPagination();
             // Fill in entry form with current information
             displayEditTable(data);
             //document.getElementById("make-changes").textContent = "Make Changes"
 
-            return [data.index, data.fName, data.lName, data.email, data.description];
+            return [ data.index, data.appName, data.appNorm ,data.description, data.criticality, data.lifecycle, data.community, data.owner, data.ownerDep, data.ownerBudg, data.ownerIt, data.ownerItDep,
+                    data.appType, data.appDel, data.platform, data.numInteg, data.numActivUsr, data.numStaff, data.cobbId, data.vendor,data.numLic, data.yrCost, data.cntDates, data.details, data.datUpdat ];
         }
     }
     catch (err) {
@@ -71,7 +66,9 @@ async function displayEditTable(data) {
     const tableForm = document.getElementById('table-form');
     tableForm.removeAttribute('hidden');
 
+    // pg1 
     document.getElementById('appname-edit').value = data.appName;
+    document.getElementById('appnorm-edit').value = data.appNorm;
     document.getElementById('description-edit').value = data.description;
     document.getElementById('criticality-edit').value = data.criticality;
     document.getElementById('lifecycle-edit').value = data.lifecycle;
@@ -81,25 +78,63 @@ async function displayEditTable(data) {
     document.getElementById('owner-budg-edit').value = data.ownerBudg;
     document.getElementById('owner-it-edit').value = data.ownerIt;
     document.getElementById('owner-itdep-edit').value = data.ownerItDep;
+    //pg2
+    document.getElementById('apptype-edit').value = data.appType;
+    document.getElementById('appdel-edit').value = data.appDel;
+    document.getElementById('platform-edit').value = data.platform;
+    document.getElementById('numInteg-edit').value = data.numInteg;
+    document.getElementById('numActivUsr-edit').value = data.numActivUsr;
+    document.getElementById('numStaff-edit').value = data.numStaff;
+    document.getElementById('cobbId-edit').value = data.cobbId;
+    document.getElementById('vendor-edit').value = data.vendor;
+    document.getElementById('numLic-edit').value = data.numLic;
+    document.getElementById('yrCost-edit').value = data.yrCost;
+    document.getElementById('cntDates-edit').value = data.cntDates;
+    document.getElementById('details-edit').value = data.details;
+    document.getElementById('datUpdat-edit').value = data.datUpdat;
 }
 
 async function editEntry(originFormData) {
     try {
-        const fName = document.getElementById('fname-edit').value;
-        const lName = document.getElementById('lname-edit').value;
-        const email = document.getElementById('email-edit').value;
+        const appName = document.getElementById('appname-edit').value;
+        const appNorm = document.getElementById('appnorm-edit').value;
         const description = document.getElementById('description-edit').value;
+        const criticality = document.getElementById('criticality-edit').value;
+        const lifecycle = document.getElementById('lifecycle-edit').value;
+        const community = document.getElementById('community-edit').value;
+        const owner = document.getElementById('owner-edit').value;
+        const ownerDep = document.getElementById('owner-dep-edit').value;
+        const ownerBudg = document.getElementById('owner-budg-edit').value;
+        const ownerIt = document.getElementById('owner-it-edit').value;
+        const ownerItDep = document.getElementById('owner-itdep-edit').value;
 
-        let newEntry = [fName, lName, email, description];
-        
+        const appType = document.getElementById('apptype-edit').value; 
+        const appDel = document.getElementById('appdel-edit').value;
+        const platform = document.getElementById('platform-edit').value;
+        const numInteg = document.getElementById('numInteg-edit').value;
+        const numActivUsr = document.getElementById('numActivUsr-edit').value;
+        const numStaff = document.getElementById('numStaff-edit').value;
+        const cobbId = document.getElementById('cobbId-edit').value;
+        const vendor = document.getElementById('vendor-edit').value;
+        const numLic = document.getElementById('numLic-edit').value;
+        const yrCost = document.getElementById('yrCost-edit').value;
+        const cntDates = document.getElementById('cntDates-edit').value;
+        const details = document.getElementById("details-edit").value;
+        const datUpdat = document.getElementById("datUpdat-edit").value;
+
+
+        let newEntry = [ appName, appNorm, description, criticality, lifecycle, community, owner, ownerDep, ownerBudg, ownerIt, ownerItDep,
+                        appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat ];
+
         newEntry = await detectChanges(originFormData.slice(1), newEntry);
-        console.log(newEntry);
+
+        const div = document.getElementById('error-div');
+
         if (newEntry.every(element => element === null)) {
-            const div = document.getElementById('error-div');
             div.innerText = 'No changes have been made';
         }
         else {
-            const response = fetch('/info/edit-entry', {
+            const response = await fetch('/info/edit-entry', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -109,9 +144,13 @@ async function editEntry(originFormData) {
                     index: originFormData[0]
                 })
             })
-            
-            const div = document.getElementById('error-div');
-            div.innerText = 'Changes have been made';
+            let data = await response.json();
+            if (data === 'Error occured while editing entry') {
+                div.innerText = 'No changes have been made';
+            } 
+            else {
+                div.innerText = 'Changes have been made';
+            }
         }
     }
     catch(err) {
@@ -124,6 +163,7 @@ async function detectChanges(oldFields, newFields) {
     try {
         for (let i = 0; i < oldFields.length; i++) {
             if (oldFields[i] === newFields[i]) {
+
                 newFields[i] = null;
             }
         }
@@ -135,11 +175,16 @@ async function detectChanges(oldFields, newFields) {
 
 async function addEntry() {
     try {
-        const fName = document.getElementById('fname-edit').value;
-        const lName = document.getElementById('lname-edit').value;
-        const email = document.getElementById('email-edit').value;
-        const description = document.getElementById('description-edit').value;
-
+        const appName = document.getElementById('appName').value;
+        const description = document.getElementById('description').value;
+        const criticality = document.getElementById('criticality').value;
+        const lifecycle = document.getElementById('lifecycle').value;
+        const community = document.getElementById('community').value;
+        const owner = document.getElementById('owner').value;
+        const ownerDep = document.getElementById('owner-dep').value;
+        const ownerBudg = document.getElementById('owner-budg').value;
+        const ownerIt = document.getElementById('owner-it').value;
+        const ownerItDep = document.getElementById('owner-itdep').value;
         let newEntry = [fName, lName, email, description];
         
         if (newEntry.every(element => element === null)) {
@@ -167,6 +212,7 @@ async function addEntry() {
 
 async function initPagination() {
     const totalPages = 3;
+    const button = document.getElementById('make-changes');
 
     //const pagination = document.getElementById('pagination-container')
 
@@ -182,9 +228,9 @@ async function initPagination() {
                 $('#page-' + pagination.pageNumber).show();
 
                 if (pagination.pageNumber === totalPages) {
-                    $('#make-changes').show();
+                    button.removeAttribute('hidden');
                 } else {
-                    $('#make-changes').hide();
+                    button.setAttribute('hidden', true);
                 }
             }
         });

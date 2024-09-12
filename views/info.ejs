@@ -11,72 +11,7 @@
         <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-        <style>
-      
-  
-          .form-container {
-              background-color: #fff;
-              padding: 20px;
-              border-radius: 10px;
-              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-              max-width: 400px;
-              width: 100%;
-          }
-  
-          h2 {
-              text-align: center;
-              color: #333;
-          }
-  
-          .form-group {
-              margin-bottom: 15px;
-          }
-  
-          .form-group label {
-              display: block;
-              margin-bottom: 5px;
-              font-weight: bold;
-          }
-  
-          .form-group input,
-          .form-group select,
-          .form-group textarea {
-              width: 100%;
-              padding: 10px;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-              font-size: 16px;
-          }
-  
-          .form-group input:focus,
-          .form-group select:focus,
-          .form-group textarea:focus {
-              outline: none;
-              border-color: #007bff;
-              box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-          }
-  
-          .form-group textarea {
-              resize: vertical;
-              min-height: 100px;
-          }
-  
-          .btn-submit {
-              display: block;
-              width: 100%;
-              padding: 10px;
-              background-color: #007bff;
-              color: white;
-              border: none;
-              border-radius: 5px;
-              font-size: 16px;
-              cursor: pointer;
-          }
-  
-          .btn-submit:hover {
-              background-color: #0056b3;
-          }
-      </style>
+        <link rel="stylesheet" href="stylesheets/info.css">
     
       </head>
     <body>
@@ -120,7 +55,7 @@
             <!-- Search Entry Form -->
               <div class="form-group">
 
-              <form id="entry-form">
+                <form id="entry-form">
                 <label for="appName">Application Name:</label>
                 <input type="text" id="appname" name="appname"><br><br>
 
@@ -128,14 +63,16 @@
                   <input type="text" id="lname" name="lname"><br><br>
                   <button type="button" id="get-entry">Get Entry</button>
                 </form>
-                </div>
               </div>
                 <!-- MAI Form -->
                 <div class="form-group" id="page-1" style="display:none;">
                   <form id="table-form">
                       <label for="appName">Application Name:</label>
                       <input type="text" id="appname-edit" name="appName"><br><br>
-          
+                      
+                      <label for="appNorm">Normalized Application Name:</label>
+                      <input type="text" id="appnorm-edit" name="appNorm"><br><br>
+
                       <label for="description">Description:</label>
                       <input type="text" id="description-edit" name="description"><br><br>
 
@@ -167,17 +104,44 @@
 
                 <div class="form-group" id="page-2" style="display:none;">
                   <form id="table-form">
-                      <label for="fname">1:</label>
-                      <input type="text" id="fname-edit" name="fname"><br><br>
+                      <label for="appType">Application Type:</label>
+                      <input type="text" id="apptype-edit" name="appType"><br><br>
           
-                      <label for="lname">2:</label>
-                      <input type="text" id="lname-edit" name="lname"><br><br>
+                      <label for="appDel">Application Delivery</label>
+                      <input type="text" id="appdel-edit" name="appDel"><br><br>
 
-                      <label for="email">3:</label>
-                      <input type="text" id="email-edit" name="email"><br><br>
+                      <label for="platform">Platform:</label>
+                      <input type="text" id="platform-edit" name="platform"><br><br>
 
-                      <label for="description">4:</label>
-                      <input type="text" id="description-edit" name="text"><br><br>
+                      <label for="numInteg"># Integrations:</label>
+                      <input type="text" id="numInteg-edit" name="numInteg"><br><br>
+
+                      <label for="numActivUsr"># Active Users:</label>
+                      <input type="text" id="numActivUsr-edit" name="numActivUsr"><br><br>
+          
+                      <label for="numStaff"># Dedicated IT Support Staff:</label>
+                      <input type="text" id="numStaff-edit" name="numStaff"><br><br>
+
+                      <label for="cobbId">Cobblestone Contract ID:</label>
+                      <input type="text" id="cobbId-edit" name="cobbID"><br><br>
+
+                      <label for="vendor">Vendor:</label>
+                      <input type="text" id="vendor-edit" name="text"><br><br>
+
+                      <label for="numLic"># Licenses:</label>
+                      <input type="text" id="numLic-edit" name="numLic"><br><br>
+          
+                      <label for="yrCost">Yearly Cost:</label>
+                      <input type="text" id="yrCost-edit" name="yrCost"><br><br>
+
+                      <label for="cntDates">Contract Dates:</label>
+                      <input type="text" id="cntDates-edit" name="cntDates"><br><br>
+
+                      <label for="details">Important Details:</label>
+                      <input type="text" id="details-edit" name="details"><br><br>
+
+                      <label for="datUpdat">Date app Updated:</label>
+                      <input type="text" id="datUpdat-edit" name="datUpdat"><br><br>
                   </form>
                 </div>
 
@@ -200,9 +164,10 @@
               <!-- Pagination controls-->
               <div id="pagination"></div>
 
-              <button type="button" id="make-changes">Make Changes</button>
+              <button type="button" id="make-changes" hidden>Make Changes</button>
 
               <div id="error-div"></div>
+        </div>
         </div>
 
     </body>
