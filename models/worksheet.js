@@ -60,6 +60,7 @@ class Worksheet {
         try {
             const list = await this.getEntryList();
             if (list === 401) {
+                console.log("Unauthorized")
                 return {error: 401, values: 'You are unauthorized to make this request.'};
             } else if (list !== null && list.length !== 0) {
                 for (let row of list) {
@@ -85,7 +86,7 @@ class Worksheet {
                     values
                 ]
             }
-
+            console.log(JSON.stringify(body));
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
@@ -94,16 +95,16 @@ class Worksheet {
                 },
                 body: JSON.stringify(body)
             })
+
             if (!response.ok) {
                 if (response.status === 401) {
-                    return 401;
+                    return {error: 401, values: 'You are unauthorized to make this request.'};
                 } else {
-                    throw new Error('Failed to edit entry');
+                    return {error: 400, values: 'Error occured while editing entry'};
                 }
             }
 
             const data = await response.json();
-
             return data;
         } catch (err) {
             console.log('Error editing entry in Master Application Inventory: ', err);
@@ -129,9 +130,10 @@ class Worksheet {
             })
             if (!response.ok) {
                 if (response.status === 401) {
+                    console.error('Unauthorized to make this request.');
                     return 401;
                 } else {
-                    throw new Error('Failed to edit entry');
+                    throw new Error('Failed to add entry');
                 }
             }
 

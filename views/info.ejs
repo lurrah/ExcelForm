@@ -7,10 +7,13 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.it.ucf.edu/minerva/1.0.0/css/minerva.css" />
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css">
         <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    </head>
+        <link rel="stylesheet" href="stylesheets/info.css">
+    
+      </head>
     <body>
         <!-- ucf bar -->
         <div id="ucfhb" class=" preload" role="complementary" aria-label="University of Central Florida navbar">
@@ -48,33 +51,123 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
             </ol>
-            <form id="entry-form">
-              <label for="fname">First Name:</label>
-              <input type="text" id="fname" name="fname"><br><br>
 
-              <label for="lname">Last Name:</label>
-              <input type="text" id="lname" name="lname"><br><br>
-              <button type="button" id="get-entry">Get Entry</button>
-            </form>
+            <!-- Search Entry Form -->
+              <div class="form-group">
 
-            <form id="table-form" hidden>
-                <label for="fname">First Name:</label>
-                <input type="text" id="fname-edit" name="fname"><br><br>
-  
-                <label for="lname">Last Name:</label>
-                <input type="text" id="lname-edit" name="lname"><br><br>
+                <form id="entry-form">
+                <label for="appName">Application Name:</label>
+                <input type="text" id="appname" name="appname"><br><br>
 
-                <label for="email">Email:</label>
-                <input type="text" id="email-edit" name="email"><br><br>
+                  <label for="lname">Last Name:</label>
+                  <input type="text" id="lname" name="lname"><br><br>
+                  <button type="button" id="get-entry">Get Entry</button>
+                </form>
+              </div>
+                <!-- MAI Form -->
+                <div class="form-group" id="page-1" style="display:none;">
+                  <form id="table-form">
+                      <label for="appName">Application Name:</label>
+                      <input type="text" id="appname-edit" name="appName"><br><br>
+                      
+                      <label for="appNorm">Normalized Application Name:</label>
+                      <input type="text" id="appnorm-edit" name="appNorm"><br><br>
 
-                <label for="description">Description:</label>
-                <input type="text" id="description-edit" name="text"><br><br>
+                      <label for="description">Description:</label>
+                      <input type="text" id="description-edit" name="description"><br><br>
 
-                <button type="button" id="make-changes">Make Changes</button>
-            </form>
+                      <label for="criticality">Business Criticality:</label>
+                      <input type="text" id="criticality-edit" name="crticality"><br><br>
 
-            <div id="error-div"></div>
-          </div>
+                      <label for="lifecycle">Lifecycle State:</label>
+                      <input type="text" id="lifecycle-edit" name="lifecycle"><br><br>
+
+                      <label for="community">User Community:</label>
+                      <input type="text" id="community-edit" name="community"><br><br>
+          
+                      <label for="owner">Business Owner:</label>
+                      <input type="text" id="owner-edit" name="owner"><br><br>
+
+                      <label for="ownerDep">Business Owner Department:</label>
+                      <input type="text" id="owner-dep-edit" name="ownerDep"><br><br>
+
+                      <label for="ownerBudg">Budget Owner:</label>
+                      <input type="text" id="owner-budg-edit" name="ownerBudg"><br><br>
+
+                      <label for="ownerIt">IT Owner:</label>
+                      <input type="text" id="owner-it-edit" name="ownerIt"><br><br>
+
+                      <label for="ownerItDep">IT Owner Department:</label>
+                      <input type="text" id="owner-itdep-edit" name="ownerItDep"><br><br>
+                  </form>
+                </div>
+
+                <div class="form-group" id="page-2" style="display:none;">
+                  <form id="table-form">
+                      <label for="appType">Application Type:</label>
+                      <input type="text" id="apptype-edit" name="appType"><br><br>
+          
+                      <label for="appDel">Application Delivery</label>
+                      <input type="text" id="appdel-edit" name="appDel"><br><br>
+
+                      <label for="platform">Platform:</label>
+                      <input type="text" id="platform-edit" name="platform"><br><br>
+
+                      <label for="numInteg"># Integrations:</label>
+                      <input type="text" id="numInteg-edit" name="numInteg"><br><br>
+
+                      <label for="numActivUsr"># Active Users:</label>
+                      <input type="text" id="numActivUsr-edit" name="numActivUsr"><br><br>
+          
+                      <label for="numStaff"># Dedicated IT Support Staff:</label>
+                      <input type="text" id="numStaff-edit" name="numStaff"><br><br>
+
+                      <label for="cobbId">Cobblestone Contract ID:</label>
+                      <input type="text" id="cobbId-edit" name="cobbID"><br><br>
+
+                      <label for="vendor">Vendor:</label>
+                      <input type="text" id="vendor-edit" name="text"><br><br>
+
+                      <label for="numLic"># Licenses:</label>
+                      <input type="text" id="numLic-edit" name="numLic"><br><br>
+          
+                      <label for="yrCost">Yearly Cost:</label>
+                      <input type="text" id="yrCost-edit" name="yrCost"><br><br>
+
+                      <label for="cntDates">Contract Dates:</label>
+                      <input type="text" id="cntDates-edit" name="cntDates"><br><br>
+
+                      <label for="details">Important Details:</label>
+                      <input type="text" id="details-edit" name="details"><br><br>
+
+                      <label for="datUpdat">Date app Updated:</label>
+                      <input type="text" id="datUpdat-edit" name="datUpdat"><br><br>
+                  </form>
+                </div>
+
+                <div class="form-group" id="page-3" style="display:none;">
+                  <form id="table-form">
+                      <label for="fname">5:</label>
+                      <input type="text" id="fname-edit" name="fname"><br><br>
+          
+                      <label for="lname">6:</label>
+                      <input type="text" id="lname-edit" name="lname"><br><br>
+
+                      <label for="email">7:</label>
+                      <input type="text" id="email-edit" name="email"><br><br>
+
+                      <label for="description">8:</label>
+                      <input type="text" id="description-edit" name="text"><br><br>
+                  </form>
+                </div>
+
+              <!-- Pagination controls-->
+              <div id="pagination"></div>
+
+              <button type="button" id="make-changes" hidden>Make Changes</button>
+
+              <div id="error-div"></div>
+        </div>
         </div>
 
     </body>
@@ -87,5 +180,6 @@
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.js"></script>
     <script src="javascripts/info.js"></script>
 </html>

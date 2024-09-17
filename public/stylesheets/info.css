@@ -1,0 +1,94 @@
+
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center; /* Centers the entire pagination bar */
+    align-items: center;     /* Vertically aligns the pagination */
+    text-align: center; 
+}
+  
+#pagination ul {
+    display: flex; /* Ensures pagination buttons are centered */
+    padding: 0; /* Removes extra padding */
+    margin: 0; /* Removes extra margin */
+    list-style-type: none; /* Removes bullet points if using <ul> */
+    justify-content: center;
+}
+  
+
+#pagination a, #pagination button, #pagination li {
+    font-size: 20px; /* Increase font size */
+    padding: 10px 20px; /* Increase padding */
+    margin: 5px; /* Add space between buttons */
+    border-radius: 5px; /* Optional: Make buttons rounded */
+    background-color: #FFC904; /* Optional: Button background color */
+    color: white; /* Optional: Text color */
+    text-decoration: none; /* Remove underline */
+    display: inline-block;
+  }
+  
+  #pagination a:hover, #pagination button:hover {
+    background-color: #BA9B37; /* Optional: Hover effect */
+  }
