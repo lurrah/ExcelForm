@@ -7,8 +7,9 @@ class WorksheetController {
 
     async getEntry(req, res) {
         try {
-            const fName = req.query.fName;
-            const response = await this.ws.getEntry(fName);
+            const appName = req.query.appName;
+            const ownerName = req.query.ownerName;
+            const response = await this.ws.getEntry(appName, ownerName);
             if (response.error) {
                 if (response.error === 1) {
                     response.values = {

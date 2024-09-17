@@ -19,19 +19,18 @@ async function searchMAI() {
     try{ 
         document.getElementById('error-div').innerText = "";
 
-        const fName = document.getElementById('appname').value;
-        const lName = document.getElementById('lname').value;
+        const appName = document.getElementById('appname').value;
+        const ownerName = document.getElementById('ownername').value;
 
         const url = new URL('/info/get-entry', window.location.origin);
-        const params = { fName, lName };
+        const params = { appName, ownerName };
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
-        // get-entry based on search parameters (currently: fName)
+        // get-entry based on search parameters (currently: appName)
         const response = await fetch(url, {
             method: 'GET',
         })
         data = await response.json();
-        console.log(data);
 
         if (data.error) {
             if (data.error === 1) {

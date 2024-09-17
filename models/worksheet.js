@@ -1,6 +1,6 @@
 
 // Current table structure (all instances must be updated when the table is updated)
-// [ fname, lname, email, description ]
+// [ appName, lname, email, description ]
 
 class Worksheet {
     constructor() {
@@ -54,10 +54,11 @@ class Worksheet {
         }
     }
 
-    // Get specified entry based on search parameter (currently fName)
-    async getEntry(fName) {
+    // Get specified entry based on search parameter (currently appName)
+    async getEntry(appName, ownerName) {
         try {
             const list = await this.getEntryList();
+            let returnList = [];
             if (list === 401) {
                 console.log("Unauthorized")
                 return {error: 401, values: 'You are unauthorized to make this request.'};
@@ -65,10 +66,19 @@ class Worksheet {
                 for (let row of list) {
 
                     const name = row.values[0][0];
-                    if (name === fName) {
-                        return {index: row.index, values: row.values};
+                    const owner = row.values[0][6];
+                    const manager = row.values[0][10];
+                    if (name === appName) {
+                        returnList.push({index: row.index, values: row.values})
+                        //return {index: row.index, values: row.values};
+                    } else if (owner.includes(ownerName)) {
+                        returnList.push({index: row.index, values: row.values})
+                    } else if (manager.includes(ownerName)) {
+                        returnList.push({index: row.index, values: row.values})
                     }
                 }
+
+                console.log(returnList);
             }
             return {error: 1, values: 'No entries found.'};
         } catch (err) {
