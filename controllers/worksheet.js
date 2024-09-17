@@ -9,25 +9,40 @@ class WorksheetController {
         try {
             const fName = req.query.fName;
             const response = await this.ws.getEntry(fName);
-
             if (response.error) {
                 if (response.error === 1) {
                     response.values = {
-                        // index: null,
-                        // appName: null,
-                        // description: null,
-                        // criticality: null,
-                        // lifecycleStat: null,
-                        // community: null,
-                        // owner: null,
-                        // ownerDep: null,
-                        // ownerBudg: null, // not sure if this is correct
-                        // ownerIt: null,
-                        // ownerItDep: null,
+                        index: "",
+                        appName: "",
+                        appNorm: "",
+                        description: "",
+                        criticality: "",
+                        lifecycle: "",
+                        community: "",
+                        owner: "",
+                        ownerDep: "",
+                        ownerBudg: "", // not sure if this is correct
+                        ownerIt: "",
+                        ownerItDep: "",
+                        //page-2 info
+                        appType: "",
+                        appDel: "",
+                        platform: "",
+                        numInteg: "",
+                        numActivUsr: "",
+                        numStaff: "",
+                        cobbId: "",
+                        vendor: "", // not sure if this is correct
+                        numLic: "",
+                        yrCost: "",
+                        cntDates: "",
+                        details: "",
+                        datUpdat: ""
                     }
                 }
                 return res.json(response);
             }
+
             // index is for backend purposes
             const entry_info = {
                 // page-1 info
@@ -59,8 +74,6 @@ class WorksheetController {
                 datUpdat:response.values[0][23]
                 //page-3 info
             }
-
-            console.log(entry_info);
             return res.json(entry_info);
         } catch(err) {
             console.log('Error retrieving entry from table:', err);

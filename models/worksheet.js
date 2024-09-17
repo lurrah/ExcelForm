@@ -37,7 +37,7 @@ class Worksheet {
                     'Content-Type': 'application/json'
                 }
             })
-
+            console.log(response);
             if (!response.ok) {
                 if (response.status === 401) {
                     return 401;
@@ -47,7 +47,6 @@ class Worksheet {
             }
     
             const data = await response.json();
-
             return data.value;
 
         } catch (err){
