@@ -37,7 +37,6 @@ class Worksheet {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(response);
             if (!response.ok) {
                 if (response.status === 401) {
                     return 401;
@@ -55,7 +54,7 @@ class Worksheet {
     }
 
     // Get specified entry based on search parameter (currently appName)
-    async getEntry(appName, ownerName) {
+    async searchEntries(appName, ownerName) {
         try {
             const list = await this.getEntryList();
             let returnList = [];
@@ -65,20 +64,23 @@ class Worksheet {
             } else if (list !== null && list.length !== 0) {
                 for (let row of list) {
 
-                    const name = row.values[0][0];
-                    const owner = row.values[0][6];
-                    const manager = row.values[0][10];
-                    if (name === appName) {
+                    const name = row.values[0][0].trim();
+                    const owner = row.values[0][6].trim();
+                    const manager = row.values[0][10].trim();
+                
+                    if (appName!=='' && name!== '' && name.toLowerCase().includes(appName.toLowerCase())) {
                         returnList.push({index: row.index, values: row.values})
                         //return {index: row.index, values: row.values};
-                    } else if (owner.includes(ownerName)) {
+                    } else if (ownerName!=='' && owner!== '' && owner.toLowerCase().includes(ownerName.toLowerCase())) {
                         returnList.push({index: row.index, values: row.values})
-                    } else if (manager.includes(ownerName)) {
+                    } else if (ownerName!=='' && manager!== '' && manager.toLowerCase().includes(ownerName.toLowerCase())) {
                         returnList.push({index: row.index, values: row.values})
                     }
                 }
 
-                console.log(returnList);
+                if (returnList.length !== 0) {
+                    return returnList
+                }
             }
             return {error: 1, values: 'No entries found.'};
         } catch (err) {
