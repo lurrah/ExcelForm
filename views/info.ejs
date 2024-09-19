@@ -56,10 +56,10 @@
               <div class="form-group">
 
                 <form id="entry-form">
-                <label for="appName">Application Name:</label>
+                <label for="appName">Application Name</label>
                 <input type="text" id="appname" name="appname"><br><br>
 
-                  <label for="lname">Last Name:</label>
+                  <label for="lname">Last Name</label>
                   <input type="text" id="lname" name="lname"><br><br>
                   <button type="button" id="get-entry">Get Entry</button>
                 </form>
@@ -67,80 +67,131 @@
                 <!-- MAI Form -->
                 <div class="form-group" id="page-1" style="display:none;">
                   <form id="table-form">
-                      <label for="appName">Application Name:</label>
+                      <label for="appName">Application Name</label>
                       <input type="text" id="appname-edit" name="appName"><br><br>
                       
-                      <label for="appNorm">Normalized Application Name:</label>
+                      <label for="appNorm">Normalized Application Name</label>
                       <input type="text" id="appnorm-edit" name="appNorm"><br><br>
 
-                      <label for="description">Description:</label>
+                      <label for="description">Description</label>
                       <input type="text" id="description-edit" name="description"><br><br>
 
-                      <label for="criticality">Business Criticality:</label>
-                      <input type="text" id="criticality-edit" name="crticality"><br><br>
+                      <label for="criticality">Business Criticality</label>
+                      <select name="criticality" id="criticality-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="1 (High)">1 (High)</option>
+                        <option value="2 (Medium)">2 (Medium)</option>
+                        <option value="3 (Low)">3 (Low)</option>
+                      </select><br><br>
 
-                      <label for="lifecycle">Lifecycle State:</label>
-                      <input type="text" id="lifecycle-edit" name="lifecycle"><br><br>
+                      <label for="lifecycle">Lifecycle State</label>
+                      <select name="lifecycle" id="lifecycle-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Planning">Planning</option>
+                        <option value="Implementing">Implementing</option>
+                        <option value="In Service">In Service</option>
+                        <option value="Sunsetting">Sunsetting</option>
+                        <option value="Retired">Retired</option>
+                      </select><br><br>
 
-                      <label for="community">User Community:</label>
-                      <input type="text" id="community-edit" name="community"><br><br>
+                      <label for="community">User Community</label>
+                      <select name="community" id="community-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="University-Campus Wide">University-Campus Wide</option>
+                        <option value="College/Division">College/Division</option>
+                        <option value="Students">Students</option>
+                        <option value="Students/Staff">Students/Staff</option>
+                        <option value="Students/Faculty">Students/Faculty</option>
+                        <option value="Faculty/Staff">Faculty/Staff</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Faculty">Faculty</option>
+                        <option value="Alumni">Alumni</option>
+                        <option value="Team">Team</option>
+                      </select><br><br>
           
-                      <label for="owner">Business Owner:</label>
+                      <label for="owner">Business Owner</label>
                       <input type="text" id="owner-edit" name="owner"><br><br>
 
-                      <label for="ownerDep">Business Owner Department:</label>
+                      <label for="ownerDep">Business Owner Department</label>
                       <input type="text" id="owner-dep-edit" name="ownerDep"><br><br>
 
-                      <label for="ownerBudg">Budget Owner:</label>
-                      <input type="text" id="owner-budg-edit" name="ownerBudg"><br><br>
+                      <label for="ownerBudg">Budget Owner</label>
+                      <select name="ownerBudg" id="owner-budg-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="UCF IT">UCF IT</option>
+                        <option value="Department IT">Department IT</option>
+                        <option value="User" disabled selected>User</option>
+                        <option value="Provider / Vendor" disabled selected>Provider / Vendor</option>
+                      </select><br><br>
 
-                      <label for="ownerIt">IT Owner:</label>
+                      <label for="ownerIt">IT Owner</label>
                       <input type="text" id="owner-it-edit" name="ownerIt"><br><br>
 
-                      <label for="ownerItDep">IT Owner Department:</label>
+                      <label for="ownerItDep">IT Owner Department</label>
                       <input type="text" id="owner-itdep-edit" name="ownerItDep"><br><br>
                   </form>
                 </div>
 
                 <div class="form-group" id="page-2" style="display:none;">
                   <form id="table-form">
-                      <label for="appType">Application Type:</label>
-                      <input type="text" id="apptype-edit" name="appType"><br><br>
+                      <label for="appType">Application Type</label>
+                      <select name="appType" id="apptype-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Custom">Custom</option>
+                        <option value="COTS (Commercial Off-the-Shelf)">COTS (Commercial Off-the-Shelf)</option>
+                        <option value="C-COTS (Custom Commercial Off-the-Shelf)">C-COTS (Custom Commercial Off-the-Shelf)</option>
+                        <option value="FOTS (Free Off-the-Shelf, Open Source)">FOTS (Free Off-the-Shelf, Open Source)</option>
+                        <option value="C-FOTS (Custom Free Off-the-Shelf, Open Source)">C-FOTS (Custom Free Off-the-Shelf, Open Source)</option>
+                      </select><br><br>
           
                       <label for="appDel">Application Delivery</label>
-                      <input type="text" id="appdel-edit" name="appDel"><br><br>
+                      <select name="appDel" id="appdel-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="SaaS (Software as a Service)">SaaS (Software as a Service)</option>
+                        <option value="Server/Client Install (Provider Developed)">Server/Client Install (Provider Developed)</option>
+                        <option value="UCF Developed (Custom/Open Source)">UCF Developed (Custom/Open Source)</option>
+                      </select><br><br>
 
-                      <label for="platform">Platform:</label>
-                      <input type="text" id="platform-edit" name="platform"><br><br>
+                      <label for="platform">Platform</label>
+                      <select name="platform" id="platform-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Azure (Microsoft)">Azure (Microsoft)</option>
+                        <option value="GCP (Google)">GCP (Google)</option>
+                        <option value="OCI (Oracle)">OCI (Oracle)</option>
+                        <option value="AWS (Amazon)">AWS (Amazon)</option>
+                        <option value="VMWare (Virtual Server)">VMWare (Virtual Server)</option>
+                        <option value="Physical Server">Physical Server</option>
+                        <option value="Other">Other</option>
+                      </select><br><br>
 
-                      <label for="numInteg"># Integrations:</label>
+                      <label for="numInteg"># Integrations</label>
                       <input type="text" id="numInteg-edit" name="numInteg"><br><br>
 
-                      <label for="numActivUsr"># Active Users:</label>
+                      <label for="numActivUsr"># Active Users</label>
                       <input type="text" id="numActivUsr-edit" name="numActivUsr"><br><br>
           
-                      <label for="numStaff"># Dedicated IT Support Staff:</label>
+                      <label for="numStaff"># Dedicated IT Support Staff</label>
                       <input type="text" id="numStaff-edit" name="numStaff"><br><br>
 
-                      <label for="cobbId">Cobblestone Contract ID:</label>
+                      <label for="cobbId">Cobblestone Contract ID</label>
                       <input type="text" id="cobbId-edit" name="cobbID"><br><br>
 
-                      <label for="vendor">Vendor:</label>
+                      <label for="vendor">Vendor</label>
                       <input type="text" id="vendor-edit" name="text"><br><br>
 
-                      <label for="numLic"># Licenses:</label>
+                      <label for="numLic"># Licenses</label>
                       <input type="text" id="numLic-edit" name="numLic"><br><br>
           
-                      <label for="yrCost">Yearly Cost:</label>
+                      <label for="yrCost">Yearly Cost</label>
                       <input type="text" id="yrCost-edit" name="yrCost"><br><br>
 
-                      <label for="cntDates">Contract Dates:</label>
+                      <label for="cntDates">Contract Dates</label>
                       <input type="text" id="cntDates-edit" name="cntDates"><br><br>
 
-                      <label for="details">Important Details:</label>
+                      <label for="details">Important Details</label>
                       <input type="text" id="details-edit" name="details"><br><br>
 
-                      <label for="datUpdat">Date app Updated:</label>
+                      <label for="datUpdat">Date app Updated</label>
                       <input type="text" id="datUpdat-edit" name="datUpdat"><br><br>
                   </form>
                 </div>
