@@ -4,15 +4,10 @@ var router = express.Router();
 const { WorksheetController } = require('../controllers/worksheet.js');
 
 const wsController = new WorksheetController();
+
 /* GET form page. */
-router.get('/', function(req, res, next) {
-  res.render('info', {title: 'Excel Form'});
-});
+router.get('/', function(req, res, next) { res.render('info', {title: 'Excel Form'}); });
 
-router.get('/get-entry', async (req, res) => await wsController.getEntry(req, res));
-
-router.patch('/edit-entry', async (req, res) => await wsController.editEntry(req, res));
-
-router.post('/add-entry', async (req, res) => await wsController.addEntry(req, res))
+router.get('/search-entries', async (req, res) => await wsController.searchEntries(req, res));
 
 module.exports = router;

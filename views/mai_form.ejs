@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.it.ucf.edu/minerva/1.0.0/css/minerva.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css">
+        <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
+        <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="stylesheets/info.css">
+      </head>
+    <body>
+        <!-- ucf bar -->
+        <div id="ucfhb" class=" preload" role="complementary" aria-label="University of Central Florida navbar">
+          <div id="ucfhb-inner" style="display: none;">
+            <div id="ucfhb-left">
+              <div id="ucfhb-logo">
+                <a href="https://www.ucf.edu" aria-label="University of Central Florida"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <!-- header -->
+        <header>
+          <nav class="navbar navbar-dark navbar-expand-lg slim-nav slim-nav-dark">
+            <div class="container">
+              <a class="navbar-brand" href="/">Master Application Inventory Form</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+                span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="main-nav">
+                <ul class="navbar-nav ml-md-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </header>
+
+        <div class="container-fluid site-content" id="content">
+            <div class="container">
+              <h1>MAI Form</h1>
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+              </ol>
+                <!-- MAI Form -->
+                <div class="form-group" id="page-1" style="display:none;">
+                    <form id="table-form">
+                        <label for="appName">Application Name</label>
+                        <input type="text" id="appname-edit" name="appName"><br><br>
+                        
+                        <label for="appNorm">Normalized Application Name</label>
+                        <input type="text" id="appnorm-edit" name="appNorm"><br><br>
+
+                        <label for="description">Description</label>
+                        <input type="text" id="description-edit" name="description"><br><br>
+
+                        <label for="criticality">Business Criticality</label>
+                        <select name="criticality" id="criticality-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="1 (High)">1 (High)</option>
+                        <option value="2 (Medium)">2 (Medium)</option>
+                        <option value="3 (Low)">3 (Low)</option>
+                        </select><br><br>
+
+                        <label for="lifecycle">Lifecycle State</label>
+                        <select name="lifecycle" id="lifecycle-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Planning">Planning</option>
+                        <option value="Implementing">Implementing</option>
+                        <option value="In Service">In Service</option>
+                        <option value="Sunsetting">Sunsetting</option>
+                        <option value="Retired">Retired</option>
+                        </select><br><br>
+
+                        <label for="community">User Community</label>
+                        <select name="community" id="community-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="University-Campus Wide">University-Campus Wide</option>
+                        <option value="College/Division">College/Division</option>
+                        <option value="Students">Students</option>
+                        <option value="Students/Staff">Students/Staff</option>
+                        <option value="Students/Faculty">Students/Faculty</option>
+                        <option value="Faculty/Staff">Faculty/Staff</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Faculty">Faculty</option>
+                        <option value="Alumni">Alumni</option>
+                        <option value="Team">Team</option>
+                        </select><br><br>
+
+                        <label for="owner">Business Owner</label>
+                        <input type="text" id="owner-edit" name="owner"><br><br>
+
+                        <label for="ownerDep">Business Owner Department</label>
+                        <input type="text" id="owner-dep-edit" name="ownerDep"><br><br>
+
+                        <label for="ownerBudg">Budget Owner</label>
+                        <select name="ownerBudg" id="owner-budg-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="UCF IT">UCF IT</option>
+                        <option value="Department IT">Department IT</option>
+                        <option value="User" disabled selected>User</option>
+                        <option value="Provider / Vendor" disabled selected>Provider / Vendor</option>
+                        </select><br><br>
+
+                        <label for="ownerIt">IT Owner</label>
+                        <input type="text" id="owner-it-edit" name="ownerIt"><br><br>
+
+                        <label for="ownerItDep">IT Owner Department</label>
+                        <input type="text" id="owner-itdep-edit" name="ownerItDep"><br><br>
+                    </form>
+                </div>
+
+                <div class="form-group" id="page-2" style="display:none;">
+                    <form id="table-form">
+                        <label for="appType">Application Type</label>
+                        <select name="appType" id="apptype-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Custom">Custom</option>
+                        <option value="COTS (Commercial Off-the-Shelf)">COTS (Commercial Off-the-Shelf)</option>
+                        <option value="C-COTS (Custom Commercial Off-the-Shelf)">C-COTS (Custom Commercial Off-the-Shelf)</option>
+                        <option value="FOTS (Free Off-the-Shelf, Open Source)">FOTS (Free Off-the-Shelf, Open Source)</option>
+                        <option value="C-FOTS (Custom Free Off-the-Shelf, Open Source)">C-FOTS (Custom Free Off-the-Shelf, Open Source)</option>
+                        </select><br><br>
+
+                        <label for="appDel">Application Delivery</label>
+                        <select name="appDel" id="appdel-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="SaaS (Software as a Service)">SaaS (Software as a Service)</option>
+                        <option value="Server/Client Install (Provider Developed)">Server/Client Install (Provider Developed)</option>
+                        <option value="UCF Developed (Custom/Open Source)">UCF Developed (Custom/Open Source)</option>
+                        </select><br><br>
+
+                        <label for="platform">Platform</label>
+                        <select name="platform" id="platform-edit">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Azure (Microsoft)">Azure (Microsoft)</option>
+                        <option value="GCP (Google)">GCP (Google)</option>
+                        <option value="OCI (Oracle)">OCI (Oracle)</option>
+                        <option value="AWS (Amazon)">AWS (Amazon)</option>
+                        <option value="VMWare (Virtual Server)">VMWare (Virtual Server)</option>
+                        <option value="Physical Server">Physical Server</option>
+                        <option value="Other">Other</option>
+                        </select><br><br>
+
+                        <label for="numInteg"># Integrations</label>
+                        <input type="text" id="numInteg-edit" name="numInteg"><br><br>
+
+                        <label for="numActivUsr"># Active Users</label>
+                        <input type="text" id="numActivUsr-edit" name="numActivUsr"><br><br>
+
+                        <label for="numStaff"># Dedicated IT Support Staff</label>
+                        <input type="text" id="numStaff-edit" name="numStaff"><br><br>
+
+                        <label for="cobbId">Cobblestone Contract ID</label>
+                        <input type="text" id="cobbId-edit" name="cobbID"><br><br>
+
+                        <label for="vendor">Vendor</label>
+                        <input type="text" id="vendor-edit" name="text"><br><br>
+
+                        <label for="numLic"># Licenses</label>
+                        <input type="text" id="numLic-edit" name="numLic"><br><br>
+
+                        <label for="yrCost">Yearly Cost</label>
+                        <input type="text" id="yrCost-edit" name="yrCost"><br><br>
+
+                        <label for="cntDates">Contract Dates</label>
+                        <input type="text" id="cntDates-edit" name="cntDates"><br><br>
+
+                        <label for="details">Important Details</label>
+                        <input type="text" id="details-edit" name="details"><br><br>
+
+                        <label for="datUpdat">Date app Updated</label>
+                        <input type="text" id="datUpdat-edit" name="datUpdat"><br><br>
+                    </form>
+                </div>
+
+                <div class="form-group" id="page-3" style="display:none;">
+                    <form id="table-form">
+                        <label for="fname">5:</label>
+                        <input type="text" id="fname-edit" name="fname"><br><br>
+
+                        <label for="lname">6:</label>
+                        <input type="text" id="lname-edit" name="lname"><br><br>
+
+                        <label for="email">7:</label>
+                        <input type="text" id="email-edit" name="email"><br><br>
+
+                        <label for="description">8:</label>
+                        <input type="text" id="description-edit" name="text"><br><br>
+                    </form>
+                </div>
+
+                <!-- Pagination controls-->
+                <div id="pagination"></div>
+
+                <button type="button" id="make-changes" hidden>Make Changes</button>
+
+                <div id="error-div"></div>
+            </div>
+        </div>
+
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.it.ucf.edu/minerva/1.0.0/js/internal-header.js"></script>
+    <script src="https://cdn.it.ucf.edu/minerva/1.0.0/js/minerva.js"></script>
+    <script src="https://cdn.it.ucf.edu/assets/scrollsaver-3.min.js "></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.js"></script>
+    <script src="javascripts/mai_form.js"></script>
+</html>

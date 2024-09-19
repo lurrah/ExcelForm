@@ -5,43 +5,53 @@ class WorksheetController {
         this.ws = new Worksheet();
     }
 
-    async getEntry(req, res) {
+    async searchEntries(req, res) {
         try {
-            const fName = req.query.fName;
-            const response = await this.ws.getEntry(fName);
-            if (response.error) {
-                if (response.error === 1) {
-                    response.values = {
-                        index: "",
-                        appName: "",
-                        appNorm: "",
-                        description: "",
-                        criticality: "",
-                        lifecycle: "",
-                        community: "",
-                        owner: "",
-                        ownerDep: "",
-                        ownerBudg: "", // not sure if this is correct
-                        ownerIt: "",
-                        ownerItDep: "",
-                        //page-2 info
-                        appType: "",
-                        appDel: "",
-                        platform: "",
-                        numInteg: "",
-                        numActivUsr: "",
-                        numStaff: "",
-                        cobbId: "",
-                        vendor: "", // not sure if this is correct
-                        numLic: "",
-                        yrCost: "",
-                        cntDates: "",
-                        details: "",
-                        datUpdat: ""
-                    }
-                }
-                return res.json(response);
-            }
+            const appName = req.query.appName;
+            const ownerName = req.query.ownerName;
+            const response = await this.ws.searchEntries(appName.trim(), ownerName.trim());
+
+            // if (response.error) {
+            //     //if (response.error === 1) {
+            //     //    return (response.values);
+            //         // response.values = {
+            //         //     index: "",
+            //         //     appName: "",
+            //         //     appNorm: "",
+            //         //     description: "",
+            //         //     criticality: "",
+            //         //     lifecycle: "",
+            //         //     community: "",
+            //         //     owner: "",
+            //         //     ownerDep: "",
+            //         //     ownerBudg: "", // not sure if this is correct
+            //         //     ownerIt: "",
+            //         //     ownerItDep: "",
+            //         //     //page-2 info
+            //         //     appType: "",
+            //         //     appDel: "",
+            //         //     platform: "",
+            //         //     numInteg: "",
+            //         //     numActivUsr: "",
+            //         //     numStaff: "",
+            //         //     cobbId: "",
+            //         //     vendor: "", // not sure if this is correct
+            //         //     numLic: "",
+            //         //     yrCost: "",
+            //         //     cntDates: "",
+            //         //     details: "",
+            //         //     datUpdat: ""
+            //         // }
+            //     //}
+            //     return res.json(response);
+            // }
+
+            return res.json(response);
+
+            let entryList = []
+            // for (let entry of response) {
+            //     entryList.push({ index: entry.index, entry: entry.values })
+            // }
 
             // index is for backend purposes
             const entry_info = {
