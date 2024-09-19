@@ -1,15 +1,10 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    let originFormData = null;
-    
+    let originFormData = await getEntry();
     initPagination();
 
-    document.getElementById('get-entry').addEventListener('click', async function(event) {
-        event.preventDefault();
-        originFormData = await searchMAI();
-    });
     const button = document.getElementById('make-changes');
     button.addEventListener('click', async function(event) {
-        event.preventDefault
+        event.preventDefault();
         if (button.textContent === 'Make Changes') {
             await editEntry(originFormData);
         } else {
@@ -18,106 +13,24 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 });
 
-async function searchMAI() {
-    try{ 
-        document.getElementById('error-div').innerText = "";
-
-        const appName = document.getElementById('appname').value;
-        const ownerName = document.getElementById('ownername').value;
-
-        const url = new URL('/info/get-entry', window.location.origin);
-        const params = { appName, ownerName };
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-
-        // get-entry based on search parameters (currently: appName)
-        const response = await fetch(url, {
+async function getEntry() {
+    try {
+        const response = await fetch('/mai-form/get-entry', {
             method: 'GET',
         })
-        data = await response.json();
-
-        if (data.error) {
-            if (data.error === 1) {
-                // error means entry is not found, therefore, add entry
-                initPagination();
-                displayForm(data.values);
-                document.getElementById("make-changes").textContent = "Add Entry"
-            }
-            else {
-                const error = document.getElementById('error-div');
-                error.innerText = data.values;
-            }
+        const entryData = await response.json();
+        if (!entryData) {
+            document.getElementById('make-changes').textContent = 'Add Application';
+            return null;
         } else {
-            initPagination();
-            // Fill in entry form with current information
-            displayForm(data);
-            //document.getElementById("make-changes").textContent = "Make Changes"
-
-            return [ data.index, data.appName, data.appNorm ,data.description, data.criticality, data.lifecycle, data.community, data.owner, data.ownerDep, data.ownerBudg, data.ownerIt, data.ownerItDep,
-                    data.appType, data.appDel, data.platform, data.numInteg, data.numActivUsr, data.numStaff, data.cobbId, data.vendor,data.numLic, data.yrCost, data.cntDates, data.details, data.datUpdat ];
+            await displayForm(entryData);
         }
+        
+        return Object.values(entryData);
     }
-    catch (err) {
-        console.error('Error populating worksheet div', err);
-        return [];
-    }
-}
+    catch(err) {
+        console.error('Error getting entry from server side', err);
 
-async function displayForm(data) {
-    // Hide search form and show entry form
-    const entryForm = document.getElementById('entry-form');
-    entryForm.setAttribute('hidden', true);
-    const tableForm = document.getElementById('table-form');
-    tableForm.removeAttribute('hidden');
-
-    // pg1 
-    document.getElementById('appname-edit').value = data.appName;
-    document.getElementById('appnorm-edit').value = data.appNorm;
-    document.getElementById('description-edit').value = data.description;
-    
-    document.getElementById('owner-edit').value = data.owner;
-    document.getElementById('owner-dep-edit').value = data.ownerDep;
-    document.getElementById('owner-it-edit').value = data.ownerIt;
-    document.getElementById('owner-itdep-edit').value = data.ownerItDep;
-    //pg2
-    document.getElementById('numInteg-edit').value = data.numInteg;
-    document.getElementById('numActivUsr-edit').value = data.numActivUsr;
-    document.getElementById('numStaff-edit').value = data.numStaff;
-    document.getElementById('cobbId-edit').value = data.cobbId;
-    document.getElementById('vendor-edit').value = data.vendor;
-    document.getElementById('numLic-edit').value = data.numLic;
-    document.getElementById('yrCost-edit').value = data.yrCost;
-    document.getElementById('cntDates-edit').value = data.cntDates;
-    document.getElementById('details-edit').value = data.details;
-    document.getElementById('datUpdat-edit').value = data.datUpdat;
-
-    // Predetermined select lists
-    const criticality = document.getElementById('criticality-edit');
-    const lifecycle = document.getElementById('lifecycle-edit');
-    const community = document.getElementById('community-edit');
-    const ownerBudg = document.getElementById('owner-budg-edit');
-    const appType = document.getElementById('apptype-edit');
-    const appDel = document.getElementById('appdel-edit');
-    const platform = document.getElementById('platform-edit');
-
-    // Map lists to elements
-    const selectLists = [ 
-        { list: criticality, value: data.criticality },
-        { list: lifecycle, value: data.lifecycle },
-        { list: community, value: data.community },
-        { list: ownerBudg, value: data.ownerBudg },
-        { list: appType, value: data.appType },
-        { list: appDel, value: data.appDel },
-        { list: platform, value: data.platform}
-    ];
-
-    // iterate through all selectLists and populate them as necessary
-    for (let { list, value } of selectLists) {
-        for (let option of list.options) {
-            if (option.value === value) {
-                option.selected = true;
-                break;
-            }
-        }
     }
 }
 
@@ -133,7 +46,7 @@ async function editEntry(originFormData) {
             div.innerText = 'No changes have been made';
         }
         else {
-            const response = await fetch('/info/edit-entry', {
+            const response = await fetch('/mai-form/edit-entry', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -182,7 +95,7 @@ async function addEntry() {
             div.innerText = 'Entry not added';
         }
         else {
-            const response = fetch('/info/add-entry', {
+            const response = fetch('/mai-form/add-entry', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -258,4 +171,61 @@ async function getValues() {
 
     return [ appName, appNorm, description, criticality, lifecycle, community, owner, ownerDep, ownerBudg, ownerIt, ownerItDep,
         appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat ];
+}
+
+async function displayForm(data) {
+    // Hide search form and show entry form
+    const tableForm = document.getElementById('table-form');
+    tableForm.removeAttribute('hidden');
+
+    // pg1 
+    document.getElementById('appname-edit').value = data.appName;
+    document.getElementById('appnorm-edit').value = data.appNorm;
+    document.getElementById('description-edit').value = data.description;
+    
+    document.getElementById('owner-edit').value = data.owner;
+    document.getElementById('owner-dep-edit').value = data.ownerDep;
+    document.getElementById('owner-it-edit').value = data.ownerIt;
+    document.getElementById('owner-itdep-edit').value = data.ownerItDep;
+    //pg2
+    document.getElementById('numInteg-edit').value = data.numInteg;
+    document.getElementById('numActivUsr-edit').value = data.numActivUsr;
+    document.getElementById('numStaff-edit').value = data.numStaff;
+    document.getElementById('cobbId-edit').value = data.cobbId;
+    document.getElementById('vendor-edit').value = data.vendor;
+    document.getElementById('numLic-edit').value = data.numLic;
+    document.getElementById('yrCost-edit').value = data.yrCost;
+    document.getElementById('cntDates-edit').value = data.cntDates;
+    document.getElementById('details-edit').value = data.details;
+    document.getElementById('datUpdat-edit').value = data.datUpdat;
+
+    // Predetermined select lists
+    const criticality = document.getElementById('criticality-edit');
+    const lifecycle = document.getElementById('lifecycle-edit');
+    const community = document.getElementById('community-edit');
+    const ownerBudg = document.getElementById('owner-budg-edit');
+    const appType = document.getElementById('apptype-edit');
+    const appDel = document.getElementById('appdel-edit');
+    const platform = document.getElementById('platform-edit');
+
+    // Map lists to elements
+    const selectLists = [ 
+        { list: criticality, value: data.criticality },
+        { list: lifecycle, value: data.lifecycle },
+        { list: community, value: data.community },
+        { list: ownerBudg, value: data.ownerBudg },
+        { list: appType, value: data.appType },
+        { list: appDel, value: data.appDel },
+        { list: platform, value: data.platform}
+    ];
+
+    // iterate through all selectLists and populate them as necessary
+    for (let { list, value } of selectLists) {
+        for (let option of list.options) {
+            if (option.value === value) {
+                option.selected = true;
+                break;
+            }
+        }
+    }
 }

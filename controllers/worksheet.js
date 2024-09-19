@@ -4,13 +4,11 @@ class WorksheetController {
     constructor () {
         this.ws = new Worksheet();
     }
-
     async searchEntries(req, res) {
         try {
             const appName = req.query.appName;
             const ownerName = req.query.ownerName;
             const response = await this.ws.searchEntries(appName.trim(), ownerName.trim());
-
             // if (response.error) {
             //     //if (response.error === 1) {
             //     //    return (response.values);
@@ -45,7 +43,6 @@ class WorksheetController {
             //     //}
             //     return res.json(response);
             // }
-
             return res.json(response);
 
             let entryList = []

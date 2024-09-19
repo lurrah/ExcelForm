@@ -7,27 +7,6 @@ class Worksheet {
     
     };
 
-    async getWS() {
-        try {
-            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/worksheets`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${process.env.graph_pat}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-            
-            if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            return data;
-        } catch (err){
-            console.log('Error fetching the Master Application Inventory:', err);
-        }
-    }
-
     async getEntryList() {
         try {
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.wb_id}/workbook/worksheets/Sheet1/tables/${process.env.mai_id}/rows`, {
@@ -79,7 +58,7 @@ class Worksheet {
                 }
 
                 if (returnList.length !== 0) {
-                    return returnList
+                    return returnList;
                 }
             }
             return {error: 1, values: 'No entries found.'};
@@ -97,7 +76,6 @@ class Worksheet {
                     values
                 ]
             }
-            console.log(JSON.stringify(body));
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
