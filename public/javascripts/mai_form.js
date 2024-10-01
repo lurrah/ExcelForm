@@ -1,16 +1,34 @@
 document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = await getEntry();
-    initPagination();
+    initPagination(1);
 
-    const button = document.getElementById('make-changes');
-    button.addEventListener('click', async function(event) {
+    const reviewButton = document.getElementById('review-changes');
+
+    reviewButton.addEventListener('click', async function(event) {
         event.preventDefault();
-        if (button.textContent === 'Make Changes') {
-            await editEntry(originFormData);
-        } else {
-            await addEntry();
-        }
+
+
+        populateReview(originFormData.slice(1));
+        initPagination(2);
+
+        const confirmChangeButton = document.getElementById('confirm-changes');
+        confirmChangeButton.addEventListener('click', async function(event) {
+            event.preventDefault();
+            if (button.textContent === 'Make Changes') {
+                await editEntry(originFormData);
+            } 
+            else {
+                await addEntry();
+            }
+        })
+
+        const modChanges = document.getElementById('modify-entry');
+        modChanges.addEventListener('click', async function() {
+
+            // show mai_form again
+        })
     })
+
 });
 
 async function getEntry() {
@@ -33,6 +51,46 @@ async function getEntry() {
 
     }
 }
+
+async function populateReview(originFormData) {
+    try {
+        let newEntry = await getValues();
+        newEntry = await detectChanges(originFormData, newEntry);
+
+        if (newEntry.every(element => element === null)) {
+            document.getElementById('error-div').innerText = 'No changes have been made';
+            return;
+        }
+        
+        else {
+            let i = 0;
+            // get table by id
+            const table1 = document.getElementById('review-table-1');
+            const table2 = document.getElementById('review-table-2');
+
+            let tbody= '';
+            // show table of all inputs, highlighting the entries that have been changed
+            tbody += '<tr>'
+            table1.querySelector('thead tr#key').querySelectorAll('th').forEach(() => {
+                if (newEntry[i] === null) {
+                    tbody += `<td>${originFormData[i]}</td>`
+                } else {
+                    tbody += `<td>${newEntry[i]}</td>`
+                }
+                i++;
+            }); 
+            tbody += '</tr>'
+            console.log(tbody);
+
+            // for each element in origin form data
+                // if newEntry[i] is null, enter originformdata[i]
+                // else enter newEntry[i] and change color
+        }
+    } catch (err) {
+        console.error('Error occurred while reviewing changes.', err);
+    }
+}
+
 
 async function editEntry(originFormData) {
     try {
@@ -113,9 +171,30 @@ async function addEntry() {
     }
 }
 
-async function initPagination() {
+let currentPagination = null;
+
+async function initPagination(type) {
+    let button, button2;
+
+    if (currentPagination === type) {
+        return;
+    } else if (currentPagination !== null){
+            $('#pagination').pagination('destroy');
+            currentPagination = null;
+    }
+    // type : 1 for form, 2 for review-changes
     const totalPages = 2;
-    const button = document.getElementById('make-changes');
+
+    if (type === 1) {
+        button = document.getElementById('review-changes');
+    } 
+    else if (type === 2) {
+        button = document.getElementById('confirm-changes');
+        button2 = document.getElementById('modify-entry');
+    }
+    else {
+        throw new err;
+    }
 
     //const pagination = document.getElementById('pagination-container')
 
@@ -124,19 +203,29 @@ async function initPagination() {
             dataSource: new Array(totalPages),
             pageSize: 1,
             callback: function (data, pagination) {
-                $('.form-group').hide();
-
-
-
-                $('#page-' + pagination.pageNumber).show();
+                if (type === 1) {
+                    $('.form-group').hide();
+                    $('#page-' + pagination.pageNumber).show();
+                } else if (type === 2) {
+                    $('.review-group').hide();
+                    $('#review-table-' + pagination.pageNumber).show();
+                }
 
                 if (pagination.pageNumber === totalPages) {
-                    button.removeAttribute('hidden');
+                    button.hidden = false;
+                    if (button2) {
+                        button2.hidden = false;
+                    }
                 } else {
-                    button.setAttribute('hidden', true);
+                    button.hidden = true;
+                    if (button2) {
+                        button2.hidden = true;
+                    }
                 }
             }
         });
+        currentPagination = type;
+
     } catch(err) {
         console.error('Error initializing pagination', err);
     }

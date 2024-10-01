@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="stylesheets/info.css">
+        <link rel="stylesheet" href="stylesheets/mai_form.css">
       </head>
     <body>
         <!-- ucf bar -->
@@ -202,9 +202,58 @@
 
                 <!-- Pagination controls-->
                 <div id="pagination"></div>
+                
+                
 
-                <button type="button" id="make-changes" hidden>Make Changes</button>
+                <div class="review-group" id="review-group" style="display:none;">
+                  <table class="table" id="review-table-1" style="display:none;">
+                    <thead>
+                      <tr id="key">
+                        <th>Application Name</th>
+                        <th>Normalized Name</th>
+                        <th>Short Description</th>
+                        <th>Business Criticality</th>
+                        <th>Life Cycle State</th>
+                        <th>User Community</th>
+                        <th>Business Owner</th>
+                        <th>Business Dept. Owner(s)</th>
+                        <th>Managed By</th>
+                        <th>Managed By Dept.</th>
+                        <th>Managed By Owner(s)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry row to be added -->
+                    </tbody>
+                  </table>
 
+                  <table class="table" id="review-table-2" style="display:none;">
+                    <thead>
+                        <tr id="key">      
+                        <th>Application Type</th>
+                        <th>Application Delivery</th>
+                        <th>Platform</th>
+                        <th># Integrations</th>
+                        <th># Active Users (ROM)</th>
+                        <th># Dedicated IT Support Staff</th>
+                        <th>Cobblestone Contract ID</th>
+                        <th>Vendor</th>
+                        <th># Licenses</th>
+                        <th>Yearly Cost</th>
+                        <th>Contract Dates (start/stop)</th>
+                        <th>Important Details</th>
+                        <th>Date App Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry row to be added -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <button type="button" id="review-changes" hidden>Review Changes</button>
+                <button type="button" id="confirm-changes" hidden></button>
+                <button type="button" id="modify-entry" hidden>Return to Form</button>
                 <div id="error-div"></div>
             </div>
         </div>
