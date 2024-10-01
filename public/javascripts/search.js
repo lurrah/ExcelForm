@@ -23,7 +23,7 @@ async function searchEntries() {
 
         // only search if user has entered app
         if (appName.trim() !== '' || ownerName.trim() !== '') {
-            const url = new URL('/info/search-entries', window.location.origin);
+            const url = new URL('/search/search-entries', window.location.origin);
             const params = { appName, ownerName };
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 

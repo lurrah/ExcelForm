@@ -8,7 +8,7 @@ const wsController = new WorksheetController();
 /* GET form page. */
 router.get('/', function(req, res, next) { 
     req.session.entryData = null;
-    res.render('info', {title: 'Excel Form'}); 
+    res.render('search', {title: 'Excel Form'}); 
 });
 
 router.get('/search-entries', async (req, res) => await wsController.searchEntries(req, res));

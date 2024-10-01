@@ -8,7 +8,7 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var infoRouter = require('./routes/info');
+var searchRouter = require('./routes/search');
 var maiRouter = require('./routes/mai_form');
 var reviewRouter = require('./routes/review');
 
@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/info', infoRouter);
+app.use('/search', searchRouter);
 app.use('/users', usersRouter);
 app.use('/mai-form', maiRouter);
 app.use('/review', reviewRouter);
