@@ -1,3 +1,6 @@
+// 1 for add 0 for edit
+let addOrEdit;
+
 document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = await getEntry();
 
@@ -21,13 +24,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     reviewButton.addEventListener('click', async function(event) {
         event.preventDefault();
 
+        if (addOrEdit === 0) {
+            populateReview(originFormData.slice(1));
+        } else {
+            populateReview(originFormData);
+        }
+        populateReview(originFormData ? originFormData.slice(1) : originFormData);
 
-        populateReview(originFormData.slice(1));
-
-        const confirmChangeButton = document.getElementById('confirm-changes');
-        confirmChangeButton.addEventListener('click', async function(event) {
+        const confirmChangeBtn= document.getElementById('confirm-changes');
+        confirmChangeBtn.addEventListener('click', async function(event) {
             event.preventDefault();
-            if (button.textContent === 'Make Changes') {
+            if (addOrEdit === 0) {
                 await editEntry(originFormData);
             } 
             else {
@@ -50,9 +57,11 @@ async function getEntry() {
         })
         const entryData = await response.json();
         if (!entryData) {
-            document.getElementById('make-changes').textContent = 'Add Application';
+            document.getElementById('confirm-changes').textContent = 'Add Application';
+            addOrEdit = 1;
             return null;
         } else {
+            addOrEdit = 0;
             await displayForm(entryData);
         }
         

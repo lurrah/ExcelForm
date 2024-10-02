@@ -102,7 +102,7 @@ async function searchEntries() {
             }
         }
         else {
-            error.innerText = 'Please fill out at least one field.'
+            error.innerText = 'Please fill out a field'
         }
     }
     catch (err) {
