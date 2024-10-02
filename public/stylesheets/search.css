@@ -1,0 +1,41 @@
+input[type="radio"] {
+    margin-right: 10px; /* Space between the radio button and label */
+}
+
+.directions {
+    margin: 20px 0; /* Spacing for the container */
+}
+
+.directions-btn {
+    background-color: black; /* Button color */
+    color: white; /* Text color */
+    cursor: pointer; /* Change cursor to pointer */
+    padding: 5px 10px; /* Smaller padding for a compact look */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    text-align: left; /* Left-align text */
+    outline: none; /* Remove outline */
+    font-size: 14px; /* Smaller font size */
+    width: 100%; /* Full width */
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Space between text and arrow */
+}
+
+.arrow {
+    margin-left: 5px; /* Space between text and arrow */
+    transition: transform 0.3s; /* Transition for arrow rotation */
+}
+
+.content {
+    padding: 10px; /* Padding for content */
+    border: 1px solid #ddd; /* Border for content */
+    border-radius: 5px; /* Rounded corners */
+    display: none; /* Hidden by default */
+    background-color: #f9f9f9; /* Background color for content */
+    margin-top: 5px; /* Margin between button and content */
+}
+
+.content p {
+    margin: 0; /* Remove default margin */
+}

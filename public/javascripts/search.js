@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    const radioButtons = document.querySelectorAll('input[name="form-section"]');
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', toggleSections);
+    });
+    
     document.getElementById('search-entry').addEventListener('click', async function(event) {
         event.preventDefault();
         searchEntries();
@@ -11,10 +17,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('add-entry').addEventListener('click', async function() {
         selectEntry(null);
     })
+
 });
 
+function toggleSections() {
+    const appName = document.getElementById('appName');
+    const ownerName = document.getElementById('ownerName');
+    const selectedValue = document.querySelector('input[name="form-section"]:checked').value;
+
+    if (selectedValue === 'appName') {
+            appName.hidden = false;
+            ownerName.hidden = true;
+            document.getElementById('ownername').value = '';
+    }
+    else {
+        appName.hidden = true;
+        ownerName.hidden = false;
+        document.getElementById('appname').value = '';
+    }
+
+}
+
 async function searchEntries() {
-    try { 
+    try {
         const error = document.getElementById('error-div');
         error.innerText = '';
 
@@ -33,15 +58,29 @@ async function searchEntries() {
             })
             data = await response.json();
 
-            document.getElementById('entry-form').setAttribute('hidden', true);
+            document.getElementById('entry-form').hidden = true;
+            document.getElementById('radio').hidden = true;
 
             if (data.error) {
-                error.innerText = data.values;
+                document.getElementById('search-result-div').innerText = data.values;
                 if  (data.error === 1) {
-                    document.getElementById('add-entry').removeAttribute('hidden');
-                    document.getElementById('new-search').removeAttribute('hidden');
+                    document.getElementById('add-entry').hidden = false;
+                    document.getElementById('new-search').hidden = false;
                 }
             } else {
+                // tell user they searched by application name or owner name
+
+                let search = appName && appName != '' ? appName : (ownerName && ownerName != '' ? ownerName : null);
+                let searchType;
+                if (appName && appName != '') {
+                    searchType = 'Application Name';
+                } else if (ownerName && ownerName != ''){
+                    searchType = 'Owner/Manager/Collaborator Name';
+                } else {
+                    throw new Error();
+                }
+
+                document.getElementById('search-result-div').innerText = `Showing search results with '${search}' in the ${searchType} field.`
                 displayEntries(data);
                 // Fill in entry form with current information
                 //document.getElementById("make-changes").textContent = "Make Changes"
@@ -82,10 +121,11 @@ async function displayEntries(entryList) {
                 selectEntry(entryList[i]);
             });
         }
-
-        table.removeAttribute('hidden');
+        table.hidden = false;
+        document.getElementById('new-search').hidden = false;
     }
     catch (err) {
+        document.getElementById('entry-list-div').hidden = true;
         console.error('Error displaying entries: ', err);
     }
 }

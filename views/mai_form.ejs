@@ -49,7 +49,9 @@
               <h1>Edit</h1>
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/search">Search</a></li>
+                <li class="breadcrumb-item"><a href="/mai_form">Edit</a></li>
+
 
               </ol>
                 <!-- MAI Form -->
@@ -200,15 +202,11 @@
                     </form>
                 </div>
 
-                <!-- Pagination controls-->
-                <div id="pagination"></div>
-                
-                
-
-                <div class="review-group" id="review-group" style="display:none;">
-                  <table class="table" id="review-table-1" style="display:none;">
+  
+                <div class="review-group" id="review-1" hidden>
+                  <table class="table" id="review-table-1">
                     <thead>
-                      <tr id="key">
+                      <tr class ='key1' id="key1">
                         <th>Application Name</th>
                         <th>Normalized Name</th>
                         <th>Short Description</th>
@@ -226,10 +224,12 @@
                       <!-- Entry row to be added -->
                     </tbody>
                   </table>
+                </div>
 
-                  <table class="table" id="review-table-2" style="display:none;">
+                <div class="review-group" id="review-2" hidden>
+                  <table class="table" id="review-table-2">
                     <thead>
-                        <tr id="key">      
+                        <tr class ='key2' id="key2">      
                         <th>Application Type</th>
                         <th>Application Delivery</th>
                         <th>Platform</th>
@@ -251,9 +251,12 @@
                   </table>
                 </div>
 
-                <button type="button" id="review-changes" hidden>Review Changes</button>
-                <button type="button" id="confirm-changes" hidden></button>
-                <button type="button" id="modify-entry" hidden>Return to Form</button>
+                <!-- Pagination controls-->
+                <div id="pagination"></div>
+
+                <button class ="typ1-buttons" type="button" id="review-changes" hidden>Review Changes</button>
+                <button class ="typ2-buttons" type="button" id="confirm-changes" hidden>Confirm Changes</button>
+                <button class ="typ2-buttons" type="button" id="return-entry" hidden>Return to Form</button>
                 <div id="error-div"></div>
             </div>
         </div>

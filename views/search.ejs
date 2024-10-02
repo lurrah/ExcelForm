@@ -12,6 +12,8 @@
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="stylesheets/mai_form.css">
+        <link rel="stylesheet" href="stylesheets/search.css">
+
       </head>
     <body>
         <!-- ucf bar -->
@@ -49,35 +51,62 @@
             <h1>Search and Select</h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/search">Search</a></li>
+
             </ol>
 
+            <!-- Collapsible Instructions-->
+            <div class="directions" id="search-directions">
+              <button class="directions-btn">Instructions<span class="arrow">&#x25BC;</span></button>
+              <div class="content">
+                <p>Search for the application you would like to edit below. You can search by the name of the application or by owner/manager/collaborator.
+                  If you would like to add an app, please search the desired name  to ensure that your app is not currently in the database. If it is, please edit
+                  that one. If you cannot find the app or no apps match your searches, you will be able to add an app or make a new search.
+                </p>
+              </div>
+            </div>
+
             <!-- Search Entry Form -->
-              <div class="form-group">
+                <div id="radio">
+                  <p>Search By:</p>
+                  <label for="radio"> Application Name</label>
+                  <input type="radio" name="form-section" value="appName" checked>
 
-                <form id="entry-form">
-                  <label for="appName">Application Name</label>
-                  <input type="text" id="appname" name="appname"><br><br>
+                  <label for="radio">  Owner/Manager/Collaborator</label>
+                  <input type="radio" name="form-section" value="ownerName">
+                </div><br><br>
+                  <div class="form-group">
 
-                  <label for="ownerName">Name of Owners / Collaborators</label>
+                    <form id="entry-form">
+                  <div id="appName">
+                    <label for="appName">Enter your Application Name</label>
+                    <input type="text" id="appname" name="appname"><br><br>
+                  </div>
+                  
+                  <div id="ownerName" hidden>
+                  <label for="ownerName">Enter the Name of Owner / Collaborator / Manager</label>
                   <input type="text" id="ownername" name="ownerName"><br><br>
+                  </div>
                   <button type="button" id="search-entry">Search for Entries</button>
                 </form>
               </div>
 
-              <table id="entry-list" hidden>
-                <thead>
-                  <tr id="key">
-                    <th>Application Name</th>
-                    <th>Normalized Name</th>
-                    <th>Business Owner</th>
-                    <th>Managed By</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Entry rows to be added -->
-                </tbody>
-              </table>
+              <div id="search-result-div"></div>
+                <table class ="table" id="entry-list" hidden>
+                  <thead>
+                    <tr id="key">
+                      <th>Application Name</th>
+                      <th>Normalized Name</th>
+                      <th>Business Owner</th>
+                      <th>Managed By</th>
+                      <th>Select</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Entry rows to be added -->
+                  </tbody>
+                </table>
+
 
               <div id="error-div"></div>
 

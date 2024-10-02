@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
         populateReview(originFormData.slice(1));
-        initPagination(2);
 
         const confirmChangeButton = document.getElementById('confirm-changes');
         confirmChangeButton.addEventListener('click', async function(event) {
@@ -22,9 +21,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         })
 
-        const modChanges = document.getElementById('modify-entry');
-        modChanges.addEventListener('click', async function() {
-
+        const returnForm = document.getElementById('return-entry');
+        returnForm.addEventListener('click', async function() {
             // show mai_form again
         })
     })
@@ -61,30 +59,53 @@ async function populateReview(originFormData) {
             document.getElementById('error-div').innerText = 'No changes have been made';
             return;
         }
-        
         else {
+            document.getElementById('error-div').innerText = '';
+
             let i = 0;
             // get table by id
             const table1 = document.getElementById('review-table-1');
             const table2 = document.getElementById('review-table-2');
 
             let tbody= '';
-            // show table of all inputs, highlighting the entries that have been changed
             tbody += '<tr>'
-            table1.querySelector('thead tr#key').querySelectorAll('th').forEach(() => {
+
+            // for each element in origin form data
+            table1.querySelector('thead tr#key1').querySelectorAll('th').forEach(() => {
                 if (newEntry[i] === null) {
-                    tbody += `<td>${originFormData[i]}</td>`
+                    // if newEntry[i] is null, enter originformdata[i]
+                    tbody += `<td class='original-cell'>${originFormData[i]}</td>`
                 } else {
-                    tbody += `<td>${newEntry[i]}</td>`
+                    // else enter newEntry[i] and change color
+                    tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
                 }
+
                 i++;
             }); 
             tbody += '</tr>'
-            console.log(tbody);
+            table1.querySelector('tbody').innerHTML = tbody;
+
+            tbody = '<tr>'
 
             // for each element in origin form data
-                // if newEntry[i] is null, enter originformdata[i]
-                // else enter newEntry[i] and change color
+            table2.querySelector('thead tr#key2').querySelectorAll('th').forEach(() => {
+                if (newEntry[i] === null) {
+                    // if newEntry[i] is null, enter originformdata[i]
+                    tbody += `<td class='original-cell'>${originFormData[i]}</td>`
+                } else {
+                    // else enter newEntry[i] and change color
+                    tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
+                }
+
+                i++;
+            }); 
+            tbody += '</tr>'
+            table2.querySelector('tbody').innerHTML = tbody;
+            initPagination(2)
+
+           
+                
+                
         }
     } catch (err) {
         console.error('Error occurred while reviewing changes.', err);
@@ -181,21 +202,19 @@ async function initPagination(type) {
     } else if (currentPagination !== null){
             $('#pagination').pagination('destroy');
             currentPagination = null;
+            if (type === 1) {
+                document.querySelectorAll('.review-group').forEach(el => el.hidden = true);
+                document.querySelectorAll('.form-group').forEach(el => el.hidden = false);
+            } else {
+                document.querySelectorAll('.form-group').forEach(el => el.hidden = true);
+                document.querySelectorAll('.review-group').forEach(el => el.hidden = false);
+            }
     }
     // type : 1 for form, 2 for review-changes
     const totalPages = 2;
 
-    if (type === 1) {
-        button = document.getElementById('review-changes');
-    } 
-    else if (type === 2) {
-        button = document.getElementById('confirm-changes');
-        button2 = document.getElementById('modify-entry');
-    }
-    else {
-        throw new err;
-    }
-
+    document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
+    document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = true);
     //const pagination = document.getElementById('pagination-container')
 
     try {
@@ -208,19 +227,21 @@ async function initPagination(type) {
                     $('#page-' + pagination.pageNumber).show();
                 } else if (type === 2) {
                     $('.review-group').hide();
-                    $('#review-table-' + pagination.pageNumber).show();
+                    $('#review-' + pagination.pageNumber).show();
                 }
 
                 if (pagination.pageNumber === totalPages) {
-                    button.hidden = false;
-                    if (button2) {
-                        button2.hidden = false;
+                    if (type === 1) {
+                        document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = false);
+                        document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = true);
+
+                    } else {
+                        document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
+                        document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = false);
                     }
                 } else {
-                    button.hidden = true;
-                    if (button2) {
-                        button2.hidden = true;
-                    }
+                    document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
+                    document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = true);
                 }
             }
         });

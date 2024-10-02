@@ -35,6 +35,17 @@ class Worksheet {
     // Get specified entry based on search parameter (currently appName)
     async searchEntries(appName, ownerName) {
         try {
+            let searchType;
+            let search = appName !== null && appName !== '' ? appName : (ownerName !== null && ownerName !== '' ? ownerName : null);
+
+            if (appName !== null && appName !== '') {
+                searchType = 'Application Name'
+            } else if (ownerName !== null && ownerName !== '') {
+                searchType = 'Owner/Manager/Collaborator Name'
+            } else {
+                throw new Error();
+            }
+    
             const list = await this.getEntryList();
             let returnList = [];
             if (list === 401) {
@@ -42,17 +53,20 @@ class Worksheet {
                 return {error: 401, values: 'You are unauthorized to make this request.'};
             } else if (list !== null && list.length !== 0) {
                 for (let row of list) {
-
+                    // get values to search through in the entries
                     const name = row.values[0][0].trim();
+                    const othrname = row.values[0][1].trim();
                     const owner = row.values[0][6].trim();
                     const manager = row.values[0][10].trim();
-                
-                    if (appName!=='' && name!== '' && name.toLowerCase().includes(appName.toLowerCase())) {
+
+                    // check by application name or owner name
+                    if (searchType === 'Application Name' && name!== '' && name.toLowerCase().includes(search.toLowerCase())) {
                         returnList.push({index: row.index, values: row.values})
-                        //return {index: row.index, values: row.values};
-                    } else if (ownerName!=='' && owner!== '' && owner.toLowerCase().includes(ownerName.toLowerCase())) {
+                    } else if (searchType === 'Application Name' && othrname!== '' && othrname.toLowerCase().includes(search.toLowerCase())) {
                         returnList.push({index: row.index, values: row.values})
-                    } else if (ownerName!=='' && manager!== '' && manager.toLowerCase().includes(ownerName.toLowerCase())) {
+                    } else if (searchType === 'Owner/Manager/Collaborator Name' && owner!== '' && owner.toLowerCase().includes(search.toLowerCase())) {
+                        returnList.push({index: row.index, values: row.values})
+                    } else if (searchType === 'Owner/Manager/Collaborator Name' && manager!== '' && manager.toLowerCase().includes(search.toLowerCase())) {
                         returnList.push({index: row.index, values: row.values})
                     }
                 }
@@ -61,7 +75,7 @@ class Worksheet {
                     return returnList;
                 }
             }
-            return {error: 1, values: 'No entries found.'};
+            return {error: 1, values: `No entries found with '${search}' in the ${searchType}`};
         } catch (err) {
             console.log('Error fetching specific entry: ', err);
         }
