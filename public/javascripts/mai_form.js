@@ -1,6 +1,20 @@
 document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = await getEntry();
+
+    document.querySelector('.directions-btn').addEventListener('click', function() {
+        const content = this.nextElementSibling; // Select the next sibling (the content div)
+        const arrow = this.querySelector('.arrow'); // Select the arrow
+        if (content.style.display === 'block') {
+            content.style.display = 'none'; // Hide content if it's visible
+            arrow.style.transform = 'rotate(0deg)'; // Reset arrow
+        } else {
+            content.style.display = 'block'; // Show content if it's hidden
+            arrow.style.transform = 'rotate(180deg)'; // Rotate arrow
+        }
+    })
+
     initPagination(1);
+
 
     const reviewButton = document.getElementById('review-changes');
 

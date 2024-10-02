@@ -1,6 +1,18 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const radioButtons = document.querySelectorAll('input[name="form-section"]');
 
+    document.querySelector('.directions-btn').addEventListener('click', function() {
+        const content = this.nextElementSibling; // Select the next sibling (the content div)
+        const arrow = this.querySelector('.arrow'); // Select the arrow
+        if (content.style.display === 'block') {
+            content.style.display = 'none'; // Hide content if it's visible
+            arrow.style.transform = 'rotate(0deg)'; // Reset arrow
+        } else {
+            content.style.display = 'block'; // Show content if it's hidden
+            arrow.style.transform = 'rotate(180deg)'; // Rotate arrow
+        }
+    });
+
     radioButtons.forEach(radio => {
         radio.addEventListener('change', toggleSections);
     });
