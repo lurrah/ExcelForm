@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 const { WorksheetController } = require('../controllers/worksheet.js');
+const { ChangeLogController } = require('../controllers/changeLog.js');
+
 
 const wsController = new WorksheetController();
+const logController = new ChangeLogController();
 
 /* GET form page. */
 router.get('/', function(req, res, next) {
@@ -25,7 +28,9 @@ router.post('/store-data', async (req, res) => {
 
 router.patch('/edit-entry', async (req, res) => await wsController.editEntry(req, res));
 
-router.post('/add-entry', async (req, res) => await wsController.addEntry(req, res))
+router.post('/add-entry', async (req, res) => await wsController.addEntry(req, res));
+
+router.post('/add-log', async(req, res) => await logController.addLog(req, res));
 
 
 module.exports = router;

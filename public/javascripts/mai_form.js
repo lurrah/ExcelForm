@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 await editEntry(reviewEntry, originFormData[0]);
             } 
             else {
-                await addEntry(reviewEntry);
+                await addLog(reviewEntry);
             }
         })
 
@@ -213,7 +213,7 @@ async function addEntry(input) {
             div.innerText = 'Entry not added';
         }
         else {
-            const response = fetch('/mai-form/add-entry', {
+            const response = await fetch('/mai-form/add-entry', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -381,5 +381,43 @@ async function displayForm(data) {
                 break;
             }
         }
+    }
+}
+
+async function addLog(input) {
+    try {
+
+        if (input.every(element => element === null)) {
+            const div = document.getElementById('error-div');
+            div.innerText = 'No fields have been changed. Request not made.';
+        }
+        else {
+            // add date of change, author, and set status to 'Pending'
+            const now = new Date();
+            input.push(now.toLocaleString());
+            input.push("user1");
+            input.push("Pending");
+
+            const response = await fetch('/mai-form/add-log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    values: input,
+                })
+            })
+            
+            const div = document.getElementById('error-div');
+            div.innerText = 'Entry has been added';
+
+            let data = await response.json();
+                div.innerText = data.value
+            if (data.status === 200) {
+                window.location.href ='/review';
+            }
+        }
+    } catch (err) {
+        console.error("Error calling addLog router: ", err);
     }
 }

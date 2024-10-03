@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var searchRouter = require('./routes/search');
 var maiRouter = require('./routes/mai_form');
-var reviewRouter = require('./routes/review');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -35,7 +35,7 @@ app.use('/', indexRouter);
 app.use('/search', searchRouter);
 app.use('/users', usersRouter);
 app.use('/mai-form', maiRouter);
-app.use('/review', reviewRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

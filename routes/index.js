@@ -4,6 +4,7 @@ var router = express.Router();
 const { WorksheetController } = require('../controllers/worksheet.js');
 
 const wsController = new WorksheetController();
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home' });

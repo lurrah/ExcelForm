@@ -90,7 +90,7 @@ class Worksheet {
                     values
                 ]
             }
-            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.review_id}/rows/itemAt(index=${index})`, {
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${process.env.graph_pat}`,
@@ -123,7 +123,7 @@ class Worksheet {
                 ]
             }
 
-            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.review_id}/rows/add`, {
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/add`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${process.env.graph_pat}`,
