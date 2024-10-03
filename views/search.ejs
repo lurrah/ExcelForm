@@ -13,6 +13,7 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="stylesheets/mai_form.css">
         <link rel="stylesheet" href="stylesheets/search.css">
+        <link rel="stylesheet" href="stylesheets/directions.css">
 
       </head>
     <body>
@@ -58,13 +59,13 @@
             <!-- Collapsible Instructions-->
             <div class="directions" id="search-directions">
               <button class="directions-btn">Instructions<span class="arrow">&#x25BC;</span></button>
-              <div class="content">
-                <p>Search for the application you would like to edit below. You can search by the name of the application or by owner/manager/collaborator.
+              <div class="content" id="directions-menu">
+                <p><b>Searching for Application:</b> Search for the application you would like to edit below. You can search by the name of the application or by owner/manager/collaborator.
                   If you would like to add an app, please search the desired name to ensure that the app does not already exist. If it does, please edit
                   the existing one and do not create a duplicate. If you cannot find the app or no apps match your search, you may add an app or make a new search.
                 </p>
                 <br>
-                <p>After you click Add or Select Application you will be redirected to a form containing all of the current information for the app. Add application will
+                <p><b>Application Not Found?</b> After you click Add or Select Application you will be redirected to a form containing all of the current information for the app. Add application will
                   bring you to an empty form. 
                 </p>
               </div>
@@ -78,22 +79,20 @@
 
                   <label for="radio">  Owner/Manager/Collaborator</label>
                   <input type="radio" name="form-section" value="ownerName">
-                </div><br><br>
-                  <div class="form-group">
+                </div><br>
 
-                    <form id="entry-form">
-                  <div id="appName">
-                    <label for="appName">Enter your Application Name</label>
-                    <input type="text" id="appname" name="appname"><br><br>
-                  </div>
+                  <form id="entry-form">
+                    <div id="appName">
+                      <label for="appName">Enter your Application Name</label>
+                      <input type="text" id="appname" name="appname"><br><br>
+                    </div>
                   
-                  <div id="ownerName" hidden>
-                  <label for="ownerName">Enter the Name of Owner / Collaborator / Manager</label>
-                  <input type="text" id="ownername" name="ownerName"><br><br>
-                  </div>
-                  <button type="button" id="search-entry">Search for Entries</button>
+                    <div id="ownerName" hidden>
+                    <label for="ownerName">Enter the Name of Owner / Collaborator / Manager</label>
+                    <input type="text" id="ownername" name="ownerName"><br><br>
+                    </div>
+                    <button type="button" id="search-entry">Search for Entries</button>
                 </form>
-              </div>
 
               <div id="search-result-div"></div>
                 <table class ="table" id="entry-list" hidden>

@@ -1,0 +1,7 @@
+class Worksheet {
+    constructor() {};
+
+    addLog() {
+        
+    }
+}

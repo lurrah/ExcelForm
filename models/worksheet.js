@@ -90,7 +90,7 @@ class Worksheet {
                     values
                 ]
             }
-            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.review_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${process.env.graph_pat}`,
@@ -123,7 +123,7 @@ class Worksheet {
                 ]
             }
 
-            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/add`, {
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.review_id}/rows/add`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${process.env.graph_pat}`,
@@ -131,18 +131,16 @@ class Worksheet {
                 },
                 body: JSON.stringify(body),
             })
+
             if (!response.ok) {
                 if (response.status === 401) {
-                    console.error('Unauthorized to make this request.');
-                    return 401;
+                    return {status: 401, msg: 'You are unauthorized to make this request.'};
                 } else {
-                    throw new Error('Failed to add entry');
+                    return {status: 400, msg: 'Unexpected error occurred when sending "add entry" request.'};
                 }
             }
 
-            const data = await response.json();
-
-            return data;
+            return {status: 200, msg: 'Entry has been successfully added.'};
         } catch(err) {
             console.log('Error adding entry to table:', err);
         }

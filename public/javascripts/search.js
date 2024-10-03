@@ -1,15 +1,26 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const radioButtons = document.querySelectorAll('input[name="form-section"]');
 
+    // instructions drop-down
     document.querySelector('.directions-btn').addEventListener('click', function() {
-        const content = this.nextElementSibling; // Select the next sibling (the content div)
+        const content = document.getElementById('directions-menu'); 
         const arrow = this.querySelector('.arrow'); // Select the arrow
-        if (content.style.display === 'block') {
-            content.style.display = 'none'; // Hide content if it's visible
+        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+            // Hide content if it's visible
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
             arrow.style.transform = 'rotate(0deg)'; // Reset arrow
+            setTimeout(() => {
+                content.style.display = 'none';
+            }, 500); // Wait for the animation to complete before hiding
         } else {
-            content.style.display = 'block'; // Show content if it's hidden
-            arrow.style.transform = 'rotate(180deg)'; // Rotate arrow
+            // Show content if it's hidden
+            content.style.display = 'block';
+            setTimeout(() => {
+                content.style.maxHeight = content.scrollHeight + "px"; // Set max-height for animation
+                content.style.opacity = '1'; // Make content visible
+                arrow.style.transform = 'rotate(180deg)'; // Rotate arrow
+            }, 10); // Delay slightly to ensure display change applies before transition
         }
     });
 
@@ -75,9 +86,9 @@ async function searchEntries() {
 
             if (data.error) {
                 document.getElementById('search-result-div').innerText = data.values;
+                document.getElementById('new-search').hidden = false;
                 if  (data.error === 1) {
                     document.getElementById('add-entry').hidden = false;
-                    document.getElementById('new-search').hidden = false;
                 }
             } else {
                 // tell user they searched by application name or owner name
@@ -135,6 +146,7 @@ async function displayEntries(entryList) {
         }
         table.hidden = false;
         document.getElementById('new-search').hidden = false;
+        document.getElementById('add-entry').hidden = false;
     }
     catch (err) {
         document.getElementById('entry-list-div').hidden = true;

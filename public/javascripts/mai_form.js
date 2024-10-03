@@ -1,51 +1,66 @@
+const entryCount = 24; 
+
 // 1 for add 0 for edit
 let addOrEdit;
+
 
 document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = await getEntry();
 
+    // instructions drop-down
     document.querySelector('.directions-btn').addEventListener('click', function() {
-        const content = this.nextElementSibling; // Select the next sibling (the content div)
+        const content = document.getElementById('directions-menu'); 
         const arrow = this.querySelector('.arrow'); // Select the arrow
-        if (content.style.display === 'block') {
-            content.style.display = 'none'; // Hide content if it's visible
+        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+            // Hide content if it's visible
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
             arrow.style.transform = 'rotate(0deg)'; // Reset arrow
+            setTimeout(() => {
+                content.style.display = 'none';
+            }, 500); // Wait for the animation to complete before hiding
         } else {
-            content.style.display = 'block'; // Show content if it's hidden
-            arrow.style.transform = 'rotate(180deg)'; // Rotate arrow
+            // Show content if it's hidden
+            content.style.display = 'block';
+            setTimeout(() => {
+                content.style.maxHeight = content.scrollHeight + "px"; // Set max-height for animation
+                content.style.opacity = '1'; // Make content visible
+                arrow.style.transform = 'rotate(180deg)'; // Rotate arrow
+            }, 10); // Delay slightly to ensure display change applies before transition
         }
-    })
+    });
 
     initPagination(1);
 
-
+    // reviewButton different text for adding vs deletion
     const reviewButton = document.getElementById('review-changes');
+    let reviewEntry;
 
     reviewButton.addEventListener('click', async function(event) {
         event.preventDefault();
-
-        if (addOrEdit === 0) {
-            populateReview(originFormData.slice(1));
-        } else {
-            populateReview(originFormData);
-        }
-        populateReview(originFormData ? originFormData.slice(1) : originFormData);
+        // if (addOrEdit === 0) {
+        //     populateReview(originFormData.slice(1));
+        // } else {
+        //     populateReview(originFormData);
+        // }
+        reviewEntry = await populateReview(addOrEdit ? Array(entryCount).fill('') : originFormData.slice(1));
 
         const confirmChangeBtn= document.getElementById('confirm-changes');
         confirmChangeBtn.addEventListener('click', async function(event) {
             event.preventDefault();
             if (addOrEdit === 0) {
-                await editEntry(originFormData);
+                await editEntry(reviewEntry, originFormData[0]);
             } 
             else {
-                await addEntry();
+                await addEntry(reviewEntry);
             }
         })
 
         const returnForm = document.getElementById('return-entry');
         returnForm.addEventListener('click', async function() {
-            // show mai_form again
-        })
+            displayForm(reviewEntry);
+            initPagination(1);
+        });
     })
 
 });
@@ -57,12 +72,13 @@ async function getEntry() {
         })
         const entryData = await response.json();
         if (!entryData) {
+            document.getElementById('review-changes').textContent = 'Review Application';
             document.getElementById('confirm-changes').textContent = 'Add Application';
             addOrEdit = 1;
             return null;
         } else {
             addOrEdit = 0;
-            await displayForm(entryData);
+            await displayForm(Object.values(entryData).slice(1));
         }
         
         return Object.values(entryData);
@@ -76,8 +92,10 @@ async function getEntry() {
 async function populateReview(originFormData) {
     try {
         let newEntry = await getValues();
+        // Entry to be accessed in case user wants to revise their changes
+        let retEntry = [];
+        
         newEntry = await detectChanges(originFormData, newEntry);
-
         if (newEntry.every(element => element === null)) {
             document.getElementById('error-div').innerText = 'No changes have been made';
             return;
@@ -98,9 +116,11 @@ async function populateReview(originFormData) {
                 if (newEntry[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
                     tbody += `<td class='original-cell'>${originFormData[i]}</td>`
+                    retEntry.push(originFormData[i]);
                 } else {
                     // else enter newEntry[i] and change color
                     tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
+                    retEntry.push(newEntry[i]);
                 }
 
                 i++;
@@ -115,9 +135,11 @@ async function populateReview(originFormData) {
                 if (newEntry[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
                     tbody += `<td class='original-cell'>${originFormData[i]}</td>`
+                    retEntry.push(originFormData[i]);
                 } else {
                     // else enter newEntry[i] and change color
                     tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
+                    retEntry.push(newEntry[i]);
                 }
 
                 i++;
@@ -126,9 +148,7 @@ async function populateReview(originFormData) {
             table2.querySelector('tbody').innerHTML = tbody;
             initPagination(2)
 
-           
-                
-                
+            return retEntry;       
         }
     } catch (err) {
         console.error('Error occurred while reviewing changes.', err);
@@ -136,15 +156,12 @@ async function populateReview(originFormData) {
 }
 
 
-async function editEntry(originFormData) {
+async function editEntry(input, index) {
     try {
-        let newEntry = await getValues();
-
-        newEntry = await detectChanges(originFormData.slice(1), newEntry);
 
         const div = document.getElementById('error-div');
 
-        if (newEntry.every(element => element === null)) {
+        if (input.every(element => element === null)) {
             div.innerText = 'No changes have been made';
         }
         else {
@@ -154,8 +171,8 @@ async function editEntry(originFormData) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    values: newEntry,
-                    index: originFormData[0]
+                    values: input,
+                    index: index
                 })
             })
             let data = await response.json();
@@ -164,6 +181,7 @@ async function editEntry(originFormData) {
             } 
             else {
                 div.innerText = 'Changes have been made';
+                window.location.href ='/review';
             }
         }
     }
@@ -187,12 +205,10 @@ async function detectChanges(oldFields, newFields) {
     }
 }
 
-async function addEntry() {
+async function addEntry(input) {
     try {
 
-        let newEntry = await getValues();
-
-        if (newEntry.every(element => element === null)) {
+        if (input.every(element => element === null)) {
             const div = document.getElementById('error-div');
             div.innerText = 'Entry not added';
         }
@@ -203,12 +219,18 @@ async function addEntry() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    values: newEntry,
+                    values: input,
                 })
             })
             
             const div = document.getElementById('error-div');
             div.innerText = 'Entry has been added';
+
+            let data = await response.json();
+                div.innerText = data.value
+            if (data.status === 200) {
+                window.location.href ='/review';
+            }
         }
     } catch (err) {
         console.error("Error calling addEntry router: ", err);
@@ -312,27 +334,26 @@ async function displayForm(data) {
     tableForm.removeAttribute('hidden');
 
     // pg1 
-    document.getElementById('appname-edit').value = data.appName;
-    document.getElementById('appnorm-edit').value = data.appNorm;
-    document.getElementById('description-edit').value = data.description;
-    
-    document.getElementById('owner-edit').value = data.owner;
-    document.getElementById('owner-dep-edit').value = data.ownerDep;
-    document.getElementById('owner-it-edit').value = data.ownerIt;
-    document.getElementById('owner-itdep-edit').value = data.ownerItDep;
+    document.getElementById('appname-edit').value = data[0];//data.appName;
+    document.getElementById('appnorm-edit').value = data[1];//data.appNorm;
+    document.getElementById('description-edit').value = data[2];//data.description;
+    document.getElementById('owner-edit').value = data[6]//data.owner;
+    document.getElementById('owner-dep-edit').value = data[7]//data.ownerDep;
+    document.getElementById('owner-it-edit').value = data[9]//data.ownerIt;
+    document.getElementById('owner-itdep-edit').value = data[10]//data.ownerItDep;
     //pg2
-    document.getElementById('numInteg-edit').value = data.numInteg;
-    document.getElementById('numActivUsr-edit').value = data.numActivUsr;
-    document.getElementById('numStaff-edit').value = data.numStaff;
-    document.getElementById('cobbId-edit').value = data.cobbId;
-    document.getElementById('vendor-edit').value = data.vendor;
-    document.getElementById('numLic-edit').value = data.numLic;
-    document.getElementById('yrCost-edit').value = data.yrCost;
-    document.getElementById('cntDates-edit').value = data.cntDates;
-    document.getElementById('details-edit').value = data.details;
-    document.getElementById('datUpdat-edit').value = data.datUpdat;
+    document.getElementById('numInteg-edit').value = data[14]//data.numInteg;
+    document.getElementById('numActivUsr-edit').value = data[15]//data.numActivUsr;
+    document.getElementById('numStaff-edit').value = data[16]//data.numStaff;
+    document.getElementById('cobbId-edit').value = data[17]//data.cobbId;
+    document.getElementById('vendor-edit').value = data[18]//data.vendor;
+    document.getElementById('numLic-edit').value = data[19]//data.numLic;
+    document.getElementById('yrCost-edit').value = data[20]//data.yrCost;
+    document.getElementById('cntDates-edit').value = data[21]//data.cntDates;
+    document.getElementById('details-edit').value = data[22]//data.details;
+    document.getElementById('datUpdat-edit').value = data[23]//data.datUpdat;
 
-    // Predetermined select lists
+    // Predetermined select lists ( index: 3, 4, 5, 8, 11, 12, 13 )
     const criticality = document.getElementById('criticality-edit');
     const lifecycle = document.getElementById('lifecycle-edit');
     const community = document.getElementById('community-edit');
@@ -343,13 +364,13 @@ async function displayForm(data) {
 
     // Map lists to elements
     const selectLists = [ 
-        { list: criticality, value: data.criticality },
-        { list: lifecycle, value: data.lifecycle },
-        { list: community, value: data.community },
-        { list: ownerBudg, value: data.ownerBudg },
-        { list: appType, value: data.appType },
-        { list: appDel, value: data.appDel },
-        { list: platform, value: data.platform}
+        { list: criticality, value: data[3] },//data.criticality },
+        { list: lifecycle, value: data[4] },//data.lifecycle },
+        { list: community, value: data[5] },//data.community },
+        { list: ownerBudg, value: data[8] },//data.ownerBudg },
+        { list: appType, value: data[11] },//data.appType },
+        { list: appDel, value: data[12] },//data.appDel },
+        { list: platform, value: data[13] }//data.platform}
     ];
 
     // iterate through all selectLists and populate them as necessary
