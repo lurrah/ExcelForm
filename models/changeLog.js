@@ -43,6 +43,7 @@ class ChangeLog {
                 },
                 body: JSON.stringify(body),
             })
+
             if (!response.ok) {
                 if (response.status === 401) {
                     return {status: 401, msg: 'You are unauthorized to make this request.'};

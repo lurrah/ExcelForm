@@ -54,20 +54,20 @@ class Worksheet {
             } else if (list !== null && list.length !== 0) {
                 for (let row of list) {
                     // get values to search through in the entries
-                    const name = row.values[0][0].trim();
-                    const othrname = row.values[0][1].trim();
-                    const owner = row.values[0][6].trim();
-                    const manager = row.values[0][10].trim();
+                    const name = row.values[0][1].trim();
+                    const othrname = row.values[0][2].trim();
+                    const owner = row.values[0][7].trim();
+                    const manager = row.values[0][11].trim();
 
                     // check by application name or owner name
                     if (searchType === 'Application Name' && name!== '' && name.toLowerCase().includes(search.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
+                        returnList.push({values: row.values})
                     } else if (searchType === 'Application Name' && othrname!== '' && othrname.toLowerCase().includes(search.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
+                        returnList.push({values: row.values})
                     } else if (searchType === 'Owner/Manager/Collaborator Name' && owner!== '' && owner.toLowerCase().includes(search.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
+                        returnList.push({values: row.values})
                     } else if (searchType === 'Owner/Manager/Collaborator Name' && manager!== '' && manager.toLowerCase().includes(search.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
+                        returnList.push({values: row.values})
                     }
                 }
 
@@ -82,14 +82,19 @@ class Worksheet {
     }
 
     // Edit specified entry based
-    async editEntry(values, index) {
+    async editEntry(index, values) {
         try {
             const body = {
                 persistChanges: true,
                 values: [
+                    index, 
                     values
                 ]
             }
+
+            console.log(index)
+
+            console.log(body)
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
@@ -106,7 +111,6 @@ class Worksheet {
                     return {error: 400, values: 'Error occured while editing entry'};
                 }
             }
-
             const data = await response.json();
             return data;
         } catch (err) {
@@ -116,6 +120,7 @@ class Worksheet {
 
     async addEntry(values) {
         try {
+            console.log(values);
             const body = {
                 persistChanges: true,
                 values: [

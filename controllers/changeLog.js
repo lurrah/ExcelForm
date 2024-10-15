@@ -10,7 +10,6 @@ class ChangeLogController {
             const filter = req.headers.statusType;
 
             const response = await this.log.getLogs(filter);
-            console.log(response);
             return res.json(response);
 
         } catch(err) {
@@ -21,9 +20,9 @@ class ChangeLogController {
 
     async addLog(req, res) {
         try {
-            const values = req.body.values;
+            const log_info = req.body.log_info;
 
-            const response = await this.log.addLog(values);
+            const response = await this.log.addLog(log_info);
 
             return res.json(response);
         } catch(err) {

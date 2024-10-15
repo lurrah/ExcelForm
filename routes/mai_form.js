@@ -26,10 +26,6 @@ router.post('/store-data', async (req, res) => {
   res.redirect('/mai-form');
 });
 
-router.patch('/edit-entry', async (req, res) => await wsController.editEntry(req, res));
-
-router.post('/add-entry', async (req, res) => await wsController.addEntry(req, res));
-
 router.post('/add-log', async(req, res) => await logController.addLog(req, res));
 
 

@@ -1,8 +1,7 @@
-const entryCount = 24; 
+const entryCount = 25; 
 
 // 1 for add 0 for edit
 let addOrEdit;
-
 
 document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = await getEntry();
@@ -45,15 +44,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         // }
         reviewEntry = await populateReview(addOrEdit ? Array(entryCount).fill('') : originFormData.slice(1));
 
+
         const confirmChangeBtn= document.getElementById('confirm-changes');
         confirmChangeBtn.addEventListener('click', async function(event) {
             event.preventDefault();
-            if (addOrEdit === 0) {
-                await editEntry(reviewEntry, originFormData[0]);
-            } 
-            else {
-                await addLog(reviewEntry);
-            }
+            addLog(reviewEntry, originFormData[0]);
         })
 
         const returnForm = document.getElementById('return-entry');
@@ -63,6 +58,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     })
 
+    document.getElementById('home-btn').addEventListener("click", async function(event) {
+        window.location.href ='/';
+    })
 });
 
 async function getEntry() {
@@ -94,7 +92,6 @@ async function populateReview(originFormData) {
         let newEntry = await getValues();
         // Entry to be accessed in case user wants to revise their changes
         let retEntry = [];
-        
         newEntry = await detectChanges(originFormData, newEntry);
         if (newEntry.every(element => element === null)) {
             document.getElementById('error-div').innerText = 'No changes have been made';
@@ -155,41 +152,6 @@ async function populateReview(originFormData) {
     }
 }
 
-
-async function editEntry(input, index) {
-    try {
-
-        const div = document.getElementById('error-div');
-
-        if (input.every(element => element === null)) {
-            div.innerText = 'No changes have been made';
-        }
-        else {
-            const response = await fetch('/mai-form/edit-entry', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    values: input,
-                    index: index
-                })
-            })
-            let data = await response.json();
-            if (data === 'Error occured while editing entry') {
-                div.innerText = 'No changes have been made';
-            } 
-            else {
-                div.innerText = 'Changes have been made';
-                window.location.href ='/review';
-            }
-        }
-    }
-    catch(err) {
-        console.error('Error editing table entry', err)
-    }
-}
-
 // return null if no change, else return new
 async function detectChanges(oldFields, newFields) {
     try {
@@ -205,43 +167,66 @@ async function detectChanges(oldFields, newFields) {
     }
 }
 
-async function addEntry(input) {
-    try {
 
-        if (input.every(element => element === null)) {
+// adds change log (both add and edit)
+async function addLog(values, index) {
+    try {
+        if (values.every(element => element === null)) {
             const div = document.getElementById('error-div');
-            div.innerText = 'Entry not added';
+            div.innerText = 'No fields have been changed. Request not made.';
         }
         else {
-            const response = await fetch('/mai-form/add-entry', {
+            const changes = JSON.stringify(values.slice(1));
+
+            // add date of change, author, and set status to 'Pending'
+            const now = new Date();
+
+            let log_info = []
+
+            log_info.push(index);
+            log_info.push(values[1]);
+            log_info.push(changes);
+
+            // current data, author, status 
+            log_info.push(now.toLocaleString());
+            log_info.push("user1");
+            log_info.push("Pending");
+
+            // pass changes as string (JSON)
+            const response = await fetch('/mai-form/add-log', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    values: input,
+                    log_info: log_info
                 })
             })
-            
-            const div = document.getElementById('error-div');
-            div.innerText = 'Entry has been added';
 
             let data = await response.json();
-                div.innerText = data.value
+            
+            const status_msg = document.getElementById('status');
+
             if (data.status === 200) {
-                window.location.href ='/review';
+                status_msg.innerText = 'Changes have been submitted';
+                document.getElementById('home-btn').hidden = false;
+
+                document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
+                document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = true);
+            } else {
+                status_msg.innerText = 'Error occurred when submitting changes. Please try submitting again or reach out to an administrator.'
+                throw new Error(data.status);
             }
         }
     } catch (err) {
-        console.error("Error calling addEntry router: ", err);
+        console.error("Error calling addLog router: ", err);
     }
 }
+
 
 let currentPagination = null;
 
 async function initPagination(type) {
-    let button, button2;
-
     if (currentPagination === type) {
         return;
     } else if (currentPagination !== null){
@@ -255,7 +240,8 @@ async function initPagination(type) {
                 document.querySelectorAll('.review-group').forEach(el => el.hidden = false);
             }
     }
-    // type : 1 for form, 2 for review-changes
+    // type :       1 for form
+    //              2 for review-changes
     const totalPages = 2;
 
     document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
@@ -297,37 +283,7 @@ async function initPagination(type) {
     }
 }
 
-async function getValues() {
-    const appName = document.getElementById('appname-edit').value;
-    const appNorm = document.getElementById('appnorm-edit').value;
-    const description = document.getElementById('description-edit').value;
-    const criticality = document.getElementById('criticality-edit').value;
-    const lifecycle = document.getElementById('lifecycle-edit').value;
-    const community = document.getElementById('community-edit').value;
-    const owner = document.getElementById('owner-edit').value;
-    const ownerDep = document.getElementById('owner-dep-edit').value;
-    const ownerBudg = document.getElementById('owner-budg-edit').value;
-    const ownerIt = document.getElementById('owner-it-edit').value;
-    const ownerItDep = document.getElementById('owner-itdep-edit').value;
-
-    const appType = document.getElementById('apptype-edit').value; 
-    const appDel = document.getElementById('appdel-edit').value;
-    const platform = document.getElementById('platform-edit').value;
-    const numInteg = document.getElementById('numInteg-edit').value;
-    const numActivUsr = document.getElementById('numActivUsr-edit').value;
-    const numStaff = document.getElementById('numStaff-edit').value;
-    const cobbId = document.getElementById('cobbId-edit').value;
-    const vendor = document.getElementById('vendor-edit').value;
-    const numLic = document.getElementById('numLic-edit').value;
-    const yrCost = document.getElementById('yrCost-edit').value;
-    const cntDates = document.getElementById('cntDates-edit').value;
-    const details = document.getElementById("details-edit").value;
-    const datUpdat = document.getElementById("datUpdat-edit").value;
-
-    return [ appName, appNorm, description, criticality, lifecycle, community, owner, ownerDep, ownerBudg, ownerIt, ownerItDep,
-        appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat ];
-}
-
+// Helper functions
 async function displayForm(data) {
     // Hide search form and show entry form
     const tableForm = document.getElementById('table-form');
@@ -384,40 +340,37 @@ async function displayForm(data) {
     }
 }
 
-async function addLog(input) {
-    try {
+async function displayConfirm() {
+    
+}
 
-        if (input.every(element => element === null)) {
-            const div = document.getElementById('error-div');
-            div.innerText = 'No fields have been changed. Request not made.';
-        }
-        else {
-            // add date of change, author, and set status to 'Pending'
-            const now = new Date();
-            input.push(now.toLocaleString());
-            input.push("user1");
-            input.push("Pending");
+async function getValues() {
+    const appName = document.getElementById('appname-edit').value;
+    const appNorm = document.getElementById('appnorm-edit').value;
+    const description = document.getElementById('description-edit').value;
+    const criticality = document.getElementById('criticality-edit').value;
+    const lifecycle = document.getElementById('lifecycle-edit').value;
+    const community = document.getElementById('community-edit').value;
+    const owner = document.getElementById('owner-edit').value;
+    const ownerDep = document.getElementById('owner-dep-edit').value;
+    const ownerBudg = document.getElementById('owner-budg-edit').value;
+    const ownerIt = document.getElementById('owner-it-edit').value;
+    const ownerItDep = document.getElementById('owner-itdep-edit').value;
 
-            const response = await fetch('/mai-form/add-log', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    values: input,
-                })
-            })
-            
-            const div = document.getElementById('error-div');
-            div.innerText = 'Entry has been added';
+    const appType = document.getElementById('apptype-edit').value; 
+    const appDel = document.getElementById('appdel-edit').value;
+    const platform = document.getElementById('platform-edit').value;
+    const numInteg = document.getElementById('numInteg-edit').value;
+    const numActivUsr = document.getElementById('numActivUsr-edit').value;
+    const numStaff = document.getElementById('numStaff-edit').value;
+    const cobbId = document.getElementById('cobbId-edit').value;
+    const vendor = document.getElementById('vendor-edit').value;
+    const numLic = document.getElementById('numLic-edit').value;
+    const yrCost = document.getElementById('yrCost-edit').value;
+    const cntDates = document.getElementById('cntDates-edit').value;
+    const details = document.getElementById("details-edit").value;
+    const datUpdat = document.getElementById("datUpdat-edit").value;
 
-            let data = await response.json();
-                div.innerText = data.value
-            if (data.status === 200) {
-                window.location.href ='/review';
-            }
-        }
-    } catch (err) {
-        console.error("Error calling addLog router: ", err);
-    }
+    return [ appName, appNorm, description, criticality, lifecycle, community, owner, ownerDep, ownerBudg, ownerIt, ownerItDep,
+        appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat ];
 }

@@ -92,7 +92,7 @@ class WorksheetController {
             const values = req.body.values;
             const index = req.body.index;
 
-            const response = await this.ws.editEntry(values, index);
+            const response = await this.ws.editEntry(index, values);
             if (response.error) {
                 return res.json(response.values);
             }

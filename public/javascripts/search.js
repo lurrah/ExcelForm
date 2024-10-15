@@ -129,17 +129,16 @@ async function displayEntries(entryList) {
         //<tr id="key"> <th>Application Name</th> <th>Normalized Name</th> <th>Business Owner</th> <th>Managed By</th> <th>Select</th> </tr>
         for (let i = 0; i < entryList.length; i++) {
             rowBody += `<tr id='row-${i}'>
-                            <td>${entryList[i].values[0][0]}</td>
                             <td>${entryList[i].values[0][1]}</td>
-                            <td>${entryList[i].values[0][6]}</td>
-                            <td>${entryList[i].values[0][10]}</td>
+                            <td>${entryList[i].values[0][2]}</td>
+                            <td>${entryList[i].values[0][7]}</td>
+                            <td>${entryList[i].values[0][11]}</td>
                             <td><button id='select-${i}'>Select</button></td>
                         </tr>`;
         }
         table.querySelector('tbody').innerHTML = rowBody;
         // set button event listeners
         for (let i = 0; i < entryList.length; i++) {
-            console.log(entryList[i]);
             document.getElementById(`select-${i}`).addEventListener('click', function() {    
                 selectEntry(entryList[i]);
             });
@@ -159,37 +158,37 @@ async function selectEntry(entryArr) {
         if (!entryArr) {
             window.location.href ='/mai-form';
         }
-        else {
-            let index = entryArr.index;
-            let entry = entryArr.values[0]
+        else { 
+            let entry = entryArr.values[0];
+
             const entryData = {
                 // page-1 info
-                index: index,
-                appName: entry[0],
-                appNorm: entry[1],
-                description: entry[2],
-                criticality: entry[3],
-                lifecycle: entry[4],
-                community: entry[5],
-                owner: entry[6],
-                ownerDep: entry[7],
-                ownerBudg: entry[8],
-                ownerIt: entry[9],
-                ownerItDep: entry[10],
+                id: entry[0],
+                appName: entry[1],
+                appNorm: entry[2],
+                description: entry[3],
+                criticality: entry[4],
+                lifecycle: entry[5],
+                community: entry[6],
+                owner: entry[7],
+                ownerDep: entry[8],
+                ownerBudg: entry[9],
+                ownerIt: entry[10],
+                ownerItDep: entry[11],
                 //page-2 info
-                appType: entry[11],
-                appDel: entry[12],
-                platform: entry[13],
-                numInteg: entry[14],
-                numActivUsr: entry[15],
-                numStaff: entry[16],
-                cobbId: entry[17],
-                vendor: entry[18],
-                numLic: entry[19],
-                yrCost: entry[20],
-                cntDates: entry[21],
-                details: entry[22],
-                datUpdat: entry[23]
+                appType: entry[12],
+                appDel: entry[13],
+                platform: entry[14],
+                numInteg: entry[15],
+                numActivUsr: entry[16],
+                numStaff: entry[17],
+                cobbId: entry[18],
+                vendor: entry[19],
+                numLic: entry[20],
+                yrCost: entry[21],
+                cntDates: entry[22],
+                details: entry[23],
+                datUpdat: entry[24]
                 //page-3 info
             }
 
