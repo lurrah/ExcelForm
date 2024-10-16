@@ -1,9 +1,22 @@
 const Worksheet = require('../models/worksheet.js');
+//const EntryInfo = require('../models/EntryInfo.js');
 
 class WorksheetController {
     constructor () {
         this.ws = new Worksheet();
     }
+
+    async getEntry(req, res) {
+        try {
+            const id = req.headers.id;
+
+            const response = await this.ws.getEntry(id);
+            return res.json(response);
+        } catch(err) { 
+            console.log('Error retrieving entry with specified index: ', err);
+        }
+    }
+
     async searchEntries(req, res) {
         try {
             const appName = req.query.appName;

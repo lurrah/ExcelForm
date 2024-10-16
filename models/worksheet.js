@@ -7,6 +7,32 @@ class Worksheet {
     
     };
 
+    async getEntry(id) {
+        try {
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.wb_id}/workbook/worksheets/Sheet1/tables/${process.env.mai_id}/rows/itemAt(index=${id})`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${process.env.graph_pat}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return 401;
+                } else {
+                    throw new Error('Failed to fetch entries');
+                }
+            }
+
+            const data = await response.json();
+            return data.values;
+
+        } catch (err) {
+            console.log('Error retrieving entry with specified index: ', err);
+        }
+    }
+
     async getEntryList() {
         try {
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.wb_id}/workbook/worksheets/Sheet1/tables/${process.env.mai_id}/rows`, {
@@ -72,7 +98,7 @@ class Worksheet {
                 }
 
                 if (returnList.length !== 0) {
-                    return returnList;
+                    return returnList;    
                 }
             }
             return {error: 1, values: `No entries found with '${search}' in the ${searchType}`};

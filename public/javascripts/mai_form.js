@@ -37,26 +37,27 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     reviewButton.addEventListener('click', async function(event) {
         event.preventDefault();
-        // if (addOrEdit === 0) {
-        //     populateReview(originFormData.slice(1));
-        // } else {
-        //     populateReview(originFormData);
-        // }
-        reviewEntry = await populateReview(addOrEdit ? Array(entryCount).fill('') : originFormData.slice(1));
 
+        reviewEntry = addOrEdit ? Array(entryCount).fill('') : originFormData;
+        if (addOrEdit) {
+            // if add, index does not exist
+            reviewEntry[0] = -1;
+        }
 
-        const confirmChangeBtn= document.getElementById('confirm-changes');
-        confirmChangeBtn.addEventListener('click', async function(event) {
-            event.preventDefault();
-            addLog(reviewEntry, originFormData[0]);
-        })
-
-        const returnForm = document.getElementById('return-entry');
-        returnForm.addEventListener('click', async function() {
-            displayForm(reviewEntry);
-            initPagination(1);
-        });
+        reviewEntry = await populateReview(reviewEntry);
     })
+
+    const confirmChangeBtn= document.getElementById('confirm-changes');
+    confirmChangeBtn.addEventListener('click', async function(event) {
+        event.preventDefault();
+        await addLog(reviewEntry);
+    })
+
+    const returnForm = document.getElementById('return-entry');
+    returnForm.addEventListener('click', async function() {
+        displayForm(reviewEntry.slice(1));
+        initPagination(1);
+    });
 
     document.getElementById('home-btn').addEventListener("click", async function(event) {
         window.location.href ='/';
@@ -87,12 +88,14 @@ async function getEntry() {
     }
 }
 
-async function populateReview(originFormData) {
+async function populateReview(origin) {
     try {
+        console.log(origin)
         let newEntry = await getValues();
         // Entry to be accessed in case user wants to revise their changes
         let retEntry = [];
-        newEntry = await detectChanges(originFormData, newEntry);
+        newEntry = await detectChanges(origin.slice(1), newEntry);
+
         if (newEntry.every(element => element === null)) {
             document.getElementById('error-div').innerText = 'No changes have been made';
             return;
@@ -100,20 +103,25 @@ async function populateReview(originFormData) {
         else {
             document.getElementById('error-div').innerText = '';
 
-            let i = 0;
+            
             // get table by id
             const table1 = document.getElementById('review-table-1');
             const table2 = document.getElementById('review-table-2');
 
+
+            let i = 0;
             let tbody= '';
             tbody += '<tr>'
-
             // for each element in origin form data
+
+            retEntry.push(origin[0]);    // entry index (for internal purposes)
+                                        // newEntry does not include an index (which input does)
+
             table1.querySelector('thead tr#key1').querySelectorAll('th').forEach(() => {
                 if (newEntry[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
-                    tbody += `<td class='original-cell'>${originFormData[i]}</td>`
-                    retEntry.push(originFormData[i]);
+                    tbody += `<td class='original-cell'>${origin[i + 1]}</td>`
+                    retEntry.push(origin[i + 1]);
                 } else {
                     // else enter newEntry[i] and change color
                     tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
@@ -131,8 +139,8 @@ async function populateReview(originFormData) {
             table2.querySelector('thead tr#key2').querySelectorAll('th').forEach(() => {
                 if (newEntry[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
-                    tbody += `<td class='original-cell'>${originFormData[i]}</td>`
-                    retEntry.push(originFormData[i]);
+                    tbody += `<td class='original-cell'>${origin[i + 1]}</td>`
+                    retEntry.push(origin[i + 1]);
                 } else {
                     // else enter newEntry[i] and change color
                     tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
@@ -169,9 +177,10 @@ async function detectChanges(oldFields, newFields) {
 
 
 // adds change log (both add and edit)
-async function addLog(values, index) {
+async function addLog(values) {
     try {
-        if (values.every(element => element === null)) {
+        // index (values[0]) will never be null
+        if (values.slice(1).every(element => element === null)) {
             const div = document.getElementById('error-div');
             div.innerText = 'No fields have been changed. Request not made.';
         }
@@ -183,9 +192,11 @@ async function addLog(values, index) {
 
             let log_info = []
 
-            log_info.push(index);
+            log_info.push(values[0]);
             log_info.push(values[1]);
             log_info.push(changes);
+
+            log_info.push(addOrEdit ? "add" : "edit");
 
             // current data, author, status 
             log_info.push(now.toLocaleString());
@@ -285,6 +296,7 @@ async function initPagination(type) {
 
 // Helper functions
 async function displayForm(data) {
+    console.log(data);
     // Hide search form and show entry form
     const tableForm = document.getElementById('table-form');
     tableForm.removeAttribute('hidden');

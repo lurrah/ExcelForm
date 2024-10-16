@@ -159,8 +159,11 @@ async function selectEntry(entryArr) {
             window.location.href ='/mai-form';
         }
         else { 
-            let entry = entryArr.values[0];
+            let entry =
+            
+            entryArr.values[0];
 
+        
             const entryData = {
                 // page-1 info
                 id: entry[0],

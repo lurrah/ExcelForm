@@ -18,5 +18,7 @@ router.patch('/edit-entry', async (req, res) => await wsController.editEntry(req
 
 router.post('/add-entry', async (req, res) => await wsController.addEntry(req, res));
 
+router.get('/get-entry', async (req, res) => await wsController.getEntry(req, res));
+
 
 module.exports = router;

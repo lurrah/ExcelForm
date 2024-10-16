@@ -58,30 +58,36 @@ async function displayLogs(logList) {
         //<tr id="key"> <th>Application Name</th> <coll.><th>Normalized Name</th> <th>Business Owner</th> <th>Managed By</th></coll.> <th>Date</th><th>Author</th><Status</th><Buttons></tr>
         for (let i = 0; i < logList.length; i++) {
             rowBody += `<tr id='row-${i}'>
-                            <td>${logList[i].values[0][0]}</td>
                             <td>${logList[i].values[0][1]}</td>
                             <td>${logList[i].values[0][3]}</td>
                             <td>${logList[i].values[0][4]}</td>
                             <td>${logList[i].values[0][5]}</td>
-
-                            <td><button id='approve-${i}'>Approve</button><br>
-                            <button id='reject-${i}'>Reject</button><br><br>
-                            <button id='view-${i}'>View</button><br>
-                            <button id='edit-${i}'>Edit</button></td>
-                        </tr>`;
+                            <td>${logList[i].values[0][6]}</td>
+                            <td>
+                        `
+            // if status is not pending (accepted/rejected), then approve or reject buttons will not show.
+            if (logList[i].values[0][6] === 'Pending') {
+                rowBody +=  `   <button id='approve-${i}'>Approve</button><br>
+                                <button id='reject-${i}'>Reject</button><br><br>
+                            `
+            }
+                        
+                rowBody +=  `    <button id='view-${i}'>View</button><br>
+                                 <button id='edit-${i}'>Edit</button></td>
+                                 </tr>`;
         }
         table.querySelector('tbody').innerHTML = rowBody;
         // set button event listeners
         for (let i = 0; i < logList.length; i++) {
-            let entry_index = logList[i].values[0][0];
-            let entry_changes = logList[i].values[0][2];
+            let entry_id = logList[i].values[0][0];
+            let entry_changes = JSON.parse(logList[i].values[0][2]);
 
             document.getElementById(`approve-${i}`).addEventListener('click', function() { 
                 // add or edit entry
-                if (entry_index < 0) {
+                if (entry_id < 0) {
                     addEntry(entry_changes);
                 } else {
-                    editEntry(entry_index, entry_changes);
+                    editEntry(entry_id, entry_changes);
 
                 }
             });
@@ -89,6 +95,7 @@ async function displayLogs(logList) {
                 // redirect to (would you like to write a message to the author about the rejection?)
             });
             document.getElementById(`view-${i}`).addEventListener('click', function() {
+                viewChangedEntry(entry_id, entry_changes);
                 // view changes as highlighted columns
             });
             document.getElementById(`edit-${i}`).addEventListener('click', function() {
@@ -98,15 +105,8 @@ async function displayLogs(logList) {
         table.hidden = false;
 }
 
-function toggleColumn(columnClass) {
-    const cells = document.querySelectorAll(`.${columnClass}`);
-    cells.forEach(cell => {
-        cell.classList.toggle('hidden');
-    });
-}
-
 // This should only be for admins
-async function editEntry(index, input) {
+async function editEntry(id, input) {
     try {
         input = JSON.parse(input);
 
@@ -123,7 +123,7 @@ async function editEntry(index, input) {
                 },
                 body: JSON.stringify({
                     values: input,
-                    index: index
+                    index: id
                 })
             })
             let data = await response.json();
@@ -170,5 +170,56 @@ async function addEntry(input) {
         }
     } catch (err) {
         console.error("Error calling addEntry router: ", err);
+    }
+}
+
+// View 
+async function viewChangedEntry(id, changes) {
+    try {
+        const modal = document.getElementById("displayModal");
+        const span = document.getElementsByClassName("close")[0];
+
+        const response = await fetch('/admin/get-entry', {
+            method: 'GET',
+            headers: {
+                id: id 
+            }
+        })
+
+        let data = await response.json();
+
+        console.log(changes);
+        console.log(data);
+        let tbody = '';
+        if (data.error) {
+            div.innerText = 'Error occured when trying to display specific entry';
+        } 
+        else {
+            // display current entry but then input user's changes
+            for (let i = 0; i < changes.length; i++) {
+                if (changes[i] === "") {
+                    // if newEntry[i] is null, enter originformdata[i]
+                    tbody += `<td class='original-cell'>${data[0][i + 1]}</td>`
+                } else {
+                    // else enter newEntry[i] and change color
+                    tbody += `<td class='changed-cell'>${changes[i]}</td>`
+                }
+            }
+            document.getElementById('blue-body').innerHTML = tbody;
+
+            modal.style.display = "block";
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                  modal.style.display = "none";
+                }
+            }    
+        }
+
+    } catch (err) {
+        console.error("Error retrieving log's entry: ", err);
     }
 }

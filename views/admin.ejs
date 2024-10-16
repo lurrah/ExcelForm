@@ -60,6 +60,8 @@
                   is selected, a table with the Application Name, Date of Change, Author of Change, and Status. If you would like to see the changes made for a specific app, click
                   the info column and it will expand to show the changes. You may approve or reject the changes. <b>!!CAUTION!!</b> Selecting approve <b>WILL</b> make the changes in the MAI.
                 </p>
+
+                <p><b>Editing/Viewing:</b> You can view the changes that a user has requested to make. You can also update the changes.</p>
               </div>
             </div>
             <h1>Get Log</h1>
@@ -82,7 +84,7 @@
                 <thead>
                     <tr>
                       <th class="fixed-column">Application Name</th>
-                      <th class="toggle-column" onclick="toggleColumn('changes')">Changes</th>
+                      <th class="fixed-column">Type of Change</th>
                       <th class="fixed-column">Date Changed</th>
                       <th class="fixed-column">Author of Change</th>
                       <th class="fixed-column">Status</th>
@@ -93,6 +95,77 @@
                     
                 </tbody>
             </table>
+
+
+            <!-- The Modal -->
+            <div id="displayModal" class="modal">
+
+              <!-- Modal content -->
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <table id="blue-cols">
+                  <thead>
+                      <tr class="key1">
+                        <th>Application Name</th>
+                        <th>Normalized Application Name</th>
+                        <th>Short Description</th>
+                        <th>Business Criticality</th>
+                        <th>Life Cycle State</th>
+                        <th>User Community</th>
+                        <th>Business Community</th>
+                        <th>Business Dept. Owner(s)</th>
+                        <th>Manage By</th>
+                        <th>Managed By Dept</th>
+                        <th>Managed By Owner</th>
+                      </tr>
+                  </thead>
+                  <tbody id="blue-body">
+                      
+                  </tbody>
+              </table>
+              <br>
+              <table id="green-cols">
+                <thead>
+                    <tr class="key2">
+                      <th>Application Type</th>
+                      <th>Application Delivery</th>
+                      <th>Platform</th>
+                      <th># Integrations</th>
+                      <th># Active Users (ROM)</th>
+                      <th># Dedicated IT Support Staff</th>
+                      <th>Cobblestone Contract ID</th>
+                      <th>Vendor</th>
+                      <th># Licenses</th>
+                      <th>Yearly Cost</th>
+                      <th>Contract Dates (start/stop)</th>
+                      <th>Date App Updated</th>
+                    </tr>
+                </thead>
+                <tbody id="green-body">
+                    
+                </tbody>
+              </table>
+              <br>
+              <table id="pink-cols">
+                <thead>
+                    <tr class="key3">
+                      <th>EDUCAUSE Service Category</th>
+                      <th>EDUCAUSE Service</th>
+                      <th>CAUDIT Parent Capability</th>
+                      <th>CAUDIT Capability</th>
+                      <th>Core or Enabling</th>
+                      <th>Enterprise or End-User Productivity (WIP)</th>
+                      <th>Common Good: Yes or No</th>
+                      <th>Application Tag / ID2</th>
+                    </tr>
+                </thead>
+                <tbody id="pink-body">
+                    
+                </tbody>
+              </table>
+              </div>
+
+            </div>
 
 
             <div id="error-div"></div>
