@@ -16,6 +16,9 @@ var app = express();
 
 const session_secret = process.env.session;
 
+//getAccessToken()
+
+
 app.use(session({
   secret: session_secret,
   resave: false,
@@ -52,5 +55,38 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+async function getAccessToken() {
+  const tenant_id = process.env.tenant_id;
+  const clientId = process.env.client_id;
+  const clientSecret = process.env.client_secret;
+  const tokenUrl = `https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token`;
+  
+  const params = new URLSearchParams({
+      client_id: clientId,
+      scope: 'https://graph.microsoft.com/.default',
+      client_secret: clientSecret,
+      grant_type: 'client_credentials',
+  });
+
+  try {
+      const response = await fetch(tokenUrl, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params,
+      });
+      console.log(response);
+
+      const data = await response.json();
+      console.log(data.access_token);
+
+      return data.access_token; // Returns the access token
+  } catch (error) {
+      console.error('Error getting access token:', error);
+  }
+}
 
 module.exports = app;

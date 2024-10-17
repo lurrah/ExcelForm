@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const confirmChangeBtn= document.getElementById('confirm-changes');
     confirmChangeBtn.addEventListener('click', async function(event) {
         event.preventDefault();
-        await addLog(reviewEntry);
+        await addLog(reviewEntry, addOrEdit ? reviewEntry[1] : originFormData[1]);
     })
 
     const returnForm = document.getElementById('return-entry');
@@ -90,13 +90,12 @@ async function getEntry() {
 
 async function populateReview(origin) {
     try {
-        console.log(origin)
         let newEntry = await getValues();
         // Entry to be accessed in case user wants to revise their changes
         let retEntry = [];
-        newEntry = await detectChanges(origin.slice(1), newEntry);
+        const changes = await detectChanges(origin.slice(1), newEntry);
 
-        if (newEntry.every(element => element === null)) {
+        if (changes.every(element => element === null)) {
             document.getElementById('error-div').innerText = 'No changes have been made';
             return;
         }
@@ -118,14 +117,14 @@ async function populateReview(origin) {
                                         // newEntry does not include an index (which input does)
 
             table1.querySelector('thead tr#key1').querySelectorAll('th').forEach(() => {
-                if (newEntry[i] === null) {
+                if (changes[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
                     tbody += `<td class='original-cell'>${origin[i + 1]}</td>`
-                    retEntry.push(origin[i + 1]);
+                    retEntry.push('');
                 } else {
                     // else enter newEntry[i] and change color
-                    tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
-                    retEntry.push(newEntry[i]);
+                    tbody += `<td class='changed-cell'>${changes[i]}</td>`
+                    retEntry.push(changes[i]);
                 }
 
                 i++;
@@ -137,14 +136,14 @@ async function populateReview(origin) {
 
             // for each element in origin form data
             table2.querySelector('thead tr#key2').querySelectorAll('th').forEach(() => {
-                if (newEntry[i] === null) {
+                if (changes[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
                     tbody += `<td class='original-cell'>${origin[i + 1]}</td>`
-                    retEntry.push(origin[i + 1]);
+                    retEntry.push('');
                 } else {
                     // else enter newEntry[i] and change color
-                    tbody += `<td class='changed-cell'>${newEntry[i]}</td>`
-                    retEntry.push(newEntry[i]);
+                    tbody += `<td class='changed-cell'>${changes[i]}</td>`
+                    retEntry.push(changes[i]);
                 }
 
                 i++;
@@ -177,7 +176,7 @@ async function detectChanges(oldFields, newFields) {
 
 
 // adds change log (both add and edit)
-async function addLog(values) {
+async function addLog(values, app_name) {
     try {
         // index (values[0]) will never be null
         if (values.slice(1).every(element => element === null)) {
@@ -185,6 +184,8 @@ async function addLog(values) {
             div.innerText = 'No fields have been changed. Request not made.';
         }
         else {
+
+            console.log(values);
             const changes = JSON.stringify(values.slice(1));
 
             // add date of change, author, and set status to 'Pending'
@@ -193,7 +194,7 @@ async function addLog(values) {
             let log_info = []
 
             log_info.push(values[0]);
-            log_info.push(values[1]);
+            log_info.push(app_name);
             log_info.push(changes);
 
             log_info.push(addOrEdit ? "add" : "edit");
@@ -296,7 +297,6 @@ async function initPagination(type) {
 
 // Helper functions
 async function displayForm(data) {
-    console.log(data);
     // Hide search form and show entry form
     const tableForm = document.getElementById('table-form');
     tableForm.removeAttribute('hidden');

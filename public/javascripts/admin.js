@@ -38,8 +38,9 @@ async function getLogs() {
             }
         })
         const logs = await response.json();
-        if (!logs) {
-            console.log('No logs found');    
+        if (logs.error) {
+            console.log('No logs found');
+            document.getElementById('error-div').innerHTML = 'Unauthorized';    
             return null;
         } else {
             await displayLogs(logs);
@@ -51,51 +52,56 @@ async function getLogs() {
 }
 
 async function displayLogs(logList) {
-        table = document.getElementById('log-table');
-        tbody = document.getElementById('log-table-body');
-        rowBody = "";
+        const table = document.getElementById('log-table');
+        const div = document.getElementById('error-div');
+        let rowBody = "";
 
         //<tr id="key"> <th>Application Name</th> <coll.><th>Normalized Name</th> <th>Business Owner</th> <th>Managed By</th></coll.> <th>Date</th><th>Author</th><Status</th><Buttons></tr>
-        for (let i = 0; i < logList.length; i++) {
-            rowBody += `<tr id='row-${i}'>
-                            <td>${logList[i].values[0][1]}</td>
-                            <td>${logList[i].values[0][3]}</td>
-                            <td>${logList[i].values[0][4]}</td>
-                            <td>${logList[i].values[0][5]}</td>
-                            <td>${logList[i].values[0][6]}</td>
-                            <td>
-                        `
-            // if status is not pending (accepted/rejected), then approve or reject buttons will not show.
-            if (logList[i].values[0][6] === 'Pending') {
-                rowBody +=  `   <button id='approve-${i}'>Approve</button><br>
-                                <button id='reject-${i}'>Reject</button><br><br>
+        for (let i = 0; i < logList.length; i++) 
+            {
+                rowBody += `<tr id='row-${i}'>
+                                <td>${logList[i].values[0][1]}</td>
+                                <td>${logList[i].values[0][3]}</td>
+                                <td>${logList[i].values[0][4]}</td>
+                                <td>${logList[i].values[0][5]}</td>
+                                <td>${logList[i].values[0][6]}</td>
+                                <td>
                             `
+                // if status is not pending (accepted/rejected), then approve or reject buttons will not show.
+                if (logList[i].values[0][6] === 'Pending') {
+                    rowBody +=  `   <button id='approve-${i}'>Approve</button><br>
+                                    <button id='reject-${i}'>Reject</button><br><br>
+                                `
+                }
+                            
+                    rowBody +=  `    <button id='view-${i}'>View</button><br>
+                                    <button id='edit-${i}'>Edit</button></td>
+                                    </tr>`;
             }
-                        
-                rowBody +=  `    <button id='view-${i}'>View</button><br>
-                                 <button id='edit-${i}'>Edit</button></td>
-                                 </tr>`;
-        }
         table.querySelector('tbody').innerHTML = rowBody;
         // set button event listeners
         for (let i = 0; i < logList.length; i++) {
             let entry_id = logList[i].values[0][0];
-            let entry_changes = JSON.parse(logList[i].values[0][2]);
+            let changes = JSON.parse(logList[i].values[0][2]);
+            let entry;
 
             document.getElementById(`approve-${i}`).addEventListener('click', function() { 
                 // add or edit entry
                 if (entry_id < 0) {
-                    addEntry(entry_changes);
+                    if (!entry) {
+                        div.innerText = 'Please view the changes before approving them.';
+                    } else {
+                        addEntry(entry);
+                    }
                 } else {
                     editEntry(entry_id, entry_changes);
-
                 }
             });
             document.getElementById(`reject-${i}`).addEventListener('click', function() {    
                 // redirect to (would you like to write a message to the author about the rejection?)
             });
-            document.getElementById(`view-${i}`).addEventListener('click', function() {
-                viewChangedEntry(entry_id, entry_changes);
+            document.getElementById(`view-${i}`).addEventListener('click', async function() {
+                entry = await viewChangedEntry(entry_id, changes);
                 // view changes as highlighted columns
             });
             document.getElementById(`edit-${i}`).addEventListener('click', function() {
@@ -141,21 +147,16 @@ async function editEntry(id, input) {
     }
 }
 
-async function addEntry(input) {
+async function addEntry(values) {
     try {
-
-        if (input.every(element => element === null)) {
-            const div = document.getElementById('error-div');
-            div.innerText = 'Entry not added';
-        }
-        else {
+        console.log(values);
             const response = await fetch('/admin/add-entry', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    values: input,
+                    values: values,
                 })
             })
             
@@ -166,7 +167,6 @@ async function addEntry(input) {
             if (data.status === 200) {
                 window.location.href ='/review';
                 div.innerText = 'Entry has been added succesfully';
-            }
         }
     } catch (err) {
         console.error("Error calling addEntry router: ", err);
@@ -178,34 +178,60 @@ async function viewChangedEntry(id, changes) {
     try {
         const modal = document.getElementById("displayModal");
         const span = document.getElementsByClassName("close")[0];
+        
+        let data;
+        let entry = [];
 
-        const response = await fetch('/admin/get-entry', {
-            method: 'GET',
-            headers: {
-                id: id 
-            }
-        })
+        if (!(id < 0)) {
+            const response = await fetch('/admin/get-entry', {
+                method: 'GET',
+                headers: {
+                    id: id 
+                }
+            })
+            data = await response.json();
 
-        let data = await response.json();
+        }
 
-        console.log(changes);
-        console.log(data);
-        let tbody = '';
-        if (data.error) {
+        if (data && data.error) {
             div.innerText = 'Error occured when trying to display specific entry';
         } 
         else {
             // display current entry but then input user's changes
-            for (let i = 0; i < changes.length; i++) {
-                if (changes[i] === "") {
-                    // if newEntry[i] is null, enter originformdata[i]
-                    tbody += `<td class='original-cell'>${data[0][i + 1]}</td>`
-                } else {
-                    // else enter newEntry[i] and change color
-                    tbody += `<td class='changed-cell'>${changes[i]}</td>`
+
+            // 3 is the number of header rows in table
+            let i = 0;
+
+            const set_cnts = [11, 13, 8]
+            for (let row_num = 1; row_num <= set_cnts.length; row_num++)
+            {
+                let row = '<tr>';
+                let tbody = document.getElementById(`set-${row_num}`);
+
+                // array index is different from step count
+                // i is array index, steps is num to iterate through array
+                for (let step = 0; step < set_cnts[row_num - 1]; step++) {
+                    if (!changes[i]) {
+                        // if newEntry[i] is null, enter originformdata[i]
+                        if (data) {
+                            row += `<td class='original-cell'>${data[0][i + 1]}</td>`
+                            entry.push(data[0][i + 1]);
+                        } else {
+                            // original row is just empty string
+                            row += `<td class='original-cell'></td>`
+                            entry.push("");
+                        }
+                    } else {
+                        // else enter newEntry[i] and change color
+                        row += `<td class='changed-cell'>${changes[i]}</td>`
+                        entry.push(changes[i]);
+                    }
+                    i++
                 }
+                row += '</tr>';
+                tbody.innerHTML = row;
             }
-            document.getElementById('blue-body').innerHTML = tbody;
+            
 
             modal.style.display = "block";
 
@@ -218,8 +244,52 @@ async function viewChangedEntry(id, changes) {
                 }
             }    
         }
+        return entry;
 
     } catch (err) {
         console.error("Error retrieving log's entry: ", err);
+    }
+}
+
+async function getChangedEntry(id, changes) {
+    try {
+        let entry = [];
+
+        let data;
+        if (!(id < 0)) {
+            const response = await fetch('/admin/get-entry', {
+                method: 'GET',
+                headers: {
+                    id: id 
+                }
+            })
+            data = await response.json();
+
+        }
+
+        if (data && data.error) {
+            div.innerText = 'Error occured when trying to display specific entry';
+        } 
+        else {
+            // 32 is the number of columns (not including index)
+            for (let i = 0; i < 32; i++) {
+                if (!changes[i]) {
+                    // if newEntry[i] is null, enter originformdata[i]
+                    if (data) {
+                        entry.push(data[0][i + 1]);
+                    } else {
+                        // original row is just empty string
+                        entry.push("");
+                    }
+                } else {
+                    // else enter newEntry[i] and change color
+                    entry.push(changes[i]);
+                }
+                i++
+            }
+        }
+        return entry;
+    } catch (err) {
+        console.error("Error getting changed entry: ", err);
     }
 }

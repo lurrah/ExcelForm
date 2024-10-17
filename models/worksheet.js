@@ -146,14 +146,17 @@ class Worksheet {
 
     async addEntry(values) {
         try {
-            console.log(values);
+            values.unshift(`=IF(A${newRowIndex}<>"", INDEX(A:A, ROW()-1, 1) + 1, "")`);
+
             const body = {
                 persistChanges: true,
-                values: [
+                values: 
+                [
                     values
                 ]
             }
 
+            console.log(body);
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/add`, {
                 method: 'POST',
                 headers: {

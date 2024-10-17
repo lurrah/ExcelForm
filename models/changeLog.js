@@ -12,9 +12,9 @@ class ChangeLog {
             })
             if (!response.ok) {
                 if (response.status === 401) {
-                    return 401;
+                    return {error: 401};
                 } else {
-                    throw new Error('Failed to fetch logs');
+                    return {error: 404};
                 }
             }
 
@@ -57,6 +57,8 @@ class ChangeLog {
             console.log('Error adding entry to table:', err);
         }
     }
+
+    // async editLog()
 }
 
 module.exports = ChangeLog;

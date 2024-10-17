@@ -1,11 +1,15 @@
-// const EntryInfo = require('../models/EntryInfo.js');
+const EntryInfo = require('../models/EntryInfo.js');
 
 
-// class EntryInfo {
-//     constructor() {
-//     }
+class EntryInfo {
+    constructor() {
+        this.entry = new EntryInfo(req.headers.values);
+    }
 
-//     async setEntry() {
+    async getEntry() {
+        const response = await this.entry.getEntry();
+        return res.json(response);
+    }
+}
 
-//     }
-// }
+module.exports = EntryInfo;
