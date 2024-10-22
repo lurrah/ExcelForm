@@ -10,8 +10,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home' });
 });
 
-//router.get('/worksheet', async (req, res) => await wsController.getWS(req, res));
-
 router.get('/get-entry', async (req, res) => await wsController.getEntry(req, res));
 
 

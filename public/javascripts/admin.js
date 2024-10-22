@@ -52,23 +52,26 @@ async function getLogs() {
 }
 
 async function displayLogs(logList) {
+    try{
+        console.log()
         const table = document.getElementById('log-table');
         const div = document.getElementById('error-div');
         let rowBody = "";
 
         //<tr id="key"> <th>Application Name</th> <coll.><th>Normalized Name</th> <th>Business Owner</th> <th>Managed By</th></coll.> <th>Date</th><th>Author</th><Status</th><Buttons></tr>
         for (let i = 0; i < logList.length; i++) 
-            {
+            {   
+                let status = logList[i].values[0][7];
                 rowBody += `<tr id='row-${i}'>
-                                <td>${logList[i].values[0][1]}</td>
-                                <td>${logList[i].values[0][3]}</td>
+                                <td>${logList[i].values[0][2]}</td>
                                 <td>${logList[i].values[0][4]}</td>
                                 <td>${logList[i].values[0][5]}</td>
                                 <td>${logList[i].values[0][6]}</td>
+                                <td>${logList[i].values[0][7]}</td>
                                 <td>
                             `
                 // if status is not pending (accepted/rejected), then approve or reject buttons will not show.
-                if (logList[i].values[0][6] === 'Pending') {
+                if (status === 'Pending') {
                     rowBody +=  `   <button id='approve-${i}'>Approve</button><br>
                                     <button id='reject-${i}'>Reject</button><br><br>
                                 `
@@ -81,38 +84,53 @@ async function displayLogs(logList) {
         table.querySelector('tbody').innerHTML = rowBody;
         // set button event listeners
         for (let i = 0; i < logList.length; i++) {
-            let entry_id = logList[i].values[0][0];
-            let changes = JSON.parse(logList[i].values[0][2]);
+            let app_id = logList[i].values[0][1];
+            let log_id = logList[i].values[0][0];
+            let changes = JSON.parse(logList[i].values[0][3]);
             let entry;
 
-            document.getElementById(`approve-${i}`).addEventListener('click', function() { 
-                // add or edit entry
-                if (entry_id < 0) {
-                    if (!entry) {
-                        div.innerText = 'Please view the changes before approving them.';
-                    } else {
-                        addEntry(entry);
-                    }
-                } else {
-                    editEntry(entry_id, entry_changes);
-                }
+
+            document.getElementById(`approve-${i}`).addEventListener('click', function() {
+                approveChanges(app_id, entry, entry_changes);
             });
             document.getElementById(`reject-${i}`).addEventListener('click', function() {    
                 // redirect to (would you like to write a message to the author about the rejection?)
             });
             document.getElementById(`view-${i}`).addEventListener('click', async function() {
-                entry = await viewChangedEntry(entry_id, changes);
+                entry = await viewChangedEntry(app_id, changes);
                 // view changes as highlighted columns
             });
             document.getElementById(`edit-${i}`).addEventListener('click', function() {
+                adminEdit(log_id, app_id);
                 // view column as a form (add pink rows)
             });
         }
         table.hidden = false;
+    } catch (err) {
+        console.error("Error displaying log list: ", err)
+    }
+}
+
+async function approveChanges(app_id, entry, entry_changes) {
+    try {
+        // if app_id does not exist, then add entry
+        if (app_id < 0) {
+            if (!entry) {
+                div.innerText = 'Please review the changes before approving them.';
+                return;
+            } else {
+                addEntryToMai(entry);
+            }
+        } else {
+            editMai(app_id, entry_changes);
+        }
+    } catch (err) {
+        console.error("Error occurred when approving changes: ", err)
+    }
 }
 
 // This should only be for admins
-async function editEntry(id, input) {
+async function editMai(id, input) {
     try {
         input = JSON.parse(input);
 
@@ -122,7 +140,7 @@ async function editEntry(id, input) {
             div.innerText = 'No changes have been made';
         }
         else {
-            const response = await fetch('/admin/edit-entry', {
+            const response = await fetch('/admin/mai/edit', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -147,10 +165,10 @@ async function editEntry(id, input) {
     }
 }
 
-async function addEntry(values) {
+async function addEntryToMai(values) {
     try {
         console.log(values);
-            const response = await fetch('/admin/add-entry', {
+            const response = await fetch('/admin/mai/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -169,7 +187,7 @@ async function addEntry(values) {
                 div.innerText = 'Entry has been added succesfully';
         }
     } catch (err) {
-        console.error("Error calling addEntry router: ", err);
+        console.error("Error calling /mai/add router: ", err);
     }
 }
 
@@ -214,16 +232,17 @@ async function viewChangedEntry(id, changes) {
                     if (!changes[i]) {
                         // if newEntry[i] is null, enter originformdata[i]
                         if (data) {
-                            row += `<td class='original-cell'>${data[0][i + 1]}</td>`
+                            console.log(data[0][i + 1])
+                            row += `<td class='original-cell'><input type="text" value="${data[0][i + 1]}" disabled></td>`
                             entry.push(data[0][i + 1]);
                         } else {
                             // original row is just empty string
-                            row += `<td class='original-cell'></td>`
+                            row += `<td class='original-cell'><input type="text" disabled></td>`
                             entry.push("");
                         }
                     } else {
                         // else enter newEntry[i] and change color
-                        row += `<td class='changed-cell'>${changes[i]}</td>`
+                        row += `<td class='changed-cell'><input type="text" value="${changes[i]}" disabled></td>`
                         entry.push(changes[i]);
                     }
                     i++
@@ -291,5 +310,13 @@ async function getChangedEntry(id, changes) {
         return entry;
     } catch (err) {
         console.error("Error getting changed entry: ", err);
+    }
+}
+
+async function adminEdit(log_id, app_id) {
+    try { 
+        // view modal with ability to edit
+    } catch (err) {
+        console.error("Error occurred while trying to edit entry: ", err);
     }
 }

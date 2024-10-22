@@ -80,10 +80,10 @@ class Worksheet {
             } else if (list !== null && list.length !== 0) {
                 for (let row of list) {
                     // get values to search through in the entries
-                    const name = row.values[0][1].trim();
-                    const othrname = row.values[0][2].trim();
-                    const owner = row.values[0][7].trim();
-                    const manager = row.values[0][11].trim();
+                    const name = String(row.values[0][1]).trim();
+                    const othrname = String(row.values[0][2]).trim();
+                    const owner = String(row.values[0][7]).trim();
+                    const manager = String(row.values[0][11]).trim();
 
                     // check by application name or owner name
                     if (searchType === 'Application Name' && name!== '' && name.toLowerCase().includes(search.toLowerCase())) {
@@ -118,7 +118,6 @@ class Worksheet {
                 ]
             }
 
-            console.log(index)
 
             console.log(body)
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
@@ -146,7 +145,7 @@ class Worksheet {
 
     async addEntry(values) {
         try {
-            values.unshift(`=IF(A${newRowIndex}<>"", INDEX(A:A, ROW()-1, 1) + 1, "")`);
+            values.unshift(`=IF(A1<>"", INDEX(A:A, ROW()-1, 1) + 1, "")`);
 
             const body = {
                 persistChanges: true,

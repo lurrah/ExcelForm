@@ -13,12 +13,16 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/get-logs', async (req, res) => await logController.getLogs(req, res));
-
-router.patch('/edit-entry', async (req, res) => await wsController.editEntry(req, res));
-
-router.post('/add-entry', async (req, res) => await wsController.addEntry(req, res));
-
 router.get('/get-entry', async (req, res) => await wsController.getEntry(req, res));
+
+
+router.patch('/mai/edit', async (req, res) => await wsController.editEntry(req, res));
+
+router.post('/mai/add', async (req, res) => await wsController.addEntry(req, res));
+
+
+// router.patch('/mai/admin-edit', async (req, res) => await wsController.getEntry(req, res));
+
 
 
 module.exports = router;

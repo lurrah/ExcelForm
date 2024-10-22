@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const returnForm = document.getElementById('return-entry');
     returnForm.addEventListener('click', async function() {
-        displayForm(reviewEntry.slice(1));
+        displayForm(originFormData.slice(1), reviewEntry.slice(1));
         initPagination(1);
     });
 
@@ -296,30 +296,39 @@ async function initPagination(type) {
 }
 
 // Helper functions
-async function displayForm(data) {
+async function displayForm(original, changes) {
     // Hide search form and show entry form
     const tableForm = document.getElementById('table-form');
-    tableForm.removeAttribute('hidden');
+    let populateEntry = [];
 
+    tableForm.removeAttribute('hidden');
+    for (let i = 0; i < original.length; i++) {
+        if (!changes || changes[i] === '') {
+            populateEntry.push(original[i]);
+        } else {
+            populateEntry.push(changes[i]);
+        }
+    }
+    
     // pg1 
-    document.getElementById('appname-edit').value = data[0];//data.appName;
-    document.getElementById('appnorm-edit').value = data[1];//data.appNorm;
-    document.getElementById('description-edit').value = data[2];//data.description;
-    document.getElementById('owner-edit').value = data[6]//data.owner;
-    document.getElementById('owner-dep-edit').value = data[7]//data.ownerDep;
-    document.getElementById('owner-it-edit').value = data[9]//data.ownerIt;
-    document.getElementById('owner-itdep-edit').value = data[10]//data.ownerItDep;
+    document.getElementById('appname-edit').value = populateEntry[0];//data.appName;
+    document.getElementById('appnorm-edit').value = populateEntry[1];//data.appNorm;
+    document.getElementById('description-edit').value = populateEntry[2];//data.description;
+    document.getElementById('owner-edit').value = populateEntry[6]//data.owner;
+    document.getElementById('owner-dep-edit').value = populateEntry[7]//data.ownerDep;
+    document.getElementById('owner-it-edit').value = populateEntry[9]//data.ownerIt;
+    document.getElementById('owner-itdep-edit').value = populateEntry[10]//data.ownerItDep;
     //pg2
-    document.getElementById('numInteg-edit').value = data[14]//data.numInteg;
-    document.getElementById('numActivUsr-edit').value = data[15]//data.numActivUsr;
-    document.getElementById('numStaff-edit').value = data[16]//data.numStaff;
-    document.getElementById('cobbId-edit').value = data[17]//data.cobbId;
-    document.getElementById('vendor-edit').value = data[18]//data.vendor;
-    document.getElementById('numLic-edit').value = data[19]//data.numLic;
-    document.getElementById('yrCost-edit').value = data[20]//data.yrCost;
-    document.getElementById('cntDates-edit').value = data[21]//data.cntDates;
-    document.getElementById('details-edit').value = data[22]//data.details;
-    document.getElementById('datUpdat-edit').value = data[23]//data.datUpdat;
+    document.getElementById('numInteg-edit').value = populateEntry[14]//data.numInteg;
+    document.getElementById('numActivUsr-edit').value = populateEntry[15]//data.numActivUsr;
+    document.getElementById('numStaff-edit').value = populateEntry[16]//data.numStaff;
+    document.getElementById('cobbId-edit').value = populateEntry[17]//data.cobbId;
+    document.getElementById('vendor-edit').value = populateEntry[18]//data.vendor;
+    document.getElementById('numLic-edit').value = populateEntry[19]//data.numLic;
+    document.getElementById('yrCost-edit').value = populateEntry[20]//data.yrCost;
+    document.getElementById('cntDates-edit').value = populateEntry[21]//data.cntDates;
+    document.getElementById('details-edit').value = populateEntry[22]//data.details;
+    document.getElementById('datUpdat-edit').value = populateEntry[23]//data.datUpdat;
 
     // Predetermined select lists ( index: 3, 4, 5, 8, 11, 12, 13 )
     const criticality = document.getElementById('criticality-edit');
@@ -332,13 +341,13 @@ async function displayForm(data) {
 
     // Map lists to elements
     const selectLists = [ 
-        { list: criticality, value: data[3] },//data.criticality },
-        { list: lifecycle, value: data[4] },//data.lifecycle },
-        { list: community, value: data[5] },//data.community },
-        { list: ownerBudg, value: data[8] },//data.ownerBudg },
-        { list: appType, value: data[11] },//data.appType },
-        { list: appDel, value: data[12] },//data.appDel },
-        { list: platform, value: data[13] }//data.platform}
+        { list: criticality, value: populateEntry[3] },//data.criticality },
+        { list: lifecycle, value: populateEntry[4] },//data.lifecycle },
+        { list: community, value: populateEntry[5] },//data.community },
+        { list: ownerBudg, value: populateEntry[8] },//data.ownerBudg },
+        { list: appType, value: populateEntry[11] },//data.appType },
+        { list: appDel, value: populateEntry[12] },//data.appDel },
+        { list: platform, value: populateEntry[13] }//data.platform}
     ];
 
     // iterate through all selectLists and populate them as necessary

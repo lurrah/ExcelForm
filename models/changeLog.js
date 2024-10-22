@@ -28,6 +28,9 @@ class ChangeLog {
 
     async addLog(values) {
         try {
+
+            values.unshift(`=IF(A1<>"", INDEX(A:A, ROW()-1, 1) + 1, "")`);
+
             const body = {
                 persistChanges: true,
                 values: [
