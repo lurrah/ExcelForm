@@ -11,7 +11,10 @@
         <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="stylesheets/info.css">
+        <link rel="stylesheet" href="stylesheets/mai_form.css">
+        <link rel="stylesheet" href="stylesheets/search.css">
+        <link rel="stylesheet" href="stylesheets/directions.css">
+
       </head>
     <body>
         <!-- ucf bar -->
@@ -46,38 +49,67 @@
 
         <div class="container-fluid site-content" id="content">
           <div class="container">
-            <h1>MAI Form</h1>
+            <h1>Search and Select</h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/search">Search</a></li>
+
             </ol>
 
-            <!-- Search Entry Form -->
-              <div class="form-group">
-
-                <form id="entry-form">
-                  <label for="appName">Application Name</label>
-                  <input type="text" id="appname" name="appname"><br><br>
-
-                  <label for="ownerName">Name of Owners / Collaborators</label>
-                  <input type="text" id="ownername" name="ownerName"><br><br>
-                  <button type="button" id="search-entry">Search for Entries</button>
-                </form>
+            <!-- Collapsible Instructions-->
+            <div class="directions" id="search-directions">
+              <button class="directions-btn">Instructions<span class="arrow">&#x25BC;</span></button>
+              <div class="content" id="directions-menu">
+                <p><b>Searching for Application:</b> Search for the application you would like to edit below. You can search by the name of the application or by owner/manager/collaborator.
+                  If you would like to add an app, please search the desired name to ensure that the app does not already exist. If it does, please edit
+                  the existing one and do not create a duplicate. If you cannot find the app or no apps match your search, you may add an app or make a new search.
+                </p>
+                <br>
+                <p><b>Application Not Found?</b> After you click Add or Select Application you will be redirected to a form containing all of the current information for the app. Add application will
+                  bring you to an empty form. 
+                </p>
               </div>
+            </div>
 
-              <table id="entry-list" hidden>
-                <thead>
-                  <tr id="key">
-                    <th>Application Name</th>
-                    <th>Normalized Name</th>
-                    <th>Business Owner</th>
-                    <th>Managed By</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Entry rows to be added -->
-                </tbody>
-              </table>
+            <!-- Search Entry Form -->
+                <div id="radio">
+                  <p>Search By:</p>
+                  <label for="radio"> Application Name</label>
+                  <input type="radio" name="form-section" value="appName" checked>
+
+                  <label for="radio">  Owner/Manager/Collaborator</label>
+                  <input type="radio" name="form-section" value="ownerName">
+                </div><br>
+
+                  <form id="entry-form">
+                    <div id="appName">
+                      <label for="appName">Enter your Application Name</label>
+                      <input type="text" id="appname" name="appname"><br><br>
+                    </div>
+                  
+                    <div id="ownerName" hidden>
+                    <label for="ownerName">Enter the Name of Owner / Collaborator / Manager</label>
+                    <input type="text" id="ownername" name="ownerName"><br><br>
+                    </div>
+                    <button type="button" id="search-entry">Search for Entries</button>
+                </form>
+
+              <div id="search-result-div"></div>
+                <table class ="table" id="entry-list" hidden>
+                  <thead>
+                    <tr id="key">
+                      <th>Application Name</th>
+                      <th>Normalized Name</th>
+                      <th>Business Owner</th>
+                      <th>Managed By</th>
+                      <th>Select</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Entry rows to be added -->
+                  </tbody>
+                </table>
+
 
               <div id="error-div"></div>
 
@@ -97,5 +129,5 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.js"></script>
-    <script src="javascripts/info.js"></script>
+    <script src="javascripts/search.js"></script>
 </html>

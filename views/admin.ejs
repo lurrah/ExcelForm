@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.it.ucf.edu/minerva/1.0.0/css/minerva.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+        <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
+        <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="stylesheets/admin.css">
+        <link rel="stylesheet" href="stylesheets/directions.css">
+
+
+    </head>
+    <body>
+        <!-- ucf bar -->
+        <div id="ucfhb" class=" preload" role="complementary" aria-label="University of Central Florida navbar">
+          <div id="ucfhb-inner" style="display: none;">
+            <div id="ucfhb-left">
+              <div id="ucfhb-logo">
+                <a href="https://www.ucf.edu" aria-label="University of Central Florida"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <!-- header -->
+        <header>
+          <nav class="navbar navbar-dark navbar-expand-lg slim-nav slim-nav-dark">
+            <div class="container">
+              <a class="navbar-brand" href="/">Master Application Inventory Form</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+                span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="main-nav">
+                <ul class="navbar-nav ml-md-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </header>
+
+        <div class="container-fluid site-content" id="content">
+          <div class="container">
+            <h1>Admin View</h1>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+            </ol>
+
+            <div class="directions" id="search-directions">
+              <button class="directions-btn">Instructions<span class="arrow">&#x25BC;</span></button>
+              <div class="content" id="directions-menu">
+                <p><b>Accessing the Change Log:</b> You can search the change log by status (Pending, Approved, or Rejected) or retrieve the entire list of changes. Once 'Get Log'
+                  is selected, a table with the Application Name, Date of Change, Author of Change, and Status. If you would like to see the changes made for a specific app, click
+                  the info column and it will expand to show the changes. You may approve or reject the changes. <b>!!CAUTION!!</b> Selecting approve <b>WILL</b> make the changes in the MAI.
+                </p>
+
+                <p><b>Editing/Viewing:</b> You can view the changes that a user has requested to make. You can also update the changes.</p>
+              </div>
+            </div>
+            <h1>Get Log</h1>
+    
+            <!-- Dropdown to select log status -->
+            <select id="log-status">
+                <option value="all">All</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            
+            <!-- Button to get logs -->
+            <button id="get-log">Get Log</button>
+            
+            <!-- Display log results here -->
+            <div id="log-results"></div>
+
+            <table id="log-table" hidden>
+                <thead>
+                    <tr>
+                      <th class="fixed-column">Application Name</th>
+                      <th class="fixed-column">Type of Change</th>
+                      <th class="fixed-column">Date Changed</th>
+                      <th class="fixed-column">Author of Change</th>
+                      <th class="fixed-column">Status</th>
+                      <th class="fixed-column">Options</th>
+                    </tr>
+                </thead>
+                <tbody id="log-table-body">
+                    
+                </tbody>
+            </table>
+
+
+            <!-- The Modal -->
+            <div id="displayModal" class="modal">
+
+              <!-- Modal content -->
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <table id="blue-cols">
+                  <thead>
+                      <tr class="key1">
+                        <th>Application Name</th>
+                        <th>Normalized Application Name</th>
+                        <th>Short Description</th>
+                        <th>Business Criticality</th>
+                        <th>Life Cycle State</th>
+                        <th>User Community</th>
+                        <th>Business Owner</th>
+                        <th>Business Dept. Owner(s)</th>
+                        <th>Manage By</th>
+                        <th>Managed By Dept</th>
+                        <th>Managed By Owner</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="set-1">
+                    </tbody>
+                    <thead>
+                      <tr class="key2">
+                        <th>Appli</tbody>cation Type</th>
+                        <th>Application Delivery</th>
+                        <th>Platform</th>
+                        <th># Integrations</th>
+                        <th># Active Users (ROM)</th>
+                        <th># Dedicated IT Support Staff</th>
+                        <th>Cobblestone Contract ID</th>
+                        <th>Vendor</th>
+                        <th># Licenses</th>
+                        <th>Yearly Cost</th>
+                        <th>Contract Dates (start/stop)</th>
+                        <th>Important Details</th>
+                        <th>Date App Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody id="set-2">
+
+                    </tbody>
+                    <thead>
+                      <tr class="key3">
+                        <th>EDUCAUSE Service Category</th>
+                        <th>EDUCAUSE Service</th>
+                        <th>CAUDIT Parent Capability</th>
+                        <th>CAUDIT Capability</th>
+                        <th>Core or Enabling</th>
+                        <th>Enterprise or End-User Productivity (WIP)</th>
+                        <th>Common Good: Yes or No</th>
+                        <th>Application Tag / ID2</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="set-3">
+
+                    </tbody>
+              </table>
+              <br>
+
+              </div>
+
+            </div>
+
+
+            <div id="error-div"></div>
+          </div>
+        </div>
+
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.it.ucf.edu/minerva/1.0.0/js/internal-header.js"></script>
+    <script src="https://cdn.it.ucf.edu/minerva/1.0.0/js/minerva.js"></script>
+    <script src="https://cdn.it.ucf.edu/assets/scrollsaver-3.min.js "></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="javascripts/admin.js"></script>
+</html>

@@ -11,7 +11,10 @@
         <link rel="shortcut icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/favicon_black.png" />
         <link rel="apple-touch-icon" href="https://cdn.it.ucf.edu/minerva/1.0.0/images/apple-touch-icon.png" />
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="stylesheets/info.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="stylesheets/mai_form.css">
+        <link rel="stylesheet" href="stylesheets/directions.css">
+
       </head>
     <body>
         <!-- ucf bar -->
@@ -46,14 +49,35 @@
 
         <div class="container-fluid site-content" id="content">
             <div class="container">
-              <h1>MAI Form</h1>
+              <h1>Edit</h1>
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/search">Search</a></li>
+                <li class="breadcrumb-item"><a href="/mai_form">Edit</a></li>
+
+
               </ol>
+              <div class="directions" id="search-directions">
+                <button class="directions-btn">Instructions<span class="arrow">&#x25BC;</span></button>
+                <div class="content" id="directions-menu">
+                  <p><b>Editing/Adding Application:</b> Please make your changes as necessary. If you are registering a new application, then fill out as much information as you can.
+                    When ready to review your changes, click the button located on the last page. 
+                  </p>    
+                  <br>
+                  <p><b>Reviewing Changes:</b> When reviewing the changes made, they will appear highlighted in red. The ones not highlighted
+                    indicate unchanged values. If you would like to continue making changes, return back to the form. Otherwise, submit your changes. You will receive an email once your
+                    changes are approved/rejected. If they happen to be rejected, an administrator will reach out to you regarding why.
+                  </p>
+                </div>
+              </div>
+
                 <!-- MAI Form -->
+                 
                 <div class="form-group" id="page-1" style="display:none;">
                     <form id="table-form">
-                        <label for="appName">Application Name</label>
+                        <label for="appName">Application Name</label> 
+                        <i class="fas fa-info-circle info-icon" title="Information about this feature"></i>
+
                         <input type="text" id="appname-edit" name="appName"><br><br>
                         
                         <label for="appNorm">Normalized Application Name</label>
@@ -198,11 +222,63 @@
                     </form>
                 </div>
 
+  
+                <div class="review-group" id="review-1" hidden>
+                  <table class="table" id="review-table-1">
+                    <thead>
+                      <tr class ='key1' id="key1">
+                        <th>Application Name</th>
+                        <th>Normalized Name</th>
+                        <th>Short Description</th>
+                        <th>Business Criticality</th>
+                        <th>Life Cycle State</th>
+                        <th>User Community</th>
+                        <th>Business Owner</th>
+                        <th>Business Dept. Owner(s)</th>
+                        <th>Managed By</th>
+                        <th>Managed By Dept.</th>
+                        <th>Managed By Owner(s)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry row to be added -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="review-group" id="review-2" hidden>
+                  <table class="table" id="review-table-2">
+                    <thead>
+                        <tr class ='key2' id="key2">      
+                        <th>Application Type</th>
+                        <th>Application Delivery</th>
+                        <th>Platform</th>
+                        <th># Integrations</th>
+                        <th># Active Users (ROM)</th>
+                        <th># Dedicated IT Support Staff</th>
+                        <th>Cobblestone Contract ID</th>
+                        <th>Vendor</th>
+                        <th># Licenses</th>
+                        <th>Yearly Cost</th>
+                        <th>Contract Dates (start/stop)</th>
+                        <th>Important Details</th>
+                        <th>Date App Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry row to be added -->
+                    </tbody>
+                  </table>
+                </div>
+
                 <!-- Pagination controls-->
                 <div id="pagination"></div>
 
-                <button type="button" id="make-changes" hidden>Make Changes</button>
-
+                <button class ="typ1-buttons" type="button" id="review-changes" hidden>Review Changes</button>
+                <button class ="typ2-buttons" type="button" id="confirm-changes" hidden>Confirm Changes</button>
+                <button class ="typ2-buttons" type="button" id="return-entry" hidden>Return to Form</button>
+                <button type="button" id="home-btn" hidden>Return to Home Page</button>
+                <div id="status"></div>
                 <div id="error-div"></div>
             </div>
         </div>

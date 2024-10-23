@@ -93,18 +93,57 @@ h2 {
     background-color: #BA9B37; /* Optional: Hover effect */
   }
 
-  table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+  .table {
+    width: 100%; /* Full width of the container */
+    border-collapse: collapse; /* Collapse borders */
+    margin: 20px auto; /* Center the table */
+    table-layout: fixed; /* Fixed layout */
   }
   
   td, th {
     border: 1px solid #dddddd;
-    text-align: left;
+    text-align: center;
     padding: 8px;
+    overflow: hidden; /* Prevent overflow */
+    align-items: center; /* Centers the text vertically */
+
+
   }
   
   tr:nth-child(even) {
     background-color: #dddddd;
   }
+
+  #review-group {
+    color: black;
+  }
+
+  .changed-cell {
+    background-color: #FFCCCB;
+    color: black;
+  }
+  .original-cell {
+    background-color: white;
+    color: #A9A9A9;
+  }
+
+  #key1 {
+    background-color:#9bc2e6;
+    color: black;
+  }
+
+  #key2 {
+    background-color: #a9d08e;
+    color: black;
+  }
+
+  label, .info-icon {
+    display: inline; /* Ensure both are inline */
+    vertical-align: middle; /* Aligns them vertically */
+}
+
+.info-icon {
+    margin-left: 5px; /* Space between label and icon */
+    color: black; /* Color of the icon */
+    cursor: pointer; /* Pointer on hover */
+}

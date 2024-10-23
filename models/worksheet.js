@@ -4,8 +4,35 @@
 
 class Worksheet {
     constructor() {
-    
+        this.totalCols = 33;
     };
+
+    async getEntry(id) {
+        try {
+            console.log(id);
+            const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.wb_id}/workbook/worksheets/Sheet1/tables/${process.env.mai_id}/rows/itemAt(index=${id})`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${process.env.graph_pat}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return 401;
+                } else {
+                    throw new Error('Failed to fetch entries');
+                }
+            }
+
+            const data = await response.json();
+            return data.values;
+
+        } catch (err) {
+            console.log('Error retrieving entry with specified index: ', err);
+        }
+    }
 
     async getEntryList() {
         try {
@@ -35,6 +62,17 @@ class Worksheet {
     // Get specified entry based on search parameter (currently appName)
     async searchEntries(appName, ownerName) {
         try {
+            let searchType;
+            let search = appName !== null && appName !== '' ? appName : (ownerName !== null && ownerName !== '' ? ownerName : null);
+
+            if (appName !== null && appName !== '') {
+                searchType = 'Application Name'
+            } else if (ownerName !== null && ownerName !== '') {
+                searchType = 'Owner/Manager/Collaborator Name'
+            } else {
+                throw new Error();
+            }
+    
             const list = await this.getEntryList();
             let returnList = [];
             if (list === 401) {
@@ -42,39 +80,49 @@ class Worksheet {
                 return {error: 401, values: 'You are unauthorized to make this request.'};
             } else if (list !== null && list.length !== 0) {
                 for (let row of list) {
+                    // get values to search through in the entries
+                    const name = String(row.values[0][1]).trim();
+                    const othrname = String(row.values[0][2]).trim();
+                    const owner = String(row.values[0][7]).trim();
+                    const manager = String(row.values[0][11]).trim();
 
-                    const name = row.values[0][0].trim();
-                    const owner = row.values[0][6].trim();
-                    const manager = row.values[0][10].trim();
-                
-                    if (appName!=='' && name!== '' && name.toLowerCase().includes(appName.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
-                        //return {index: row.index, values: row.values};
-                    } else if (ownerName!=='' && owner!== '' && owner.toLowerCase().includes(ownerName.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
-                    } else if (ownerName!=='' && manager!== '' && manager.toLowerCase().includes(ownerName.toLowerCase())) {
-                        returnList.push({index: row.index, values: row.values})
+                    // check by application name or owner name
+                    if (searchType === 'Application Name' && name!== '' && name.toLowerCase().includes(search.toLowerCase())) {
+                        returnList.push({values: row.values})
+                    } else if (searchType === 'Application Name' && othrname!== '' && othrname.toLowerCase().includes(search.toLowerCase())) {
+                        returnList.push({values: row.values})
+                    } else if (searchType === 'Owner/Manager/Collaborator Name' && owner!== '' && owner.toLowerCase().includes(search.toLowerCase())) {
+                        returnList.push({values: row.values})
+                    } else if (searchType === 'Owner/Manager/Collaborator Name' && manager!== '' && manager.toLowerCase().includes(search.toLowerCase())) {
+                        returnList.push({values: row.values})
                     }
                 }
 
                 if (returnList.length !== 0) {
-                    return returnList;
+                    return returnList;    
                 }
             }
-            return {error: 1, values: 'No entries found.'};
+            return {error: 1, values: `No entries found with '${search}' in the ${searchType}`};
         } catch (err) {
             console.log('Error fetching specific entry: ', err);
         }
     }
 
     // Edit specified entry based
-    async editEntry(values, index) {
+    async editEntry(index, values) {
         try {
+            // input id column (do not change)
+            values.unshift(null);
+
+            // Account for the pink columns if admin has not added them.
+            while (values.length < this.totalCols ) 
+            {
+                values.push(null);
+            }
+
             const body = {
                 persistChanges: true,
-                values: [
-                    values
-                ]
+                values: [ values ]
             }
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
@@ -84,7 +132,6 @@ class Worksheet {
                 },
                 body: JSON.stringify(body)
             })
-
             if (!response.ok) {
                 if (response.status === 401) {
                     return {error: 401, values: 'You are unauthorized to make this request.'};
@@ -92,7 +139,6 @@ class Worksheet {
                     return {error: 400, values: 'Error occured while editing entry'};
                 }
             }
-
             const data = await response.json();
             return data;
         } catch (err) {
@@ -102,9 +148,18 @@ class Worksheet {
 
     async addEntry(values) {
         try {
+            values.unshift(`=IF(A1<>"", INDEX(A:A, ROW()-1, 1) + 1, "")`);
+
+            // Account for the pink columns if admin has not added them.
+            while (values.length < this.totalCols ) 
+            {
+                values.push("");
+            }
+
             const body = {
                 persistChanges: true,
-                values: [
+                values: 
+                [
                     values
                 ]
             }
@@ -117,18 +172,16 @@ class Worksheet {
                 },
                 body: JSON.stringify(body),
             })
+
             if (!response.ok) {
                 if (response.status === 401) {
-                    console.error('Unauthorized to make this request.');
-                    return 401;
+                    return {status: 401, msg: 'You are unauthorized to make this request.'};
                 } else {
-                    throw new Error('Failed to add entry');
+                    return {status: 400, msg: 'Unexpected error occurred when sending "add entry" request.'};
                 }
             }
 
-            const data = await response.json();
-
-            return data;
+            return {status: 200, msg: 'Entry has been successfully added.'};
         } catch(err) {
             console.log('Error adding entry to table:', err);
         }
