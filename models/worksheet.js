@@ -4,11 +4,12 @@
 
 class Worksheet {
     constructor() {
-    
+        this.totalCols = 33;
     };
 
     async getEntry(id) {
         try {
+            console.log(id);
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.wb_id}/workbook/worksheets/Sheet1/tables/${process.env.mai_id}/rows/itemAt(index=${id})`, {
                 method: 'GET',
                 headers: {
@@ -110,16 +111,19 @@ class Worksheet {
     // Edit specified entry based
     async editEntry(index, values) {
         try {
-            const body = {
-                persistChanges: true,
-                values: [
-                    index, 
-                    values
-                ]
+            // input id column (do not change)
+            values.unshift(null);
+
+            // Account for the pink columns if admin has not added them.
+            while (values.length < this.totalCols ) 
+            {
+                values.push(null);
             }
 
-
-            console.log(body)
+            const body = {
+                persistChanges: true,
+                values: [ values ]
+            }
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/itemAt(index=${index})`, {
                 method: 'PATCH',
                 headers: {
@@ -128,7 +132,6 @@ class Worksheet {
                 },
                 body: JSON.stringify(body)
             })
-
             if (!response.ok) {
                 if (response.status === 401) {
                     return {error: 401, values: 'You are unauthorized to make this request.'};
@@ -147,6 +150,12 @@ class Worksheet {
         try {
             values.unshift(`=IF(A1<>"", INDEX(A:A, ROW()-1, 1) + 1, "")`);
 
+            // Account for the pink columns if admin has not added them.
+            while (values.length < this.totalCols ) 
+            {
+                values.push("");
+            }
+
             const body = {
                 persistChanges: true,
                 values: 
@@ -155,7 +164,6 @@ class Worksheet {
                 ]
             }
 
-            console.log(body);
             const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.mai_id}/rows/add`, {
                 method: 'POST',
                 headers: {

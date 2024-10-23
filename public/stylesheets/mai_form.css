@@ -136,3 +136,14 @@ h2 {
     background-color: #a9d08e;
     color: black;
   }
+
+  label, .info-icon {
+    display: inline; /* Ensure both are inline */
+    vertical-align: middle; /* Aligns them vertically */
+}
+
+.info-icon {
+    margin-left: 5px; /* Space between label and icon */
+    color: black; /* Color of the icon */
+    cursor: pointer; /* Pointer on hover */
+}

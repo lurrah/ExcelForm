@@ -61,6 +61,38 @@ class ChangeLog {
         }
     }
 
+    async changeStatus(log_id, status) {
+        try { 
+        const body = {
+            persistChanges: true,
+            values: [
+                status
+            ]
+        }
+
+        const response = await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${process.env.drive_id}/workbook/tables/${process.env.review_id}/rows/itemAt(index=${log_id})`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${process.env.graph_pat}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body),
+        })
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                return {status: 401, msg: 'You are unauthorized to make this request.'};
+            } else {
+                return {status: 400, msg: 'Unexpected error occurred when submitting "add entry" request.'};
+            }
+        }
+
+        return {status: 200, msg: 'Your submission has been sent successfully.'};
+        }
+        catch(err) {
+            console.log('Error changing status:', err);
+        }
+    }
     // async editLog()
 }
 

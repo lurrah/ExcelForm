@@ -9,7 +9,6 @@ class WorksheetController {
     async getEntry(req, res) {
         try {
             const id = req.headers.id;
-
             const response = await this.ws.getEntry(id);
             return res.json(response);
         } catch(err) { 

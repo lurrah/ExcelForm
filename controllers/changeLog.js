@@ -29,6 +29,21 @@ class ChangeLogController {
             console.log('Error adding request to the Change Log:', err);
         }
     }
+
+    async changeStatus(req, res) {
+        try {
+            const log_id = req.body.log_id;
+            const status = req.body.status;
+
+            console.log(status);
+            console.log(log_id)
+            const response = await this.log.changeStatus(log_id, status);
+
+            return res.json(response);
+        } catch(err) {
+            console.log('Error changing status:', err);
+        }
+    }
 }
 
 module.exports = { ChangeLogController };

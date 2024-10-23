@@ -36,27 +36,51 @@ document.addEventListener('DOMContentLoaded', async function () {
     let reviewEntry;
 
     reviewButton.addEventListener('click', async function(event) {
+        reviewButton.disabled = true;
         event.preventDefault();
+        try { 
+            reviewEntry = addOrEdit ? Array(entryCount).fill(null) : originFormData;
+            if (addOrEdit) {
+                // if add, index does not exist
+                reviewEntry[0] = -1;
+            }
 
-        reviewEntry = addOrEdit ? Array(entryCount).fill('') : originFormData;
-        if (addOrEdit) {
-            // if add, index does not exist
-            reviewEntry[0] = -1;
+            reviewEntry = await populateReview(reviewEntry);
+        } catch (err) {
+            console.error('Error occurred when reviewing changes', err);
         }
-
-        reviewEntry = await populateReview(reviewEntry);
-    })
-
+        finally {
+            reviewButton.disabled = false;
+        }
+    }) 
+    
     const confirmChangeBtn= document.getElementById('confirm-changes');
     confirmChangeBtn.addEventListener('click', async function(event) {
+        confirmChangeBtn.disabled = true;
         event.preventDefault();
-        await addLog(reviewEntry, addOrEdit ? reviewEntry[1] : originFormData[1]);
+        try {
+            await addLog(reviewEntry, addOrEdit ? reviewEntry[1] : originFormData[1]);
+        } catch (err) {
+            console.error('Error occurred when confirming changes', err);
+        }
+        finally {
+            confirmChangeBtn.disabled = false;
+        }
     })
 
     const returnForm = document.getElementById('return-entry');
+    
     returnForm.addEventListener('click', async function() {
-        displayForm(originFormData.slice(1), reviewEntry.slice(1));
-        initPagination(1);
+        returnForm.disabled = true;
+        try {
+            displayForm(originFormData.slice(1), reviewEntry.slice(1));
+            initPagination(1);
+        } catch(err) {
+            console.error('Error occurred when returning to form', err);
+        } finally {
+            returnForm.disabled = false;
+        }
+        
     });
 
     document.getElementById('home-btn').addEventListener("click", async function(event) {
@@ -74,7 +98,7 @@ async function getEntry() {
             document.getElementById('review-changes').textContent = 'Review Application';
             document.getElementById('confirm-changes').textContent = 'Add Application';
             addOrEdit = 1;
-            return null;
+            return Array(entryCount).fill(null);
         } else {
             addOrEdit = 0;
             await displayForm(Object.values(entryData).slice(1));
@@ -90,26 +114,38 @@ async function getEntry() {
 
 async function populateReview(origin) {
     try {
-        let newEntry = await getValues();
+        let newEntry = await getValues();        
+        console.log(newEntry);
+
         // Entry to be accessed in case user wants to revise their changes
         let retEntry = [];
+        // newEntry does not have index, so therefore, origin index field must be removed.
         const changes = await detectChanges(origin.slice(1), newEntry);
-
+        
+        let div = document.getElementById('error-div');
         if (changes.every(element => element === null)) {
-            document.getElementById('error-div').innerText = 'No changes have been made';
+            div.innerText = 'No changes have been made';
             return;
         }
-        else {
-            document.getElementById('error-div').innerText = '';
+        else if (newEntry[0] === "" || newEntry[0] === null) {
+            // newEntry[0] is user appName
 
-            
+            div.innerText = 'Application name cannot be empty. Request not made.';
+        }
+        else {
+            // check if application name already exists in the inventory (with changes [0] if not null)
+
+
+
+            div.innerText = "";
+
             // get table by id
             const table1 = document.getElementById('review-table-1');
             const table2 = document.getElementById('review-table-2');
 
 
             let i = 0;
-            let tbody= '';
+            let tbody= "";
             tbody += '<tr>'
             // for each element in origin form data
 
@@ -119,8 +155,12 @@ async function populateReview(origin) {
             table1.querySelector('thead tr#key1').querySelectorAll('th').forEach(() => {
                 if (changes[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
-                    tbody += `<td class='original-cell'>${origin[i + 1]}</td>`
-                    retEntry.push('');
+                    if (origin[i + 1]) {
+                        tbody += `<td class='original-cell'>${origin[i + 1]}</td>`;
+                    } else {
+                        tbody += `<td class='original-cell'>-</td>`;
+                    }
+                    retEntry.push(null);
                 } else {
                     // else enter newEntry[i] and change color
                     tbody += `<td class='changed-cell'>${changes[i]}</td>`
@@ -138,11 +178,15 @@ async function populateReview(origin) {
             table2.querySelector('thead tr#key2').querySelectorAll('th').forEach(() => {
                 if (changes[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
-                    tbody += `<td class='original-cell'>${origin[i + 1]}</td>`
-                    retEntry.push('');
+                    if (origin[i + 1]) {
+                        tbody += `<td class='original-cell'>${origin[i + 1]}</td>`;
+                    } else {
+                        tbody += `<td class='original-cell'>-</td>`;
+                    }
+                    retEntry.push(null);
                 } else {
                     // else enter newEntry[i] and change color
-                    tbody += `<td class='changed-cell'>${changes[i]}</td>`
+                    tbody += `<td class='changed-cell'>${changes[i]}</td>`;
                     retEntry.push(changes[i]);
                 }
 
@@ -160,11 +204,11 @@ async function populateReview(origin) {
 }
 
 // return null if no change, else return new
-async function detectChanges(oldFields, newFields) {
+async function detectChanges(oldFields, newEntry) {
     try {
+        let newFields = [...newEntry];
         for (let i = 0; i < oldFields.length; i++) {
-            if (oldFields[i] === newFields[i]) {
-
+            if (String(oldFields[i]) === String(newFields[i]) || (String(newFields[i]) === "" && oldFields[i] === null)) {
                 newFields[i] = null;
             }
         }
@@ -178,14 +222,13 @@ async function detectChanges(oldFields, newFields) {
 // adds change log (both add and edit)
 async function addLog(values, app_name) {
     try {
+        const div = document.getElementById('error-div');
+
         // index (values[0]) will never be null
         if (values.slice(1).every(element => element === null)) {
-            const div = document.getElementById('error-div');
             div.innerText = 'No fields have been changed. Request not made.';
         }
         else {
-
-            console.log(values);
             const changes = JSON.stringify(values.slice(1));
 
             // add date of change, author, and set status to 'Pending'
@@ -214,9 +257,7 @@ async function addLog(values, app_name) {
                     log_info: log_info
                 })
             })
-
             let data = await response.json();
-            
             const status_msg = document.getElementById('status');
 
             if (data.status === 200) {
@@ -303,7 +344,7 @@ async function displayForm(original, changes) {
 
     tableForm.removeAttribute('hidden');
     for (let i = 0; i < original.length; i++) {
-        if (!changes || changes[i] === '') {
+        if (!changes || changes[i] === null) {
             populateEntry.push(original[i]);
         } else {
             populateEntry.push(changes[i]);
