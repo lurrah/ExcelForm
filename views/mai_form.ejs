@@ -74,27 +74,34 @@
                 <!-- MAI Form -->
                  
                 <div class="form-group" id="page-1" style="display:none;">
-                    <form id="table-form">
-                        <label for="appName">Application Name</label> 
-                        <i class="fas fa-info-circle info-icon" title="Information about this feature"></i>
-
+                    <form id="table-form" class="form-flex">
+                      <div class="form-item short-item">
+                        <label for="appName">Application Name <i class="fas fa-info-circle info-icon" title="Name of application (app) used by UCF."></i></label>
                         <input type="text" id="appname-edit" name="appName"><br><br>
-                        
-                        <label for="appNorm">Normalized Application Name</label>
+                      </div>
+
+                      <div class="form-item short-item">
+                        <label for="appNorm">Normalized Application Name <i class="fas fa-info-circle info-icon" title="Normalized application names. Leave blank if unknown."></i></label>
                         <input type="text" id="appnorm-edit" name="appNorm"><br><br>
+                      </div>
 
-                        <label for="description">Description</label>
+                      <div class="form-item long-item">
+                        <label for="description">Description <i class="fas fa-info-circle info-icon" title="Application purpose / function."></i></label>
                         <input type="text" id="description-edit" name="description"><br><br>
+                      </div>
 
-                        <label for="criticality">Business Criticality</label>
+                      <div class="form-item select-item">
+                        <label for="criticality">Business Criticality <i class="fas fa-info-circle info-icon" title="Importance to UCF's operations:  1 (High), 2 (Medium), 3 (Low)"></i></label>
                         <select name="criticality" id="criticality-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="1 (High)">1 (High)</option>
                         <option value="2 (Medium)">2 (Medium)</option>
                         <option value="3 (Low)">3 (Low)</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="lifecycle">Lifecycle State</label>
+                      <div class="form-item select-item">
+                        <label for="lifecycle">Lifecycle State <i class="fas fa-info-circle info-icon" title="Options: Planning, Implementing, In Service, Sunsetting, or Retired"></i></label>
                         <select name="lifecycle" id="lifecycle-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="Planning">Planning</option>
@@ -103,8 +110,10 @@
                         <option value="Sunsetting">Sunsetting</option>
                         <option value="Retired">Retired</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="community">User Community</label>
+                      <div class="form-item select-item">
+                        <label for="community">User Community <i class="fas fa-info-circle info-icon" title="Options: University-Campus Wide, College/Division, Students, Students/Staff, Students/Faculty, Faculty/Staff, Staff, Faculty, Alumni, or Team"></i></label>
                         <select name="community" id="community-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="University-Campus Wide">University-Campus Wide</option>
@@ -118,14 +127,20 @@
                         <option value="Alumni">Alumni</option>
                         <option value="Team">Team</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="owner">Business Owner</label>
+                      <div class="form-item short-item">
+                        <label for="owner">Business Owner <i class="fas fa-info-circle info-icon" title="Name of Business Owner whose dept. uses the application."></i></label>
                         <input type="text" id="owner-edit" name="owner"><br><br>
+                      </div>
 
-                        <label for="ownerDep">Business Owner Department</label>
+                      <div class="form-item short-item">
+                        <label for="ownerDep">Business Owner Department <i class="fas fa-info-circle info-icon" title="Department(s) who use the application."></i></label>
                         <input type="text" id="owner-dep-edit" name="ownerDep"><br><br>
+                      </div>
 
-                        <label for="ownerBudg">Budget Owner</label>
+                      <div class="form-item select-item">
+                        <label for="ownerBudg">Budget Owner <i class="fas fa-info-circle info-icon" title="What group is this application managed by? "></i></label>
                         <select name="ownerBudg" id="owner-budg-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="UCF IT">UCF IT</option>
@@ -133,18 +148,26 @@
                         <option value="User">User</option>
                         <option value="Provider / Vendor">Provider / Vendor</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="ownerIt">IT Owner</label>
+                      <div class="form-item short-item">
+                        <label for="ownerIt">IT Owner <i class="fas fa-info-circle info-icon" title="Department responsible for application."></i></label>
                         <input type="text" id="owner-it-edit" name="ownerIt"><br><br>
+                      </div>
 
-                        <label for="ownerItDep">IT Owner Department</label>
+                      <div class="form-item short-item">
+                        <label for="ownerItDep">IT Owner Department <i class="fas fa-info-circle info-icon" title="Individual(s) responsible for application."></i></label>
                         <input type="text" id="owner-itdep-edit" name="ownerItDep"><br><br>
+                      </div>
+
                     </form>
                 </div>
 
                 <div class="form-group" id="page-2" style="display:none;">
-                    <form id="table-form">
-                        <label for="appType">Application Type</label>
+                    <form id="table-form" class="form-flex">
+
+                      <div class="form-item select-item">
+                        <label for="appType">Application Type <i class="fas fa-info-circle info-icon" title="In what form do you receive the application? "></i></label>
                         <select name="appType" id="apptype-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="Custom">Custom</option>
@@ -153,16 +176,20 @@
                         <option value="FOTS (Free Off-the-Shelf, Open Source)">FOTS (Free Off-the-Shelf, Open Source)</option>
                         <option value="C-FOTS (Custom Free Off-the-Shelf, Open Source)">C-FOTS (Custom Free Off-the-Shelf, Open Source)</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="appDel">Application Delivery</label>
+                      <div class="form-item select-item">
+                        <label for="appDel">Application Delivery <i class="fas fa-info-circle info-icon" title="How is the application used or made available to end users? "></i></label>
                         <select name="appDel" id="appdel-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="SaaS (Software as a Service)">SaaS (Software as a Service)</option>
                         <option value="Server/Client Install (Provider Developed)">Server/Client Install (Provider Developed)</option>
                         <option value="UCF Developed (Custom/Open Source)">UCF Developed (Custom/Open Source)</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="platform">Platform</label>
+                      <div class="form-item select-item">
+                        <label for="platform">Platform <i class="fas fa-info-circle info-icon" title="What platform is used to deliver the application? Note, SaaS delivered applications do not require this information as the vendor is wholly responsible for keeping the application available; use N/A for SaaS delivered applications. "></i></label>
                         <select name="platform" id="platform-edit">
                         <option value="" disabled selected>Select an option</option>
                         <option value="Azure (Microsoft)">Azure (Microsoft)</option>
@@ -173,41 +200,63 @@
                         <option value="Physical Server">Physical Server</option>
                         <option value="Other">Other</option>
                         </select><br><br>
+                      </div>
 
-                        <label for="numInteg"># Integrations</label>
-                        <input type="text" id="numInteg-edit" name="numInteg"><br><br>
+                      <div class="form-item short-item">
+                        <label for="numInteg"># Integrations <i class="fas fa-info-circle info-icon" title="How many other apps does this application work with?"></i></label>
+                        <input type="text" id="numInteg-edit" name="numInteg"><br><br>                      
+                      </div>
 
-                        <label for="numActivUsr"># Active Users</label>
+                      <div class="form-item short-item">
+                        <label for="numActivUsr"># Active Users <i class="fas fa-info-circle info-icon" title="Number of people who use the application (not number of licenses)."></i></label>
                         <input type="text" id="numActivUsr-edit" name="numActivUsr"><br><br>
+                      </div>
 
-                        <label for="numStaff"># Dedicated IT Support Staff</label>
+                      <div class="form-item short-item">
+                        <label for="numStaff"># Dedicated IT Support Staff <i class="fas fa-info-circle info-icon" title="Number of technical staff needed to support application. Use FTE (Full Time Employee)."></i></label>
                         <input type="text" id="numStaff-edit" name="numStaff"><br><br>
+                      </div>
 
-                        <label for="cobbId">Cobblestone Contract ID</label>
+                      <div class="form-item short-item">
+                        <label for="cobbId">Cobblestone Contract ID <i class="fas fa-info-circle info-icon" title="Contract number found in Cobblestone (if used)."></i></label>
                         <input type="text" id="cobbId-edit" name="cobbID"><br><br>
+                      </div>
 
-                        <label for="vendor">Vendor</label>
+                      <div class="form-item short-item">
+                        <label for="vendor">Vendor <i class="fas fa-info-circle info-icon" title="Name of vendor from which application was purchased."></i></label>
                         <input type="text" id="vendor-edit" name="text"><br><br>
+                      </div>
 
-                        <label for="numLic"># Licenses</label>
+                      <div class="form-item short-item">
+                        <label for="numLic"># Licenses <i class="fas fa-info-circle info-icon" title="Number of licenses. Clarify if enterprise license or by user."></i></label>
                         <input type="text" id="numLic-edit" name="numLic"><br><br>
+                      </div>
 
-                        <label for="yrCost">Yearly Cost</label>
+                      <div class="form-item short-item">
+                        <label for="yrCost">Yearly Cost <i class="fas fa-info-circle info-icon" title="Cost of application per year. "></i></label>
                         <input type="text" id="yrCost-edit" name="yrCost"><br><br>
+                      </div>
 
-                        <label for="cntDates">Contract Dates</label>
+                      <div class="form-item short-item">
+                        <label for="cntDates">Contract Dates <i class="fas fa-info-circle info-icon" title="Start and end dates of contractual agreement. "></i></label>
                         <input type="text" id="cntDates-edit" name="cntDates"><br><br>
+                      </div>
 
-                        <label for="details">Important Details</label>
+                      <div class="form-item long-item">
+                        <label for="details">Important Details <i class="fas fa-info-circle info-icon" title="Please add any relevant application details not already reviewed."></i></label>
                         <input type="text" id="details-edit" name="details"><br><br>
+                      </div>
 
-                        <label for="datUpdat">Date app Updated</label>
+                      <div class="form-item short-item">
+                        <label for="datUpdat">Date App Updated <i class="fas fa-info-circle info-icon" title="Date application was last updated in inventory."></i></label>
                         <input type="text" id="datUpdat-edit" name="datUpdat"><br><br>
+                      </div>
+
                     </form>
                 </div>
 
                 <div class="form-group" id="page-3" style="display:none;">
-                    <form id="table-form">
+                    <form id="table-form" class="form-flex">
                         <label for="fname">5:</label>
                         <input type="text" id="fname-edit" name="fname"><br><br>
 

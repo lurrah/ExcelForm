@@ -1,10 +1,40 @@
+.form-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-item {
+  flex: 1 1 45%; /* Each form item (label + input) takes 45% of the width */
+  display: flex;
+  flex-direction: column; /* Labels always on top of inputs */
+}
+
+.form-item {
+  flex: 1 1 45%; /* Each form item (label + input) takes 45% of the width */
+  display: flex;
+  flex-direction: column; /* Labels always on top of inputs */
+}
+
+.short-item {
+  flex: 1 1 20%; /* Short input fields take up 20% of the width */
+}
+
+.long-item {
+  flex: 1 1 80%; /* Long input fields take up 80% of the width */
+  /* Increased height for long textareas */
+  min-height: 150px; /* Set minimum height for long input fields */
+  height: auto; /* Allow height to adjust based on content */
+}
+
+
 
 .form-container {
     background-color: #fff;
-    padding: 20px;
+    padding: 15px; /* Reduced padding */
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    max-width: 300px; /* Reduced width */
     width: 100%;
 }
 
@@ -14,7 +44,9 @@ h2 {
 }
 
 .form-group {
-    margin-bottom: 15px;
+  flex: 1 1 45%; /* Adjust the width of the form groups */
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group label {
@@ -24,23 +56,19 @@ h2 {
 }
 
 .form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
+.form-group select {
+    padding: 8px; /* Reduced padding */
+    font-size: 14px; /* Reduced font size */
     border-radius: 5px;
-    font-size: 16px;
+    border: 1px solid #ccc;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #007bff;
+.form-group textarea:focus { 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
 }
-
 .form-group textarea {
     resize: vertical;
     min-height: 100px;

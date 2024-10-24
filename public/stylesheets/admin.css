@@ -3,7 +3,7 @@ table {
     border-collapse: collapse;
 }
 th, td {
-    border: 1px solid #ddd;
+    border: 1px solid rgb(99, 99, 99);
     padding: 8px;
     text-align: left;
 }
@@ -62,23 +62,36 @@ th, td {
   .key1 {
     background-color:#9bc2e6;
     color: black;
+    border-color: rgb(99, 99, 99);
+
   }
 
   .key2 {
     background-color: #a9d08e;
     color: black;
+    border-color: rgb(99, 99, 99);
+
   }
 
   .key3{
     background-color: #ff99ff;
     color: black;
+    border-color: rgb(99, 99, 99);
+
+  }
+
+  .placeholder{
+    background-color: rgb(221, 221, 221);
+    border-color: rgb(99, 99, 99);
   }
 
   .changed-cell {
     background-color: #FFCCCB;
-    color: black;
-  }
+    border-color: rgb(99, 99, 99);
+    }
   .original-cell {
     background-color: white;
     color: #A9A9A9;
+    border-color: rgb(99, 99, 99);
+
   }

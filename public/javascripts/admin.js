@@ -91,18 +91,33 @@ async function displayLogs(logList) {
             let reject_btn = document.getElementById(`reject-${i}`);
             if (approve_btn && reject_btn) {
                 document.getElementById(`approve-${i}`).addEventListener('click', function() {
-                    approve_btn.disabled = true;
+                    
                     try {
-                        approveChanges(log_id, app_id, entry, changes);
-
+                        if (!entry) {
+                            div.innerText = 'Please "view" the changes before approving them.';
+                            return;
+                        } else {
+                            div.innerText = '';
+                            approve_btn.disabled = true;
+                            reject_btn.disabled = true;
+                            approveChanges(log_id, app_id, entry, changes);
+                        }
                     } catch (err) { 
                         console.error("Error approving changes: ", err);
                     }
                 });
                 document.getElementById(`reject-${i}`).addEventListener('click', function() {   
-                    reject_btn.disabled = true;
                     try {
-                        changeStatus(log_id, 'Rejected');
+                        if (!entry) {
+                            div.innerText = 'Please "view" the changes before rejecting them.';
+                            return;
+                        }
+                        else {
+                            div.innerText = '';
+                            reject_btn.disabled = true;
+                            approve_btn.disabled = true;
+                            changeStatus(log_id, 'Rejected');
+                        }
 
                     } catch (err) { 
                         console.error("Error approving changes: ", err);
@@ -204,7 +219,7 @@ async function addApp(log_id, values) {
                 div.innerText = data.value
             if (data.status === 200) {
                 //window.location.href ='/review';
-                div.innerText = 'Entry has been added succesfully';
+                div.innerText = 'The Master Application Inventory has been successfully updated.';
         }
     } catch (err) {
         console.error("Error calling /mai/add router: ", err);
@@ -253,19 +268,33 @@ async function viewChangedEntry(id, changes) {
                     if (!changes[i]) {
                         // if newEntry[i] is null, enter originformdata[i]
                         if (data) {
-                            row += `<td class='original-cell'>${data[0][i + 1]}</td>`
+                            row += `<td class='original-cell'>${data[0][i + 1]}</td>`;
                             entry.push(data[0][i + 1]);
                         } else {
                             // original row is just empty string
-                            row += `<td class='original-cell'></td>`
+                            row += `<td class='original-cell'></td>`;
                             entry.push(null);
                         }
                     } else {
                         // else enter newEntry[i] and change color
-                        row += `<td class='changed-cell'>${changes[i]}</td>`
+                        row += `<td class='changed-cell'>${changes[i]}</td>`;
                         entry.push(changes[i]);
                     }
-                    i++
+                    i++;
+                }
+
+                // blue cols need 2, pink needs 5 
+                if (row_num === 1) {
+                    row +=  `   <td class="placeholder"></td>
+                                <td class="placeholder"></td>`
+                } else if (row_num === 3) {
+                    console.log("there");
+
+                    row += `    <td class="placeholder"></td>
+                                <td class="placeholder"></td>
+                                <td class="placeholder"></td>
+                                <td class="placeholder"></td>
+                                <td class="placeholder"></td>`
                 }
                 row += '</tr>';
                 tbody.innerHTML = row;
@@ -370,5 +399,9 @@ async function changeStatus(log_id, status) {
         }
     } catch (err) {
         console.error(`Error occured while trying to ${status[7]} changes: `, err);
+    }
+    finally {
+        location.reload;
+        await getLogs();
     }
 }

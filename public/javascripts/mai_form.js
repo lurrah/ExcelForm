@@ -208,7 +208,7 @@ async function detectChanges(oldFields, newEntry) {
     try {
         let newFields = [...newEntry];
         for (let i = 0; i < oldFields.length; i++) {
-            if (String(oldFields[i]) === String(newFields[i]) || (String(newFields[i]) === "" && oldFields[i] === null)) {
+            if (String(oldFields[i]).replace(/[()]/g, '').replace(/\//g, ' ').trim() === String(newFields[i]).replace(/[()]/g, '').replace(/\//g, ' ').trim() || (String(newFields[i]) === "" && oldFields[i] === null)) {
                 newFields[i] = null;
             }
         }
@@ -307,6 +307,7 @@ async function initPagination(type) {
             pageSize: 1,
             callback: function (data, pagination) {
                 if (type === 1) {
+                    document.getElementById('error-div').innerText = "";
                     $('.form-group').hide();
                     $('#page-' + pagination.pageNumber).show();
                 } else if (type === 2) {
@@ -394,7 +395,7 @@ async function displayForm(original, changes) {
     // iterate through all selectLists and populate them as necessary
     for (let { list, value } of selectLists) {
         for (let option of list.options) {
-            if (option.value === value) {
+            if (option.value.replace(/[()]/g, '').replace(/\//g, ' ').trim() === value.replace(/[()]/g, '').replace(/\//g, ' ').trim()) {
                 option.selected = true;
                 break;
             }
