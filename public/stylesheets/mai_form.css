@@ -18,13 +18,19 @@
 
 .short-item {
   flex: 1 1 20%; /* Short input fields take up 20% of the width */
+  min-width: 120px; /* Minimum width for better appearance */
+
 }
 
 .long-item {
   flex: 1 1 80%; /* Long input fields take up 80% of the width */
-  /* Increased height for long textareas */
-  min-height: 150px; /* Set minimum height for long input fields */
   height: auto; /* Allow height to adjust based on content */
+}
+
+.select-item {
+  flex: 1 1 20%; /* Short input fields take up 20% of the width */
+  min-width: 120px; /* Minimum width for better appearance */
+
 }
 
 
@@ -71,7 +77,6 @@ h2 {
 }
 .form-group textarea {
     resize: vertical;
-    min-height: 100px;
 }
 
 .btn-submit {

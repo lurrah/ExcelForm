@@ -278,6 +278,8 @@ async function addLog(values, app_name) {
 
 
 let currentPagination = null;
+let admin = 1; //remove
+
 
 async function initPagination(type) {
     if (currentPagination === type) {
@@ -295,7 +297,12 @@ async function initPagination(type) {
     }
     // type :       1 for form
     //              2 for review-changes
-    const totalPages = 2;
+    let totalPages;
+    if (admin === 1) {
+        totalPages = 3;
+    } else {
+        totalPages = 2;
+    }
 
     document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
     document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = true);
