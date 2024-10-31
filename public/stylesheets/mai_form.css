@@ -170,6 +170,11 @@ h2 {
     color: black;
   }
 
+  #key3 {
+    background-color: #ff99ff;
+    color: black;
+  }
+
   label, .info-icon {
     display: inline; /* Ensure both are inline */
     vertical-align: middle; /* Aligns them vertically */

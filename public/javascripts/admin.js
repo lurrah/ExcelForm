@@ -362,8 +362,24 @@ async function getChangedEntry(id, changes) {
     }
 }
 
+// redirect to mai-form for admins
 async function adminEdit(log_id, app_id) {
+    // populate entry with 
     try { 
+        const response = await fetch('/admin/get-entry', {
+            method: 'GET',
+            headers: {
+                id: app_id,
+            }
+        })
+        data = await response.json();
+
+        if (data && data.error) {
+            div.innerText = 'Error occured when trying to edit entry';
+        } else {
+            window.location.href('/mai-form/admin')
+        }
+
         // view modal with ability to edit
     } catch (err) {
         console.error("Error occurred while trying to edit entry: ", err);

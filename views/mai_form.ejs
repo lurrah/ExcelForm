@@ -278,28 +278,27 @@
                         <input type="text" id="CAUDCap-edit" name="CAUDCap"><br><br>
                       </div>
 
-                      <div class="form-item short-item">
+                      <div class="form-item select-item">
                         <label for="coreEnable">Core or Enabling<i class="fas fa-info-circle info-icon" title="Application alignment within the CAUDIT IT framework (based on CAUDIT capability)."></i></label>
-                        <select name="coreEnable" id="coreEnable-edit"><br><br>
+                        <select name="coreEnable" id="coreEnable-edit">
                           <option value="" disabled selected>Select an option</option>
-                          <option value="core">Core</option>
-                          <option value="enabling">Enabling</option>
+                          <option value="Core">Core</option>
+                          <option value="Enabling">Enabling</option>
                         </select>
                       </div>
 
                       <div class="form-item short-item">
                         <label for="usrProd">End-User Productivity (WIP)<i class="fas fa-info-circle info-icon" title="Enterprise: Software used by organizations rather than individual users. End-User Productivity: Software for productivity of individual user"></i></label>
-                        <select name="usrProd" id="usrProd-edit">
-                          <option value="" disabled selected>Select an option</option>
-                          <option value="y">Yes</option>
-                          <option value="n">No</option>
-
-                        </select> 
+                        <input type="text" id="usrProd-edit" name="usrProd">
                       </div>
 
-                      <div class="form-item short-item">
+                      <div class="form-item select-item">
                         <label for="comGood">Common Good: Yes or No<i class="fas fa-info-circle info-icon" title="Is this considered a Common Good application?"></i></label>
-                        <input type="text" id="comGood-edit" name="comGood"><br><br>
+                        <select name="comGood" id="comGood-edit">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
                       </div>
 
                       <div class="form-item short-item">
@@ -351,6 +350,26 @@
                         <th>Contract Dates (start/stop)</th>
                         <th>Important Details</th>
                         <th>Date App Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry row to be added -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="review-group" id="review-3" hidden>
+                  <table class="table" id="review-table-3">
+                    <thead>
+                      <tr class="key3" id="key3">
+                        <th>EDUCAUSE Service Category</th>
+                        <th>EDUCAUSE Service</th>
+                        <th>CAUDIT Parent Capability</th>
+                        <th>CAUDIT Capability</th>
+                        <th>Core or Enabling</th>
+                        <th>End-User Productivity (WIP)</th>
+                        <th>Common Good: Yes or No</th>
+                        <th>Application Tag / ID2</th>
                       </tr>
                     </thead>
                     <tbody>
