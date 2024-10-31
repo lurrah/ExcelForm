@@ -257,17 +257,55 @@
 
                 <div class="form-group" id="page-3" style="display:none;">
                     <form id="table-form" class="form-flex">
-                        <label for="fname">5:</label>
-                        <input type="text" id="fname-edit" name="fname"><br><br>
 
-                        <label for="lname">6:</label>
-                        <input type="text" id="lname-edit" name="lname"><br><br>
+                      <div class="form-item short-item">
+                        <label for="EDUCat">EDUCAUSE Service Category<i class="fas fa-info-circle info-icon" title="Application alignment within the EDUCAUSE framework (based on EDUCAUSE Service)."></i></label>
+                        <input type="text" id="EDUCat-edit" name="EDUCat"><br><br>
+                      </div>
 
-                        <label for="email">7:</label>
-                        <input type="text" id="email-edit" name="email"><br><br>
+                      <div class="form-item short-item">
+                        <label for="EDUServ">EDUCAUSE Service<i class="fas fa-info-circle info-icon" title="Application alignment within the EDUCAUSE framework."></i></label>
+                        <input type="text" id="EDUServ-edit" name="EDUServ"><br><br>
+                      </div>
 
-                        <label for="description">8:</label>
-                        <input type="text" id="description-edit" name="text"><br><br>
+                      <div class="form-item short-item">
+                        <label for="CAUDParent">CAUDIT Parent Capability<i class="fas fa-info-circle info-icon" title="Application alignment within the CAUDIT framework (based on CAUDIT capability)."></i></label>
+                        <input type="text" id="CAUDParent-edit" name="CAUDParent"><br><br>
+                      </div>
+
+                      <div class="form-item short-item">
+                        <label for="CAUDCap">CAUDIT Capability<i class="fas fa-info-circle info-icon" title="Application alignment within the CAUDIT IT framework (based on CAUDIT capability)."></i></label>
+                        <input type="text" id="CAUDCap-edit" name="CAUDCap"><br><br>
+                      </div>
+
+                      <div class="form-item select-item">
+                        <label for="coreEnable">Core or Enabling<i class="fas fa-info-circle info-icon" title="Application alignment within the CAUDIT IT framework (based on CAUDIT capability)."></i></label>
+                        <select name="coreEnable" id="coreEnable-edit">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="Core">Core</option>
+                          <option value="Enabling">Enabling</option>
+                        </select>
+                      </div>
+
+                      <div class="form-item short-item">
+                        <label for="usrProd">End-User Productivity (WIP)<i class="fas fa-info-circle info-icon" title="Enterprise: Software used by organizations rather than individual users. End-User Productivity: Software for productivity of individual user"></i></label>
+                        <input type="text" id="usrProd-edit" name="usrProd">
+                      </div>
+
+                      <div class="form-item select-item">
+                        <label for="comGood">Common Good: Yes or No<i class="fas fa-info-circle info-icon" title="Is this considered a Common Good application?"></i></label>
+                        <select name="comGood" id="comGood-edit">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                      </div>
+
+                      <div class="form-item short-item">
+                        <label for="appTag">Application Tag / ID2<i class="fas fa-info-circle info-icon" title="Used to collaborativvely collect a variety of existing data across IT."></i></label>
+                        <input type="text" id="appTag-edit" name="appTag"><br><br>
+                      </div>
+
                     </form>
                 </div>
 
@@ -312,6 +350,26 @@
                         <th>Contract Dates (start/stop)</th>
                         <th>Important Details</th>
                         <th>Date App Updated</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry row to be added -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="review-group" id="review-3" hidden>
+                  <table class="table" id="review-table-3">
+                    <thead>
+                      <tr class="key3" id="key3">
+                        <th>EDUCAUSE Service Category</th>
+                        <th>EDUCAUSE Service</th>
+                        <th>CAUDIT Parent Capability</th>
+                        <th>CAUDIT Capability</th>
+                        <th>Core or Enabling</th>
+                        <th>End-User Productivity (WIP)</th>
+                        <th>Common Good: Yes or No</th>
+                        <th>Application Tag / ID2</th>
                       </tr>
                     </thead>
                     <tbody>

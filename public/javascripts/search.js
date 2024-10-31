@@ -159,11 +159,9 @@ async function selectEntry(entryArr) {
             window.location.href ='/mai-form';
         }
         else { 
-            let entry =
-            
-            entryArr.values[0];
+            let entry = entryArr.values[0];
 
-        
+            console.log(entryArr.values[0]);
             const entryData = {
                 // page-1 info
                 id: entry[0],
@@ -191,10 +189,18 @@ async function selectEntry(entryArr) {
                 yrCost: entry[21],
                 cntDates: entry[22],
                 details: entry[23],
-                datUpdat: entry[24]
+                datUpdat: entry[24],
                 //page-3 info
+                eduCaus: entry[25],
+                eduServ: entry[26],
+                caudParent: entry[27],
+                caudCap: entry[28],
+                coreEnab: entry[29],
+                endUsr: entry[30],
+                comGood: entry[31],
+                appTag:  entry[32]
             }
-
+            
             await fetch('/mai-form/store-data', {
                 method:'POST',
                 headers: {

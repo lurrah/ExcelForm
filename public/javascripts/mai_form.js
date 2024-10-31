@@ -1,11 +1,10 @@
-const entryCount = 25; 
+const entryCount = 33; 
 
 // 1 for add 0 for edit
 let addOrEdit;
 
 document.addEventListener('DOMContentLoaded', async function () {
     let originFormData = await getEntry();
-
     // instructions drop-down
     document.querySelector('.directions-btn').addEventListener('click', function() {
         const content = document.getElementById('directions-menu'); 
@@ -73,6 +72,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     returnForm.addEventListener('click', async function() {
         returnForm.disabled = true;
         try {
+            console.log(originFormData[1])
+            console.log(reviewEntry);
+
             displayForm(originFormData.slice(1), reviewEntry.slice(1));
             initPagination(1);
         } catch(err) {
@@ -101,9 +103,10 @@ async function getEntry() {
             return Array(entryCount).fill(null);
         } else {
             addOrEdit = 0;
+
             await displayForm(Object.values(entryData).slice(1));
         }
-        
+
         return Object.values(entryData);
     }
     catch(err) {
@@ -115,14 +118,15 @@ async function getEntry() {
 async function populateReview(origin) {
     try {
         let newEntry = await getValues();        
-        console.log(newEntry);
 
         // Entry to be accessed in case user wants to revise their changes
         let retEntry = [];
         // newEntry does not have index, so therefore, origin index field must be removed.
+
         const changes = await detectChanges(origin.slice(1), newEntry);
         
         let div = document.getElementById('error-div');
+        console.log(changes);
         if (changes.every(element => element === null)) {
             div.innerText = 'No changes have been made';
             return;
@@ -142,16 +146,18 @@ async function populateReview(origin) {
             // get table by id
             const table1 = document.getElementById('review-table-1');
             const table2 = document.getElementById('review-table-2');
-
+            const table3 = document.getElementById('review-table-3');
 
             let i = 0;
             let tbody= "";
-            tbody += '<tr>'
-            // for each element in origin form data
+
+
 
             retEntry.push(origin[0]);    // entry index (for internal purposes)
                                         // newEntry does not include an index (which input does)
-
+                                         
+            // for each element in origin form data
+            tbody += '<tr>'
             table1.querySelector('thead tr#key1').querySelectorAll('th').forEach(() => {
                 if (changes[i] === null) {
                     // if newEntry[i] is null, enter originformdata[i]
@@ -194,6 +200,32 @@ async function populateReview(origin) {
             }); 
             tbody += '</tr>'
             table2.querySelector('tbody').innerHTML = tbody;
+
+            if (admin === 1) {
+                tbody = '<tr>'
+                console.log(origin)
+                console.log(changes);
+                table3.querySelector('thead tr#key3').querySelectorAll('th').forEach(() => {
+                    if (changes[i] === null) {
+                        // if newEntry[i] is null, enter originformdata[i]
+                        if (origin[i + 1]) {
+                            tbody += `<td class='original-cell'>${origin[i + 1]}</td>`;
+                        } else {
+                            tbody += `<td class='original-cell'>-</td>`;
+                        }
+                        retEntry.push(null);
+                    } else {
+                        // else enter newEntry[i] and change color
+                        tbody += `<td class='changed-cell'>${changes[i]}</td>`
+                        retEntry.push(changes[i]);
+                    }
+
+                    i++;
+                })
+                tbody += '</tr>'
+                table3.querySelector('tbody').innerHTML = tbody;
+            }
+
             initPagination(2)
 
             return retEntry;       
@@ -206,9 +238,10 @@ async function populateReview(origin) {
 // return null if no change, else return new
 async function detectChanges(oldFields, newEntry) {
     try {
+        // ensure that new array is created, do not edit newEntry
         let newFields = [...newEntry];
         for (let i = 0; i < oldFields.length; i++) {
-            if (String(oldFields[i]).replace(/[()]/g, '').replace(/\//g, ' ').trim() === String(newFields[i]).replace(/[()]/g, '').replace(/\//g, ' ').trim() || (String(newFields[i]) === "" && oldFields[i] === null)) {
+            if (String(oldFields[i]).replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase() === String(newFields[i]).replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase() || (String(newFields[i]) === "" && oldFields[i] === null)) {
                 newFields[i] = null;
             }
         }
@@ -217,7 +250,6 @@ async function detectChanges(oldFields, newEntry) {
         console.error("Discrepancy between the old and updated form values: ", err);
     }
 }
-
 
 // adds change log (both add and edit)
 async function addLog(values, app_name) {
@@ -278,6 +310,8 @@ async function addLog(values, app_name) {
 
 
 let currentPagination = null;
+let admin = 1; //remove
+
 
 async function initPagination(type) {
     if (currentPagination === type) {
@@ -295,7 +329,12 @@ async function initPagination(type) {
     }
     // type :       1 for form
     //              2 for review-changes
-    const totalPages = 2;
+    let totalPages;
+    if (admin === 1) {
+        totalPages = 3;
+    } else {
+        totalPages = 2;
+    }
 
     document.querySelectorAll('.typ1-buttons').forEach(el => el.hidden = true);
     document.querySelectorAll('.typ2-buttons').forEach(el => el.hidden = true);
@@ -371,6 +410,13 @@ async function displayForm(original, changes) {
     document.getElementById('cntDates-edit').value = populateEntry[21]//data.cntDates;
     document.getElementById('details-edit').value = populateEntry[22]//data.details;
     document.getElementById('datUpdat-edit').value = populateEntry[23]//data.datUpdat;
+    //pg3
+    document.getElementById('EDUCat-edit').value = populateEntry[24];
+    document.getElementById('EDUServ-edit').value = populateEntry[25];
+    document.getElementById('CAUDParent-edit').value = populateEntry[26];
+    document.getElementById('CAUDCap-edit').value = populateEntry[27];
+    document.getElementById('usrProd-edit').value = populateEntry[29];
+    document.getElementById('appTag-edit').value = populateEntry[31];
 
     // Predetermined select lists ( index: 3, 4, 5, 8, 11, 12, 13 )
     const criticality = document.getElementById('criticality-edit');
@@ -380,6 +426,8 @@ async function displayForm(original, changes) {
     const appType = document.getElementById('apptype-edit');
     const appDel = document.getElementById('appdel-edit');
     const platform = document.getElementById('platform-edit');
+    const coreEnable = document.getElementById('coreEnable-edit');//.value = populateEntry[27];
+    const comGood = document.getElementById('comGood-edit');//.value = populateEntry[30];
 
     // Map lists to elements
     const selectLists = [ 
@@ -389,13 +437,16 @@ async function displayForm(original, changes) {
         { list: ownerBudg, value: populateEntry[8] },//data.ownerBudg },
         { list: appType, value: populateEntry[11] },//data.appType },
         { list: appDel, value: populateEntry[12] },//data.appDel },
-        { list: platform, value: populateEntry[13] }//data.platform}
+        { list: platform, value: populateEntry[13] },//data.platform}
+        { list: coreEnable, value: populateEntry[28] },//data.platform}
+        { list: comGood, value: populateEntry[30] }//data.platform}
+
     ];
 
     // iterate through all selectLists and populate them as necessary
     for (let { list, value } of selectLists) {
         for (let option of list.options) {
-            if (option.value.replace(/[()]/g, '').replace(/\//g, ' ').trim() === value.replace(/[()]/g, '').replace(/\//g, ' ').trim()) {
+            if (option.value.replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase() === value.replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase()) {
                 option.selected = true;
                 break;
             }
@@ -434,6 +485,19 @@ async function getValues() {
     const details = document.getElementById("details-edit").value;
     const datUpdat = document.getElementById("datUpdat-edit").value;
 
+    const eduCat = document.getElementById('EDUCat-edit').value;
+    const eduServ = document.getElementById('EDUServ-edit').value;
+    const caudParent = document.getElementById('CAUDParent-edit').value;
+    const caudCap = document.getElementById('CAUDCap-edit').value;
+    const coreEnable = document.getElementById('coreEnable-edit').value;
+    const usrProd = document.getElementById('usrProd-edit').value;
+    const comGood = document.getElementById('comGood-edit').value;
+    const appTag = document.getElementById('appTag-edit').value;
+
+
+
+
     return [ appName, appNorm, description, criticality, lifecycle, community, owner, ownerDep, ownerBudg, ownerIt, ownerItDep,
-        appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat ];
+        appType, appDel, platform, numInteg, numActivUsr, numStaff, cobbId, vendor, numLic, yrCost, cntDates, details, datUpdat,
+        eduCat, eduServ, caudParent, caudCap, coreEnable, usrProd, comGood, appTag ];
 }
