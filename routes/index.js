@@ -10,6 +10,20 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home' });
 });
 
+router.get('/login', function(req, res, next) {
+  req.session.user = {
+    email: 'example@ucf.edu',
+    name: 'examplename',
+    admin: 0,
+  }
+  res.send('Logged in');
+})
+
+router.get('/logout', function(req, res, next) {
+  req.session.destroy();
+  res.send('Logged out');
+})
+
 router.get('/get-entry', async (req, res) => await wsController.getEntry(req, res));
 
 
