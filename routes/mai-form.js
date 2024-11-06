@@ -11,7 +11,9 @@ const logController = new ChangeLogController();
 
 /* GET form page. */
 router.get('/', function(req, res, next) {
-  res.render('mai_form', {title: 'Mai Form'});
+  const isAdmin = req.session.user.isAdmin;
+  console.log(isAdmin);
+  res.render('mai-form', {title: 'Mai Form', isAdmin},);
 });
 
 router.get('/get-entry', async (req, res) => {

@@ -4,6 +4,8 @@ const entryCount = 33;
 let addOrEdit;
 
 document.addEventListener('DOMContentLoaded', async function () {
+    const isAdmin = document.getElementById('admin-info').getAttribute('data-is-admin') === 'true'; // Change when auth
+    console.log(isAdmin)
     let originFormData = await getEntry();
     // instructions drop-down
     document.querySelector('.directions-btn').addEventListener('click', function() {
@@ -28,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
-    initPagination(1);
+    initPagination(1, isAdmin);
 
     // reviewButton different text for adding vs deletion
     const reviewButton = document.getElementById('review-changes');
@@ -44,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 reviewEntry[0] = -1;
             }
 
-            reviewEntry = await populateReview(reviewEntry);
+            reviewEntry = await populateReview(reviewEntry, isAdmin);
         } catch (err) {
             console.error('Error occurred when reviewing changes', err);
         }
@@ -72,11 +74,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     returnForm.addEventListener('click', async function() {
         returnForm.disabled = true;
         try {
-            console.log(originFormData[1])
-            console.log(reviewEntry);
-
             displayForm(originFormData.slice(1), reviewEntry.slice(1));
-            initPagination(1);
+            initPagination(1, isAdmin);
         } catch(err) {
             console.error('Error occurred when returning to form', err);
         } finally {
@@ -89,6 +88,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href ='/';
     })
 });
+
+
 
 async function getEntry() {
     try {
@@ -103,8 +104,8 @@ async function getEntry() {
             return Array(entryCount).fill(null);
         } else {
             addOrEdit = 0;
-
-            await displayForm(Object.values(entryData).slice(1));
+            console.log(Object.values(entryData));
+            await displayForm(Object.values(entryData).slice(1), null);
         }
 
         return Object.values(entryData);
@@ -115,7 +116,7 @@ async function getEntry() {
     }
 }
 
-async function populateReview(origin) {
+async function populateReview(origin, isAdmin) {
     try {
         let newEntry = await getValues();        
 
@@ -200,8 +201,7 @@ async function populateReview(origin) {
             }); 
             tbody += '</tr>'
             table2.querySelector('tbody').innerHTML = tbody;
-
-            if (admin === 1) {
+            if (isAdmin === true) {
                 tbody = '<tr>'
                 console.log(origin)
                 console.log(changes);
@@ -226,7 +226,7 @@ async function populateReview(origin) {
                 table3.querySelector('tbody').innerHTML = tbody;
             }
 
-            initPagination(2)
+            initPagination(2, isAdmin)
 
             return retEntry;       
         }
@@ -310,11 +310,11 @@ async function addLog(values, app_name) {
 
 
 let currentPagination = null;
-let admin = 1; //remove
+let currentIsAdmin = null;
 
 
-async function initPagination(type) {
-    if (currentPagination === type) {
+async function initPagination(type, isAdmin) {
+    if (currentPagination === type && currentIsAdmin === isAdmin) {
         return;
     } else if (currentPagination !== null){
             $('#pagination').pagination('destroy');
@@ -330,7 +330,7 @@ async function initPagination(type) {
     // type :       1 for form
     //              2 for review-changes
     let totalPages;
-    if (admin === 1) {
+    if (isAdmin) {
         totalPages = 3;
     } else {
         totalPages = 2;
@@ -370,6 +370,7 @@ async function initPagination(type) {
             }
         });
         currentPagination = type;
+        currentIsAdmin = isAdmin;
 
     } catch(err) {
         console.error('Error initializing pagination', err);
@@ -378,6 +379,8 @@ async function initPagination(type) {
 
 // Helper functions
 async function displayForm(original, changes) {
+
+    console.log(original);
     // Hide search form and show entry form
     const tableForm = document.getElementById('table-form');
     let populateEntry = [];
@@ -446,7 +449,7 @@ async function displayForm(original, changes) {
     // iterate through all selectLists and populate them as necessary
     for (let { list, value } of selectLists) {
         for (let option of list.options) {
-            if (option.value.replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase() === value.replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase()) {
+            if (value && option.value.replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase() === value.replace(/[()]/g, '').replace(/\//g, ' ').trim().toLowerCase()) {
                 option.selected = true;
                 break;
             }

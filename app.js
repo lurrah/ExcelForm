@@ -9,7 +9,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var searchRouter = require('./routes/search');
-var maiRouter = require('./routes/mai_form');
+var maiRouter = require('./routes/mai-form');
 var adminRouter = require('./routes/admin');
 
 var app = express();

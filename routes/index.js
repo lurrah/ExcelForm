@@ -14,8 +14,9 @@ router.get('/login', function(req, res, next) {
   req.session.user = {
     email: 'example@ucf.edu',
     name: 'examplename',
-    admin: 0,
+    isAdmin: false,
   }
+  console.log(req.session.user);
   res.send('Logged in');
 })
 

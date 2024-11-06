@@ -12,7 +12,16 @@ router.get('/', function(req, res, next) {
     res.render('admin', { title: 'Admin' });
 });
 
-router.get('/get-logs', async (req, res) => await logController.getLogs(req, res));
+router.get('/get-logs', async (req, res) => {
+    req.session.user = {
+        email: 'example@ucf.edu',
+        name: 'examplename',
+        isAdmin: true,
+    }
+    console.log(req.session.user);
+
+    await logController.getLogs(req, res)
+});
 router.get('/get-entry', async (req, res) => await wsController.getEntry(req, res));
 
 

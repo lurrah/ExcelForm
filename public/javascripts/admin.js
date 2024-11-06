@@ -372,12 +372,25 @@ async function adminEdit(log_id, app_id) {
                 id: app_id,
             }
         })
-        data = await response.json();
-
-        if (data && data.error) {
+        let entry = await response.json();
+        if (entry && entry.error) {
             div.innerText = 'Error occured when trying to edit entry';
         } else {
-            window.location.href('/mai-form/admin')
+
+            // convert single length array to full array
+            const entryData = Object.values(entry)[0];
+            // store entry
+            const response = await fetch('/mai-form/store-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(entryData)
+            })
+            window.location.href = '/mai-form';
+            if (data.error) {
+                div.innerText = 'Error occured when trying to edit entry';
+            }
         }
 
         // view modal with ability to edit
