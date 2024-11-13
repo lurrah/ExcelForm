@@ -154,7 +154,7 @@ async function approveChanges(log_id, app_id, entry, entry_changes) {
         else {
             if (app_id < 0) {
                 addApp(log_id, entry);
-
+                // update date for app 
             } else {
                 editMai(log_id, app_id, entry_changes);
             }
@@ -166,21 +166,23 @@ async function approveChanges(log_id, app_id, entry, entry_changes) {
 }
 
 // This should only be for admins
-async function editMai(log_id, app_id, input) {
+async function editMai(log_id, app_id, values) {
     try {
         const div = document.getElementById('error-div');
 
-        if (input.every(element => element === null)) {
+        if (values.every(element => element === null)) {
             div.innerText = 'No changes have been made';
         }
         else {
+            values[23] = new Date().toString();
+            console.log(values);
             const response = await fetch('/admin/mai/edit', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    values: input,
+                    values: values,
                     index: app_id,
                     log_id: log_id
                 })
@@ -202,6 +204,8 @@ async function editMai(log_id, app_id, input) {
 
 async function addApp(log_id, values) {
     try {
+            values[23] = new Date().toString();
+            console.log(values);
             const response = await fetch('/admin/mai/add', {
                 method: 'POST',
                 headers: {
@@ -232,6 +236,7 @@ async function viewChangedEntry(id, changes) {
         const modal = document.getElementById("displayModal");
         const span = document.getElementsByClassName("close")[0];
         
+        const div = document.getElementById('error-div');
         let data;
         let entry = [];
 
@@ -242,9 +247,7 @@ async function viewChangedEntry(id, changes) {
                     id: id 
                 }
             })
-
             data = await response.json();
-
         }
 
         if (data && data.error) {
@@ -288,8 +291,6 @@ async function viewChangedEntry(id, changes) {
                     row +=  `   <td class="placeholder"></td>
                                 <td class="placeholder"></td>`
                 } else if (row_num === 3) {
-                    console.log("there");
-
                     row += `    <td class="placeholder"></td>
                                 <td class="placeholder"></td>
                                 <td class="placeholder"></td>
@@ -376,9 +377,50 @@ async function adminEdit(log_id, app_id) {
         if (entry && entry.error) {
             div.innerText = 'Error occured when trying to edit entry';
         } else {
-
             // convert single length array to full array
-            const entryData = Object.values(entry)[0];
+            entry = entry[0];
+
+            const entryData = {
+                //addition info
+                log_id: log_id,
+                // page-1 info
+                id: entry[0],
+                appName: entry[1],
+                appNorm: entry[2],
+                description: entry[3],
+                criticality: entry[4],
+                lifecycle: entry[5],
+                community: entry[6],
+                owner: entry[7],
+                ownerDep: entry[8],
+                ownerBudg: entry[9],
+                ownerIt: entry[10],
+                ownerItDep: entry[11],
+                //page-2 info
+                appType: entry[12],
+                appDel: entry[13],
+                platform: entry[14],
+                numInteg: entry[15],
+                numActivUsr: entry[16],
+                numStaff: entry[17],
+                cobbId: entry[18],
+                vendor: entry[19],
+                numLic: entry[20],
+                yrCost: entry[21],
+                cntDates: entry[22],
+                details: entry[23],
+                datUpdat: entry[24],
+                //page-3 info
+                eduCaus: entry[25],
+                eduServ: entry[26],
+                caudParent: entry[27],
+                caudCap: entry[28],
+                coreEnab: entry[29],
+                endUsr: entry[30],
+                comGood: entry[31],
+                appTag:  entry[32]
+            }
+            
             // store entry
             const response = await fetch('/mai-form/store-data', {
                 method: 'POST',
@@ -387,10 +429,16 @@ async function adminEdit(log_id, app_id) {
                 },
                 body: JSON.stringify(entryData)
             })
+
+            //const data = await response.json();
+
+            // if (data.error) {
+            //     div.innerText = 'Error occured when trying to edit entry';
+            // }
+
             window.location.href = '/mai-form';
-            if (data.error) {
-                div.innerText = 'Error occured when trying to edit entry';
-            }
+
+            
         }
 
         // view modal with ability to edit

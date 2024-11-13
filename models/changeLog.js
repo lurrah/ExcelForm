@@ -26,6 +26,18 @@ class ChangeLog {
         }
     }
 
+    async getLog(log_id) {
+        try {
+            const log_list = getLogs();
+            const log = log_list.find(log => log.values[0][0] === log_id);
+
+            return log;
+        }
+        catch(err) {
+            console.log('Error retrieving log with id', log_id,": ", err);
+        }
+    }
+
     async addLog(values) {
         try {
 

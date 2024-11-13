@@ -161,8 +161,9 @@ async function selectEntry(entryArr) {
         else { 
             let entry = entryArr.values[0];
 
-            console.log(entryArr.values[0]);
             const entryData = {
+                // additional info 
+                log_id: -1,
                 // page-1 info
                 id: entry[0],
                 appName: entry[1],

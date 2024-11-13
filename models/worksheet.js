@@ -1,7 +1,3 @@
-
-// Current table structure (all instances must be updated when the table is updated)
-// [ appName, lname, email, description ]
-
 class Worksheet {
     constructor() {
         this.totalCols = 33;

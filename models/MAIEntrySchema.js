@@ -1,4 +1,4 @@
-class EntryInfo {
+class MAIEntrySchema {
     constructor(values) {
         this.entry = {
             blue: 
@@ -41,7 +41,8 @@ class EntryInfo {
                 wip: values[30],
                 common_gd: values[31],
             }
-        }    }
+        }    
+    }
 
     async getEntry() {
         try {
@@ -53,4 +54,4 @@ class EntryInfo {
     }
 }
 
-module.exports = EntryInfo;
+module.exports = MAIEntrySchema;

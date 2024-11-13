@@ -5,8 +5,8 @@ let addOrEdit;
 
 document.addEventListener('DOMContentLoaded', async function () {
     const isAdmin = document.getElementById('admin-info').getAttribute('data-is-admin') === 'true'; // Change when auth
-    console.log(isAdmin)
-    let originFormData = await getEntry();
+    let { originFormData, log_id } = await getEntry();
+    console.log(originFormData);
     // instructions drop-down
     document.querySelector('.directions-btn').addEventListener('click', function() {
         const content = document.getElementById('directions-menu'); 
@@ -60,7 +60,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         confirmChangeBtn.disabled = true;
         event.preventDefault();
         try {
-            await addLog(reviewEntry, addOrEdit ? reviewEntry[1] : originFormData[1]);
+            if (log_id === -1) {
+                await addLog(reviewEntry, addOrEdit ? reviewEntry[1] : originFormData[1]);
+            } else {
+                // (in case of admin) if log exists, update log and approve
+                editLog(isAdmin, reviewEntry, log_id);
+            }
+
         } catch (err) {
             console.error('Error occurred when confirming changes', err);
         }
@@ -93,6 +99,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 async function getEntry() {
     try {
+        let log_id;
         const response = await fetch('/mai-form/get-entry', {
             method: 'GET',
         })
@@ -101,14 +108,15 @@ async function getEntry() {
             document.getElementById('review-changes').textContent = 'Review Application';
             document.getElementById('confirm-changes').textContent = 'Add Application';
             addOrEdit = 1;
-            return Array(entryCount).fill(null);
+            return { originFormData: Array(entryCount).fill(null), log_id: -1 };
         } else {
             addOrEdit = 0;
-            console.log(Object.values(entryData));
-            await displayForm(Object.values(entryData).slice(1), null);
+            log_id = entryData.log_id;
+            await displayForm(Object.values(entryData).slice(2), null);
         }
 
-        return Object.values(entryData);
+        // remove log_id from originFormData
+        return { originFormData: Object.values(entryData).slice(1), log_id };
     }
     catch(err) {
         console.error('Error getting entry from server side', err);
@@ -127,21 +135,26 @@ async function populateReview(origin, isAdmin) {
         const changes = await detectChanges(origin.slice(1), newEntry);
         
         let div = document.getElementById('error-div');
-        console.log(changes);
-        if (changes.every(element => element === null)) {
-            div.innerText = 'No changes have been made';
+        if (changes.every(element => element === null) && isAdmin !== true) {
+            div.innerText = 'No changes to review';
             return;
         }
-        else if (newEntry[0] === "" || newEntry[0] === null) {
+        else if ((newEntry[0] === "" || newEntry[0] === null) && isAdmin !== true) {
             // newEntry[0] is user appName
 
             div.innerText = 'Application name cannot be empty. Request not made.';
         }
         else {
+            if (isAdmin === true && changes.every(element => element === null)) {
+                if (confirm("You have not made any changes, are you sure you would like to proceed?")) {
+                    
+                } else {
+                    div.innerText = 'No changes to review';
+                    return;
+                }
+            }
+
             // check if application name already exists in the inventory (with changes [0] if not null)
-
-
-
             div.innerText = "";
 
             // get table by id
@@ -151,8 +164,6 @@ async function populateReview(origin, isAdmin) {
 
             let i = 0;
             let tbody= "";
-
-
 
             retEntry.push(origin[0]);    // entry index (for internal purposes)
                                         // newEntry does not include an index (which input does)
@@ -251,6 +262,28 @@ async function detectChanges(oldFields, newEntry) {
     }
 }
 
+async function editLog(isAdmin, values, log_id) {
+    try {
+        const div = document.getElementById('error-div');
+        console.log(values);
+        if (values.slice(1).every(element => element === null)) {
+            if (isAdmin === true) {
+                if (confirm("You have not made any changes. If you approve these changes, the existing changes (and the log itself will automatically be approved). Would you like to proceed?")) {
+                    div.innerText
+                } else {
+                    div.innerText = 'No changes have been made.';
+                    return;
+                }
+            }
+        } else {
+
+        }
+
+    } catch (err) {
+        console.error("Error calling router to edit log: ", err);
+    }
+}
+
 // adds change log (both add and edit)
 async function addLog(values, app_name) {
     try {
@@ -304,7 +337,7 @@ async function addLog(values, app_name) {
             }
         }
     } catch (err) {
-        console.error("Error calling addLog router: ", err);
+        console.error("Error calling router to add log: ", err);
     }
 }
 

@@ -18,6 +18,18 @@ class ChangeLogController {
         }
     }
 
+    async getLog(req, res) {
+        try {
+            const log_id = req.body.log_id;
+
+            const response = await this.log.getLog(log_id);
+            return res.json(response);
+
+        } catch(err) {
+            console.log('Error fetching log:', err);
+        }
+    }
+
     async addLog(req, res) {
         try {
             const log_info = req.body.log_info;
